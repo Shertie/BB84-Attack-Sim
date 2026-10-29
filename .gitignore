@@ -1,0 +1,36 @@
+# Artykuły (PDF i źródła LaTeX) mają własne licencje i nie trafiają do publicznego repo.
+# Plan projektu (.md) w assets/ zostaje śledzony.
+assets/*.pdf
+assets/*.tex
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+build/
+dist/
+
+# Narzędzia
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.hypothesis/
+.coverage
+htmlcov/
+.ipynb_checkpoints/
+
+# Wyniki generowane (make figures); same wykresy w figures/ są śledzone
+results/
+
+# LaTeX
+report/*.aux
+report/*.bbl
+report/*.blg
+report/*.fdb_latexmk
+report/*.fls
+report/*.log
+report/*.out
+report/*.toc
+report/*.synctex.gz
+report/main.pdf

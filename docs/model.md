@@ -1,0 +1,81 @@
+# Model fizyczny, konwencje i założenia
+
+Dokument referencyjny dla kodu w `src/qkdsim/`. Zmiana modelu = zmiana tego pliku w tym samym commicie.
+
+## 1. Zakres
+
+- Protokół: BB84 z kodowaniem polaryzacyjnym, bazy Z (H/V) i X (D/A).
+- Kanał: światłowód 1550 nm, straty wykładnicze w długości, stały błąd optyki.
+- Źródło: słabe impulsy koherentne (WCP), opcjonalnie z kilkoma intensywnościami (decoy).
+- Bob: **aktywny** wybór bazy (modulator przed jednym PBS), dwa detektory SPAD w trybie bramkowanym. Przy biernym wyborze bazy (dzielnik wiązki i dwa PBS) zmienia się m.in. moc potrzebna do ataku oślepiania (Lydersen et al. 2010). Taki wariant to osobna decyzja.
+
+## 2. Konwencje
+
+| Wielkość | Konwencja |
+| --- | --- |
+| Stany polaryzacji | kąt θ: H = 0°, V = 90°, D = 45°, A = 135°; bit 0 = H lub D, bit 1 = V lub A |
+| Pomiar | PBS ustawiony pod kątem φ bazy; foton trafia do detektora 0 z p-stwem cos²(θ − φ) |
+| Bazy | 0 = Z, 1 = X |
+| Długość | km |
+| Tłumienie | dB/km (α), dB (straty skupione, izolacja) |
+| Moc | W |
+| Prawdopodobieństwa | nazwa parametru mówi, czego dotyczą: `*_per_pulse`, `*_per_gate`, `*_per_detector` |
+| Losowość | wyłącznie przez wstrzykiwany `RandomSource` (ADR 0003); żadnych globalnych `np.random.*` |
+| Wyniki | każdy eksperyment zapisuje konfigurację, ziarno, hash commita i wersje bibliotek |
+
+## 3. Parametry startowe: eksperyment GYS
+
+Źródło: Ma, Qi, Zhao, Lo 2005, Tabela I, oraz tekst artykułu; eksperyment: Gobby, Yuan, Shields 2004.
+
+| Parametr | Symbol | Wartość | Uwagi |
+| --- | --- | --- | --- |
+| Długość fali | λ | 1550 nm | |
+| Tłumienie | α | 0,21 dB/km | |
+| Sprawność po stronie Boba | η_Bob | 0,045 | **zawiera** sprawność detektora; nie mnożyć drugi raz przez η_d |
+| Tło (ciemne zliczenia) | Y₀ | 1,7 × 10⁻⁶ na impuls | **łączne dla obu detektorów**; na detektor p_d = 1 − √(1 − Y₀) ≈ Y₀/2 |
+| Błąd optyki | e_d | 0,033 | stały w funkcji L |
+| Błąd tła | e₀ | 0,5 | |
+| Sprawność korekcji błędów | f | 1,22 | z tekstu artykułu, **nie** z Tabeli I |
+| Częstotliwość powtarzania | — | 2 MHz | to jest kolumna „f” w Tabeli I; do przeliczenia R na bit/s |
+| Wydajność siftingu | q | 0,5 | |
+| Intensywność sygnału | μ | 0,48 | optimum dla f = 1,22 (0,54 dla f = 1) |
+| Intensywność decoy | ν | 0,05 | wariant vacuum+weak |
+
+Wartości kontrolne wynikające z tych parametrów: ROADMAP.md, rozdz. 3.2.
+
+## 4. Model kroków toru
+
+1. **Źródło:** liczba fotonów n ~ Poisson(μ_i) dla intensywności wybranej w danym impulsie. n jest zapisywane, bo potrzebuje go atak PNS, ale Alice i Bob go nie znają (ADR 0001).
+2. **Kanał:** liczba ocalałych fotonów ~ Binomial(n, 10^(−αL/10)). Błąd optyki to obrót polaryzacji o kąt θ_e z sin²θ_e = e_d.
+3. **Bob:** wybór bazy, PBS, rozkład fotonów na detektory ~ Binomial(n, cos²(θ − φ)), każdy foton wykryty z prawdopodobieństwem η, a do tego niezależne ciemne zliczenia p_d na detektor i bramkę.
+4. **Klasyfikacja zdarzeń:** brak kliknięcia, pojedyncze, podwójne. Podwójne kliknięcie dostaje losowy bit i nie jest odrzucane (squashing, Beaudry, Moroder, Lütkenhaus 2008).
+5. **Później (F3, F6):** tryb liniowy detektora (oślepianie), krzywe sprawności w czasie η_i(t) (time-shift), czas martwy i afterpulsing (F7).
+
+Własność do testów: dla stanu koherentnego liczby fotonów w dwóch wyjściach PBS są niezależnymi rozkładami Poissona o średnich μηcos² i μηsin². Próbkowanie przez n i rozkład dwumianowy musi dawać ten sam rozkład (F1.13).
+
+## 5. Założenia dowodu bezpieczeństwa
+
+Lista, na której w F5.1 powstanie mapa „atak → złamane założenie → obrona → metryka”. Kolumna „Atak” to przewidywanie z planu, do potwierdzenia wynikami.
+
+| # | Założenie | Atak, który je łamie | Obrona |
+| --- | --- | --- | --- |
+| Z1 | Rozkład liczby fotonów źródła jest znany i uwzględniony w długości klucza (GLLP / decoy) | 3, PNS (gdy liczymy klucz tak, jakby impulsy były jednofotonowe) | stany decoy |
+| Z2 | Moduł Alice nie ujawnia ustawień poza wysłanym stanem (brak kanałów bocznych) | 5, Trojan horse | izolatory, monitor mocy, filtr |
+| Z3 | Detektory Boba działają w trybie jednofotonowym, a ich sprawność nie zależy od bitu, bazy ani czasu przyjścia | 2, oślepianie; 4, time-shift | monitor mocy/fotoprądu, losowa sprawność, losowe przypisanie bit ↔ detektor, MDI |
+| Z4 | Pomiar Boba jest opisany modelem squashing (podwójne kliknięcia dostają losowy bit) | odrzucanie podwójnych kliknięć jako „optymalizacja” implementacji | losowy bit zamiast odrzucenia |
+| Z5a | Kanał klasyczny jest uwierzytelniony, a uwierzytelnienie nie zostaje złamane **w trakcie** sesji (później już nie musi wytrzymać) | 7, MITM; MITM z fałszerstwem podpisu w czasie rzeczywistym | Wegman–Carter z kluczem współdzielonym, ML-DSA lub hybryda (wariant E) |
+| Z5b | Klucze publiczne stron są autentyczne (tylko przy uwierzytelnianiu podpisem) | 7, MITM z podmianą klucza publicznego w katalogu | zaufany katalog / PKI, weryfikacja odcisku klucza |
+| Z6 | Wybory bitów, baz i intensywności są prawdziwie losowe i prywatne | 8, słaby generator | QRNG; testy losowości wykrywają obciążenie, ale nie przewidywalność |
+| Z7 | Ewa jest ograniczona tylko prawami fizyki; wszystkie błędy przypisujemy jej | 6, granica dla ataków indywidualnych (Fuchs) vs ogólnych (Shor–Preskill) | odpowiednio konserwatywny próg QBER |
+| Z8 | Parametry są estymowane ze skończonej próbki z jawnym ε | „Ewa w szumie”: mały ułamek przechwytu ginie w fluktuacjach | rachunek skończonego klucza (Tomamichel et al. 2012) |
+
+Wspólny wniosek z planu: atak, który nie podnosi QBER (2, 4, 5, 7, 8), łamie jedno z założeń Z2–Z6, a nie wzór na długość klucza.
+
+Przy Z5a widać różnicę między QKD a ML-KEM (ROADMAP, rozdz. 2.2a). QKD potrzebuje uwierzytelnienia, które jest bezpieczne tylko w chwili sesji. Złamanie ML-DSA po fakcie nie odsłania wcześniejszych kluczy. Klucz z ML-KEM traci bezpieczeństwo, gdy w dowolnym momencie w przyszłości padną problemy kratowe.
+
+## 6. Znane uproszczenia (na starcie)
+
+- e_d i Y₀ nie zależą od L ani od czasu.
+- Brak dyspersji i dryfu polaryzacji w kanale.
+- Brak czasu martwego i afterpulsingu (do F3/F7).
+- Skończony klucz tylko dla modelu jednofotonowego. WCP + decoy (Lim et al. 2014) dopiero w F7.

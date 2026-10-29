@@ -1,0 +1,68 @@
+[build-system]
+requires = ["hatchling>=1.25"]
+build-backend = "hatchling.build"
+
+[project]
+name = "bb84-attacks"
+version = "0.1.0.dev0"
+description = "Symulator BB84 z atakami, walidowany względem wzorów analitycznych i literatury"
+readme = "README.md"
+license = "MIT"
+license-files = ["LICENSE"]
+requires-python = ">=3.11"
+authors = [{ name = "Shertie" }]
+dependencies = [
+    "numpy>=1.26",
+    "scipy>=1.11",
+    "matplotlib>=3.8",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "hypothesis>=6.100",
+    "ruff>=0.6",
+    "mypy>=1.11",
+    "pre-commit>=3.7",
+    "types-PyYAML",
+]
+# Tylko do weryfikacji fragmentów (atak 6, Trojan horse), patrz docs/adr/0004.
+verify = ["qutip>=5.0"]
+# Niezależna wyrocznia w testach krzyżowych (docs/adr/0007). Wersja przypięta dokładnie,
+# bo testy korzystają z prywatnego modułu qkd._core.
+crosscheck = ["qkd==0.2.0"]
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/qkdsim"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+src = ["src", "tests"]
+# Bloki kodu w dokumentach (np. załącznik ROADMAP.md) nie są kodem projektu.
+extend-exclude = ["assets", "*.md"]
+
+[tool.ruff.lint]
+select = ["E", "W", "F", "I", "B", "UP", "NPY", "SIM", "RUF"]
+# Polskie znaki w komentarzach i docstringach są zamierzone.
+ignore = ["RUF001", "RUF002", "RUF003"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+files = ["src", "tests"]
+
+[[tool.mypy.overrides]]
+module = ["scipy.*", "matplotlib.*", "qutip.*", "qkd.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Moduły pomocnicze testów (golden.py, qkd_oracle.py) importowane po nazwie.
+pythonpath = ["tests"]
+addopts = ["-ra", "--strict-markers", "--strict-config"]
+markers = [
+    "slow: testy statystyczne Monte Carlo i krzyżowe (make test-slow)",
+]
+xfail_strict = true
