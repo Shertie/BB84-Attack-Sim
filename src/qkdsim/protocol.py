@@ -1,8 +1,7 @@
 """Alice, Bob i sifting.
 
-Etap 1 (ROADMAP, F1.3): idealny BB84, jeden foton na impuls, kanał bez strat. Pomiar Boba
-już teraz korzysta z reguły Borna na kątach polaryzacji, więc etap 2 dokłada tylko straty,
-liczbę fotonów i detektory, bez zmiany konwencji.
+Etap 1 (F1.3): idealny BB84, jeden foton na impuls, kanał bez strat. Etap 2 (F1.7): pomiar
+parą detektorów progowych z ciemnymi zliczeniami i podwójnymi kliknięciami.
 """
 
 from dataclasses import dataclass
@@ -10,32 +9,13 @@ from dataclasses import dataclass
 import numpy as np
 import numpy.typing as npt
 
+from qkdsim.detector import DetectorPair
+from qkdsim.optics import analyzer_angle, polarization_angle, prob_detector0
 from qkdsim.pulses import Pulses
 from qkdsim.rng import Bits, RandomSource, RandomStreams
 
 BASIS_Z = 0
 BASIS_X = 1
-
-Angles = npt.NDArray[np.float64]
-
-
-def polarization_angle(bits: Bits, bases: Bits) -> Angles:
-    """Kąt stanu Alice: H = 0, V = π/2, D = π/4, A = 3π/4 (docs/model.md, rozdz. 2)."""
-    return bases.astype(np.float64) * (np.pi / 4) + bits.astype(np.float64) * (np.pi / 2)
-
-
-def analyzer_angle(bases: Bits) -> Angles:
-    """Kąt PBS Boba: 0 dla bazy Z, π/4 dla bazy X."""
-    return bases.astype(np.float64) * (np.pi / 4)
-
-
-def prob_detector0(theta: Angles, phi: Angles) -> Angles:
-    """Reguła Borna cos²(θ − φ): p-stwo, że foton trafi do detektora 0 (bit 0).
-
-    Liczone jako (1 + cos 2(θ − φ)) / 2, co daje dokładnie 0 i 1 dla stanów z bazy analizatora.
-    Wprost liczone cos² zostawiłoby resztę rzędu 10⁻³³ zamiast zera.
-    """
-    return 0.5 * (1.0 + np.cos(2.0 * (theta - phi)))
 
 
 @dataclass(frozen=True, eq=False)
@@ -54,6 +34,7 @@ class BobRecord:
     bases: Bits
     bits: Bits
     detected: npt.NDArray[np.bool_]
+    double: npt.NDArray[np.bool_]  # kliknęły oba detektory; bit wylosowany (squashing)
 
 
 @dataclass(frozen=True, eq=False)
@@ -88,7 +69,30 @@ def bob_measure_ideal(pulses: Pulses, rng: RandomSource, nature: np.random.Gener
     bases = rng.bases(len(pulses))
     p0 = prob_detector0(pulses.theta, analyzer_angle(bases))
     bits = (nature.random(len(pulses)) >= p0).astype(np.uint8)
-    return BobRecord(bases=bases, bits=bits, detected=np.ones(len(pulses), dtype=np.bool_))
+    return BobRecord(
+        bases=bases,
+        bits=bits,
+        detected=np.ones(len(pulses), dtype=np.bool_),
+        double=np.zeros(len(pulses), dtype=np.bool_),
+    )
+
+
+def bob_measure(
+    pulses: Pulses, detectors: DetectorPair, rng: RandomSource, nature: np.random.Generator
+) -> BobRecord:
+    """Bob losuje bazę i mierzy impulsy parą detektorów progowych (etap 2).
+
+    Pojedyncze kliknięcie daje bit równy numerowi detektora. Podwójne kliknięcie dostaje
+    losowy bit z generatora Boba i nie jest odrzucane (squashing, docs/model.md).
+    """
+    bases = rng.bases(len(pulses))
+    click0, click1 = detectors.clicks(pulses, bases, nature)
+    double = click0 & click1
+    bits = click1.astype(np.uint8)
+    n_double = int(np.count_nonzero(double))
+    if n_double:
+        bits[double] = rng.bits(n_double)
+    return BobRecord(bases=bases, bits=bits, detected=click0 | click1, double=double)
 
 
 def sift(alice: AliceRecord, bob: BobRecord) -> SiftedKey:

@@ -53,6 +53,17 @@ Wartości kontrolne wynikające z tych parametrów: ROADMAP.md, rozdz. 3.2.
 
 Własność do testów: dla stanu koherentnego liczby fotonów w dwóch wyjściach PBS są niezależnymi rozkładami Poissona o średnich μηcos² i μηsin². Próbkowanie przez n i rozkład dwumianowy musi dawać ten sam rozkład (F1.13).
 
+### Implementacja i model analityczny (F1.5–F1.9)
+
+- Detektor z k fotonami po PBS klika z p-stwem 1 − (1 − p_d)(1 − η)^k: jedno losowanie na detektor i impuls, dokładnie równoważne dwumianowi i ciemnemu zliczeniu.
+- Ciemne zliczenia na detektor: p_d = 1 − √(1 − Y₀), żeby łączne tło obu detektorów wynosiło Y₀.
+- `analysis/wcp.py` ma dwa modele:
+  - wzory Ma et al. (sumy (7) i (8)), na których stoją stopy klucza;
+  - dokładną wartość oczekiwaną dla detektorów symulatora (niezależne rozkłady Poissona w obu detektorach, podwójne kliknięcie z losowym bitem).
+
+  Zysk jest w obu modelach identyczny. QBER różni się o mniej niż 3·10⁻⁵ względnie dla GYS na 0–200 km. MC jest walidowane względem modelu dokładnego, ale przechodzi też test względem wzoru z artykułu.
+- Wzór Ma et al. na E_μ może przekroczyć ½ dla e_d > (1 − Y₀)/2 (ROADMAP, K16). Model dokładny nigdy.
+
 ## 5. Założenia dowodu bezpieczeństwa
 
 Lista, na której w F5.1 powstanie mapa „atak → złamane założenie → obrona → metryka”. Kolumna „Atak” to przewidywanie z planu, do potwierdzenia wynikami.

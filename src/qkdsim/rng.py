@@ -57,8 +57,12 @@ class RandomStreams:
     eve: np.random.Generator
 
     @classmethod
-    def from_seed(cls, seed: int) -> Self:
-        alice, bob, nature, eve = np.random.SeedSequence(seed).spawn(4)
+    def from_seed(cls, seed: int | np.random.SeedSequence) -> Self:
+        """Z ziarna albo z gałęzi SeedSequence (np. osobnej dla każdego punktu L)."""
+        sequence = (
+            seed if isinstance(seed, np.random.SeedSequence) else np.random.SeedSequence(seed)
+        )
+        alice, bob, nature, eve = sequence.spawn(4)
         return cls(
             alice=GeneratorSource(np.random.default_rng(alice)),
             bob=GeneratorSource(np.random.default_rng(bob)),

@@ -5,6 +5,7 @@ import pytest
 
 from conftest import SEED
 from qkdsim.metrics import qber, sifted_fraction
+from qkdsim.optics import analyzer_angle, polarization_angle, prob_detector0
 from qkdsim.protocol import (
     BASIS_X,
     BASIS_Z,
@@ -12,10 +13,7 @@ from qkdsim.protocol import (
     BobRecord,
     SiftedKey,
     alice_prepare_single_photons,
-    analyzer_angle,
     bob_measure_ideal,
-    polarization_angle,
-    prob_detector0,
     run_ideal,
     sift,
 )
