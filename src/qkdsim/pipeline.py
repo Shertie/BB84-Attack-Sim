@@ -167,3 +167,30 @@ def run_counts_parallel(
     for part in parts:
         total = total + part
     return total
+
+
+def run_sifted(
+    link: Link, n_pulses: int, streams: RandomStreams, batch_size: int = DEFAULT_BATCH_SIZE
+) -> SiftedKey:
+    """Klucz po siftingu z `n_pulses` impulsów, liczony w paczkach (pamięć: tylko klucz).
+
+    Indeksy w zwróconym kluczu są globalne, liczone od pierwszego impulsu przebiegu.
+    """
+    if batch_size <= 0:
+        raise ValueError("batch_size musi być dodatnie")
+    parts: list[SiftedKey] = []
+    done = 0
+    while done < n_pulses:
+        size = min(batch_size, n_pulses - done)
+        alice, bob = simulate(link, size, streams)
+        key = sift(alice, bob)
+        parts.append(SiftedKey(index=key.index + done, alice=key.alice, bob=key.bob))
+        done += size
+    if not parts:
+        empty = np.zeros(0, dtype=np.uint8)
+        return SiftedKey(index=np.zeros(0, dtype=np.intp), alice=empty, bob=empty)
+    return SiftedKey(
+        index=np.concatenate([k.index for k in parts]),
+        alice=np.concatenate([k.alice for k in parts]),
+        bob=np.concatenate([k.bob for k in parts]),
+    )

@@ -51,3 +51,13 @@ def test_different_seeds_give_different_streams(other_seed: int) -> None:
     a = RandomStreams.from_seed(SEED).alice.bits(1000)
     b = RandomStreams.from_seed(other_seed).alice.bits(1000)
     assert not np.array_equal(a, b)
+
+
+def test_public_stream_did_not_change_the_first_four() -> None:
+    """Dodanie strumienia `public` (F2) nie zmienia losowań z F1: wyniki są odtwarzalne."""
+    alice_seq, _, nature_seq, _ = np.random.SeedSequence(SEED).spawn(4)
+    streams = RandomStreams.from_seed(SEED)
+    expected_bits = np.random.default_rng(alice_seq).integers(0, 2, 1000, dtype=np.uint8)
+    assert np.array_equal(streams.alice.bits(1000), expected_bits)
+    assert np.array_equal(streams.nature.random(10), np.random.default_rng(nature_seq).random(10))
+    assert not np.array_equal(streams.public.random(10), streams.eve.random(10))

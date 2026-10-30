@@ -90,3 +90,11 @@ Przy Z5a widać różnicę między QKD a ML-KEM (ROADMAP, rozdz. 2.2a). QKD potr
 - Brak dyspersji i dryfu polaryzacji w kanale.
 - Brak czasu martwego i afterpulsingu (do F3/F7).
 - Skończony klucz tylko dla modelu jednofotonowego. WCP + decoy (Lim et al. 2014) dopiero w F7.
+
+## 7. Postprocessing (F2)
+
+- **Losowość publiczna:** próbka do estymacji, permutacje Cascade i ziarna haszy pochodzą ze strumienia `RandomStreams.public`. Jest jawny, bo i tak jest ogłaszany przez kanał klasyczny, a osobny strumień nie przesuwa losowań stron.
+- **Wyciek:** liczy się jeden bit na każdą parzystość ogłoszoną przez Alice w Cascade (bloki i połówki w BINARY) oraz bity hasza weryfikacyjnego. Parzystości Boba mówią tylko, gdzie są błędy, więc nie są liczone osobno. Bazy i ujawniona próbka nie ujawniają nic o reszcie klucza.
+- **Hasz:** macierz Toeplitza T[i, j] = s[i − j + n − 1]; ta sama rodzina 2-uniwersalna służy do weryfikacji (64 bity, ε_cor = 2⁻⁶⁴) i do wzmacniania prywatności.
+- **Długość klucza (asymptotycznie):** ℓ = ⌊n·s·[1 − h(e_ph)] − leak_EC − leak_ver⌋. Dla źródła jednofotonowego s = 1 i e_ph to błąd fazowy. Dla WCP s = Q₁/Q_μ i e_ph = e₁ (GLLP). Poprawki skończonego klucza dochodzą w F4.
+- **Wiedza pasywnej Ewy:** dokładnie dim(span P ∩ span T) bitów klucza końcowego, gdzie P to ujawnione funkcje liniowe, a T macierz wzmacniania prywatności. Dlatego zapomniany wyciek daje Ewie co najmniej ℓ − (n − rank P) bitów bez żadnego ataku na kanał kwantowy.

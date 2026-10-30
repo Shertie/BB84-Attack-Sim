@@ -16,19 +16,24 @@ import math
 from dataclasses import dataclass
 
 
+def _one_minus_exp(x: float) -> float:
+    """1 − e^(−x) bez utraty precyzji dla małych x (np. ημ ≈ 10⁻¹⁶ daje inaczej 10⁻⁴ błędu)."""
+    return -math.expm1(-x)
+
+
 def gain(mu: float, eta: float, background: float) -> float:
     """Q_μ = Σ Y_n P(n) = 1 − (1 − Y₀) e^(−ημ) (Ma et al., wzór (7) zsumowany dokładnie)."""
-    return 1.0 - (1.0 - background) * math.exp(-eta * mu)
+    return background + (1.0 - background) * _one_minus_exp(eta * mu)
 
 
 def gain_eq10(mu: float, eta: float, background: float) -> float:
     """Q_μ ≈ Y₀ + 1 − e^(−ημ): przybliżenie z wzoru (10), użyte w planie projektu."""
-    return background + 1.0 - math.exp(-eta * mu)
+    return background + _one_minus_exp(eta * mu)
 
 
 def qber(mu: float, eta: float, background: float, misalignment: float, e0: float = 0.5) -> float:
     """E_μ = [e₀Y₀ + e_d(1 − e^(−ημ))] / Q_μ (Ma et al., wzory (8) i (11))."""
-    errors = e0 * background + misalignment * (1.0 - math.exp(-eta * mu))
+    errors = e0 * background + misalignment * _one_minus_exp(eta * mu)
     return errors / gain(mu, eta, background)
 
 
@@ -43,7 +48,8 @@ class ClickProbabilities:
 
     @property
     def detected(self) -> float:
-        return 1.0 - self.none
+        # Suma małych składników zamiast 1 − none: stabilne, gdy detekcje są rzadkie.
+        return self.right_only + self.wrong_only + self.double
 
     @property
     def qber(self) -> float:
@@ -60,8 +66,8 @@ def click_probabilities(
     gdzie f = `fraction_right`. Ciemne zliczenia są niezależne z p-stwem `dark_count`.
     """
     silent = 1.0 - dark_count
-    click_right = 1.0 - silent * math.exp(-eta * mu * fraction_right)
-    click_wrong = 1.0 - silent * math.exp(-eta * mu * (1.0 - fraction_right))
+    click_right = dark_count + silent * _one_minus_exp(eta * mu * fraction_right)
+    click_wrong = dark_count + silent * _one_minus_exp(eta * mu * (1.0 - fraction_right))
     return ClickProbabilities(
         right_only=click_right * (1.0 - click_wrong),
         wrong_only=click_wrong * (1.0 - click_right),

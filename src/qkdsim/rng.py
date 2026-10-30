@@ -55,17 +55,25 @@ class RandomStreams:
     bob: RandomSource
     nature: np.random.Generator
     eve: np.random.Generator
+    # Losowość jawna, ogłaszana kanałem klasycznym: próbka do estymacji, permutacje Cascade,
+    # ziarna haszy. Osobny strumień, żeby postprocessing nie przesuwał losowań stron.
+    public: np.random.Generator
 
     @classmethod
     def from_seed(cls, seed: int | np.random.SeedSequence) -> Self:
-        """Z ziarna albo z gałęzi SeedSequence (np. osobnej dla każdego punktu L)."""
+        """Z ziarna albo z gałęzi SeedSequence (np. osobnej dla każdego punktu L).
+
+        Gałęzie SeedSequence zależą tylko od swojego numeru, więc dodanie strumienia `public`
+        jako piątego nie zmieniło czterech pierwszych (wyniki F1 są odtwarzalne).
+        """
         sequence = (
             seed if isinstance(seed, np.random.SeedSequence) else np.random.SeedSequence(seed)
         )
-        alice, bob, nature, eve = sequence.spawn(4)
+        alice, bob, nature, eve, public = sequence.spawn(5)
         return cls(
             alice=GeneratorSource(np.random.default_rng(alice)),
             bob=GeneratorSource(np.random.default_rng(bob)),
             nature=np.random.default_rng(nature),
             eve=np.random.default_rng(eve),
+            public=np.random.default_rng(public),
         )

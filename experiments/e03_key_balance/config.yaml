@@ -1,0 +1,9 @@
+# E03: bilans klucza od impulsów do klucza końcowego dla GYS (F2.9).
+# Długość klucza: GLLP z udziałem jednofotonowych i e1 z granicy nieskończenie wielu stanów decoy
+# (model analityczny; w F3 zastąpi go estymata decoy z Monte Carlo).
+seed: 20261102
+mu: 0.48
+lengths_km: [25, 50]
+pulses: [100_000_000, 300_000_000]
+sample_fraction: 0.1
+linear_eve_bits: 2200

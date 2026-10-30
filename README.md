@@ -6,13 +6,21 @@ Model: polaryzacyjny BB84, światłowód 1550 nm, źródło słabych impulsów k
 
 Pomost do kryptografii postkwantowej: kanał klasyczny można uwierzytelniać kluczem współdzielonym (Wegman–Carter), podpisem ML-DSA (FIPS 204) albo hybrydowo. Symulator pokazuje, kiedy takie uwierzytelnianie chroni klucz QKD, i porównuje QKD z ML-KEM w różnych modelach zagrożeń.
 
-> **Status:** faza F1 zakończona, bramka G1 zaliczona: fizyka bez ataków (źródło WCP, światłowód, detektory) zgadza się ze wzorami na 0–150 km. Postprocessing i ataki to kolejne fazy, patrz [ROADMAP.md](ROADMAP.md).
+> **Status:** fazy F1 i F2 zakończone, bramki G1 i G2 zaliczone. Fizyka bez ataków zgadza się ze wzorami na 0–150 km, a postprocessing (estymacja, Cascade, weryfikacja, wzmacnianie prywatności) daje identyczne klucze z poprawnie policzonym wyciekiem. Ataki to kolejne fazy, patrz [ROADMAP.md](ROADMAP.md).
 
 ## Wyniki
 
 ![Zysk i QBER w funkcji długości światłowodu](figures/e01_gain_qber_vs_L.png)
 
-Monte Carlo (punkty) na tle wzorów Ma et al. 2005 (linie) dla parametrów eksperymentu GYS: do 10⁹ impulsów na punkt, wszystkie punkty w granicach |z| < 1,8. Odtworzenie: `make figures`.
+Monte Carlo (punkty) na tle wzorów Ma et al. 2005 (linie) dla parametrów eksperymentu GYS: do 10⁹ impulsów na punkt, wszystkie punkty w granicach |z| < 1,8.
+
+![Sprawność Cascade](figures/e02_cascade_efficiency.png)
+
+Cascade (4 przebiegi) ujawnia 1,11–1,19 razy więcej bitów niż granica Shannona dla QBER 0,5–8%, w przedziale zakładanym w planie.
+
+[Bilans klucza dla GYS przy 25 i 50 km](figures/e03_key_balance.md): od 10⁸ impulsów do klucza końcowego, oraz pomiar wiedzy pasywnej Ewy, gdy wyciek z korekcji błędów zostanie (albo nie) odjęty.
+
+Wszystkie wyniki odtwarza `make figures` (około 1,5 min na 12 rdzeniach).
 
 ## Szybki start
 
