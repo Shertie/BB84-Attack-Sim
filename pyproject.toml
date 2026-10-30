@@ -16,6 +16,7 @@ dependencies = [
     "scipy>=1.11",
     "matplotlib>=3.8",
     "pyyaml>=6.0",
+    "cryptography>=47",  # ML-DSA (wariant E, ADR 0006)
 ]
 
 [project.optional-dependencies]
@@ -26,6 +27,7 @@ dev = [
     "mypy>=1.11",
     "pre-commit>=3.7",
     "types-PyYAML",
+    "dilithium-py",  # druga implementacja ML-DSA do testu zgodności (ADR 0006)
 ]
 # Tylko do weryfikacji fragmentów (atak 6, Trojan horse), patrz docs/adr/0004.
 verify = ["qutip>=5.0"]
@@ -54,7 +56,7 @@ strict = true
 files = ["src", "tests"]
 
 [[tool.mypy.overrides]]
-module = ["scipy.*", "matplotlib.*", "qutip.*", "qkd.*"]
+module = ["scipy.*", "matplotlib.*", "qutip.*", "qkd.*", "dilithium_py.*"]
 ignore_missing_imports = true
 
 [tool.pytest.ini_options]

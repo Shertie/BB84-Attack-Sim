@@ -1,0 +1,9 @@
+# E10: wariant E, czyli uwierzytelnianie ML-DSA, hybryda i modele zagrożeń (F4.15–F4.21), GYS, μ = 0,48.
+seed: 20261103
+mitm_length_km: 25.0
+mitm_pulses: 2_000_000
+levels: [44, 65, 87]
+cpu_repeats: 300
+balance_round_pulses: [1_000_000, 10_000_000, 100_000_000]
+check_length_km: 25.0
+check_pulses: 10_000_000

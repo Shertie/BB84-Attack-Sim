@@ -18,7 +18,7 @@ przerywa protokół wyjątkiem `AuthenticationFailure`.
 
 from collections.abc import Sequence
 from dataclasses import dataclass, field
-from typing import Literal
+from typing import Literal, Protocol
 
 import numpy as np
 
@@ -70,6 +70,27 @@ def message_bits(message: Message) -> Bits:
     return np.unpackbits(np.frombuffer(raw, dtype=np.uint8))
 
 
+class Authenticator(Protocol):
+    """Metoda uwierzytelniania kanału klasycznego (ADR 0006).
+
+    `genuine`: prawdziwy nadawca taguje dane, a odbiorca je weryfikuje (zużywa zasoby).
+    `impostor_passes`: najlepsza próba Ewy udającej `sender`; True, jeśli odbiorca ją przyjmie.
+    """
+
+    @property
+    def tags_used(self) -> int: ...
+
+    @property
+    def key_bits_used(self) -> int: ...
+
+    @property
+    def bytes_sent(self) -> int: ...
+
+    def genuine(self, sender: str, bits: Bits) -> None: ...
+
+    def impostor_passes(self, sender: str, bits: Bits, rng: np.random.Generator) -> bool: ...
+
+
 @dataclass
 class WegmanCarter:
     pool: KeyPool
@@ -117,11 +138,22 @@ class WegmanCarter:
     def key_bits_used(self) -> int:
         return self.pool.used
 
+    @property
+    def bytes_sent(self) -> int:
+        return self.tags_used * -(-self.tag_bits // 8)
+
+    def genuine(self, sender: str, bits: Bits) -> None:
+        self.tag(bits)  # nadawca zużywa klucz jednorazowy, odbiorca sprawdza go tak samo
+
+    def impostor_passes(self, sender: str, bits: Bits, rng: np.random.Generator) -> bool:
+        # Ewa nie zna ani k, ani r: najlepsze, co może, to zgadnąć tag.
+        return self.verify(bits, int(rng.integers(0, self.prime)))
+
 
 class AuthenticatedChannel(ClassicalChannel):
     def __init__(
         self,
-        auth: WegmanCarter,
+        auth: Authenticator,
         mode: Literal["message", "transcript"] = "transcript",
         impostor: str | None = None,
         forger: np.random.Generator | None = None,
@@ -138,12 +170,10 @@ class AuthenticatedChannel(ClassicalChannel):
     def _check(self, sender: str, bits: Bits, kind: str) -> None:
         self.tags_sent += 1
         if sender == self.impostor:
-            # Ewa nie zna ani k, ani r: najlepsze, co może, to zgadnąć tag.
-            forged = int(self.forger.integers(0, self.auth.prime))
-            if not self.auth.verify(bits, forged):
+            if not self.auth.impostor_passes(sender, bits, self.forger):
                 raise AuthenticationFailure(len(self.transcript), kind)
         else:
-            self.auth.tag(bits)  # nadawca zużywa klucz jednorazowy, odbiorca sprawdza go tak samo
+            self.auth.genuine(sender, bits)
 
     def send(self, message: Message) -> Message:
         bits = message_bits(message)

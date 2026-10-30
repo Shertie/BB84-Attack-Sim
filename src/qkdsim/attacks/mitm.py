@@ -10,6 +10,7 @@ W sesji z Alice Ewa musi podrobić tagi Boba (i odwrotnie), co udaje się z p-st
 na wiadomość. Atak wychodzi przy pierwszej uwierzytelnionej wiadomości Ewy.
 """
 
+from collections.abc import Callable
 from dataclasses import dataclass
 from typing import Literal
 
@@ -21,6 +22,7 @@ from qkdsim.postprocessing.auth import (
     MERSENNE_61,
     AuthenticatedChannel,
     AuthenticationFailure,
+    Authenticator,
     KeyPool,
     WegmanCarter,
 )
@@ -34,6 +36,7 @@ class SessionOutcome:
     failure: AuthenticationFailure | None
     key_bits_used: int  # klucz uwierzytelniania zużyty w tej sesji
     tags: int
+    bytes_sent: int = 0  # tagi i podpisy na łączu klasycznym
 
 
 @dataclass(frozen=True)
@@ -55,27 +58,26 @@ def _session(
     link: Link,
     n_pulses: int,
     seed: np.random.SeedSequence,
-    pool_bits: Bits | None,
+    factory: Callable[[], Authenticator] | None,
     impostor: str,
     mode: Literal["message", "transcript"],
-    prime: int,
 ) -> SessionOutcome:
     streams = RandomStreams.from_seed(seed)
     key = run_sifted(link, n_pulses, streams)
-    if pool_bits is None:
-        channel: ClassicalChannel = ClassicalChannel()
-        auth = None
-    else:
-        auth = WegmanCarter(KeyPool(pool_bits.copy()), prime)
-        channel = AuthenticatedChannel(auth, mode=mode, impostor=impostor, forger=streams.eve)
+    auth = None if factory is None else factory()
+    channel: ClassicalChannel = (
+        ClassicalChannel()
+        if auth is None
+        else AuthenticatedChannel(auth, mode=mode, impostor=impostor, forger=streams.eve)
+    )
     try:
         result = postprocess(key, streams.public, channel=channel)
         failure = None
     except AuthenticationFailure as error:
         result, failure = None, error
-    used = 0 if auth is None else auth.key_bits_used
-    tags = 0 if auth is None else auth.tags_used
-    return SessionOutcome(result, failure, used, tags)
+    if auth is None:
+        return SessionOutcome(result, failure, 0, 0)
+    return SessionOutcome(result, failure, auth.key_bits_used, auth.tags_used, auth.bytes_sent)
 
 
 def run_mitm(
@@ -86,15 +88,24 @@ def run_mitm(
     pre_shared_bits: int | None = None,
     mode: Literal["message", "transcript"] = "transcript",
     prime: int = MERSENNE_61,
+    authenticator: Callable[[], Authenticator] | None = None,
 ) -> MITMOutcome:
-    """`pre_shared_bits` = None: brak uwierzytelniania; inaczej rozmiar wspólnej puli klucza."""
-    pool = None
+    """Bez uwierzytelniania, gdy `pre_shared_bits` i `authenticator` są None.
+
+    `pre_shared_bits`: Wegman–Carter z pulą tej wielkości (każda sesja ma kopię puli).
+    `authenticator`: dowolna metoda (np. ML-DSA, hybryda), tworzona osobno dla każdej sesji.
+    """
+    factory = authenticator
     if pre_shared_bits is not None:
         pool = np.random.default_rng([seed, 7]).integers(0, 2, pre_shared_bits, dtype=np.uint8)
+
+        def factory() -> Authenticator:
+            return WegmanCarter(KeyPool(pool.copy()), prime)
+
     alice_side = _session(
-        link_alice_eve, n_pulses, np.random.SeedSequence([seed, 1]), pool, "bob", mode, prime
+        link_alice_eve, n_pulses, np.random.SeedSequence([seed, 1]), factory, "bob", mode
     )
     bob_side = _session(
-        link_eve_bob, n_pulses, np.random.SeedSequence([seed, 2]), pool, "alice", mode, prime
+        link_eve_bob, n_pulses, np.random.SeedSequence([seed, 2]), factory, "alice", mode
     )
     return MITMOutcome(alice_side, bob_side)

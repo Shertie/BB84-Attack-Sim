@@ -6,7 +6,7 @@ Model: polaryzacyjny BB84, światłowód 1550 nm, źródło słabych impulsów k
 
 Pomost do kryptografii postkwantowej: kanał klasyczny można uwierzytelniać kluczem współdzielonym (Wegman–Carter), podpisem ML-DSA (FIPS 204) albo hybrydowo. Symulator pokazuje, kiedy takie uwierzytelnianie chroni klucz QKD, i porównuje QKD z ML-KEM w różnych modelach zagrożeń.
 
-> **Status:** fazy F1 i F2 zakończone (bramki G1 i G2 zaliczone), faza F3 zakończona (bramka G3 zaliczona): ataki 1 (intercept-resend), 2 (oślepianie detektorów z obronami) i 3 (PNS ze stanami decoy). Fizyka bez ataków zgadza się ze wzorami na 0–150 km, postprocessing daje identyczne klucze z poprawnie policzonym wyciekiem. W fazie F4 gotowe: skończony klucz (Tomamichel et al. 2012) atak 6 (Fuchs), czyli komplet czterech wyników kontrolnych z planu, oraz atak 7 (MITM z uwierzytelnianiem Wegmana–Cartera); dalej uwierzytelnianie postkwantowe (wariant E): [ROADMAP.md](ROADMAP.md).
+> **Status:** fazy F1 i F2 zakończone (bramki G1 i G2 zaliczone), faza F3 zakończona (bramka G3 zaliczona): ataki 1 (intercept-resend), 2 (oślepianie detektorów z obronami) i 3 (PNS ze stanami decoy). Fizyka bez ataków zgadza się ze wzorami na 0–150 km, postprocessing daje identyczne klucze z poprawnie policzonym wyciekiem. W fazie F4 gotowe: skończony klucz (Tomamichel et al. 2012), atak 6 (Fuchs), czyli komplet czterech wyników kontrolnych z planu, atak 7 (MITM z uwierzytelnianiem Wegmana–Cartera) i uwierzytelnianie postkwantowe (wariant E: ML-DSA, hybryda, porównanie z ML-KEM). Dalej publikacja v1.0: [ROADMAP.md](ROADMAP.md).
 
 ## Wyniki
 
@@ -41,6 +41,10 @@ Optymalny atak indywidualny (Fuchs et al. 1997) jako kloner fazowo-kowariantny, 
 ![MITM i uwierzytelnianie](figures/e09_mitm.png)
 
 Atak MITM ([tabela przebiegu](figures/e09_mitm.md)): bez uwierzytelniania Ewa zna klucze Alice i Boba przy QBER jak bez ataku; z Wegmanem–Carterem protokół przerywa się przy pierwszej wiadomości Ewy. Tag na każdą wiadomość zjada więcej klucza, niż QKD wytwarza; tag na transkrypt rundy kosztuje 122 bity.
+
+![Uwierzytelnianie postkwantowe](figures/e10_pqc_auth.png)
+
+Wariant E ([scenariusze i tabela modeli zagrożeń](figures/e10_pqc_auth.md)): podpis ML-DSA (FIPS 204) zatrzymuje MITM tak jak Wegman–Carter, ale bez zużywania klucza, więc bilans jest dodatni do ~140 km zamiast 60 km przy 10⁶ impulsów na rundę. Ceną są 2 × 3309 B na rundę i założenie obliczeniowe, które musi stać w trakcie sesji: ML-DSA złamane na żywo albo podmieniony klucz w katalogu oznaczają udany MITM, a hybryda WC + ML-DSA nadal go wykrywa. Złamanie podpisu po sesji nic Ewie nie daje (0 bitów klucza), podczas gdy nagrany szyfrogram ML-KEM-768 oddaje po złamaniu cały sekret.
 
 [Bilans klucza dla GYS przy 25 i 50 km](figures/e03_key_balance.md): od 10⁸ impulsów do klucza końcowego, oraz pomiar wiedzy pasywnej Ewy, gdy wyciek z korekcji błędów zostanie (albo nie) odjęty.
 
