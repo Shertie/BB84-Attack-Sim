@@ -122,3 +122,9 @@ Przy Z5a widać różnicę między QKD a ML-KEM (ROADMAP, rozdz. 2.2a). QKD potr
 - **Konstrukcja:** optymalny atak indywidualny to fazowo-kowariantny kloner (częściowa zamiana o kąt η w podprzestrzeni {|01⟩, |10⟩}) w układzie obróconym o 120° wokół (1, 1, 1), tak by bazy Z i X leżały na równiku. Daje on D = sin²(η/2) u Boba i błąd Ewy ½ − √(D(1 − D)), czyli dokładnie granicę Fuchsa, dla wszystkich czterech stanów BB84.
 - **Weryfikacja:** QuTiP buduje tę samą operację niezależnie, z generatora i operatorów Pauliego. Wierności Boba i Ewy wynikają ze śladów częściowych, a prawdopodobieństwa wyników z projektorów.
 - **Zakres:** atak działa na pojedynczych fotonach i idealnych detektorach (granica teoretyczna), więc ma własny sampler zamiast toru impulsów.
+
+## 11. Uwierzytelnianie i MITM (F4)
+
+- **Wegman–Carter:** tag = (h_k(m) + r) mod p, gdzie h_k to hasz wielomianowy nad GF(p), p = 2⁶¹ − 1 (kawałki 60-bitowe plus długość wiadomości). Klucz k jest jeden na sesję, r to świeży klucz jednorazowy na tag. P-stwo fałszerstwa ≤ L/p, także po zobaczeniu prawdziwej pary (m, tag). Klucz pochodzi z puli współdzielonej przez Alice i Boba (`KeyPool`), której Ewa nie zna.
+- **Tryb:** domyślnie tag na transkrypt rundy (po jednym na kierunek, przed użyciem klucza), bo tag na każdą wiadomość zużywa więcej klucza, niż QKD wytwarza (ROADMAP, K19).
+- **MITM:** Ewa przecina światłowód i prowadzi dwa niezależne BB84. Bez uwierzytelniania oba się udają z QBER jak bez ataku, a Ewa zna oba klucze. Z uwierzytelnianiem jej podrobiony tag nie przechodzi weryfikacji i protokół się przerywa.

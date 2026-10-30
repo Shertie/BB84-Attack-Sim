@@ -55,3 +55,6 @@ class ClassicalChannel:
 
     def messages(self, prefix: str = "") -> list[Message]:
         return [m for m in self.transcript if m.kind.startswith(prefix)]
+
+    def close_round(self) -> None:
+        """Koniec rundy postprocessingu; kanał uwierzytelniony taguje tu transkrypt."""

@@ -96,6 +96,7 @@ def postprocess(
     if not check.passed:
         length = 0  # weryfikacja nieudana: klucz odrzucony
     pa = privacy_amplification(alice, ec.corrected, length, public, channel)
+    channel.close_round()  # uwierzytelnienie transkryptu przed użyciem klucza (F4.12)
 
     balance = KeyBalance(
         sifted=len(key),

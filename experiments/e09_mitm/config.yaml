@@ -1,0 +1,9 @@
+# E09: atak MITM i uwierzytelnianie Wegmana–Cartera (F4.11–F4.14), GYS, μ = 0,48.
+seed: 20261102
+mitm_length_km: 25.0
+mitm_pulses: 2_000_000
+forgery_primes: [7, 31, 127, 8191]
+forgery_trials: 50_000
+balance_round_pulses: [1_000_000, 10_000_000, 100_000_000]
+check_length_km: 25.0
+check_pulses: 10_000_000

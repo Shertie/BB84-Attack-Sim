@@ -6,7 +6,7 @@ Model: polaryzacyjny BB84, światłowód 1550 nm, źródło słabych impulsów k
 
 Pomost do kryptografii postkwantowej: kanał klasyczny można uwierzytelniać kluczem współdzielonym (Wegman–Carter), podpisem ML-DSA (FIPS 204) albo hybrydowo. Symulator pokazuje, kiedy takie uwierzytelnianie chroni klucz QKD, i porównuje QKD z ML-KEM w różnych modelach zagrożeń.
 
-> **Status:** fazy F1 i F2 zakończone (bramki G1 i G2 zaliczone), faza F3 zakończona (bramka G3 zaliczona): ataki 1 (intercept-resend), 2 (oślepianie detektorów z obronami) i 3 (PNS ze stanami decoy). Fizyka bez ataków zgadza się ze wzorami na 0–150 km, postprocessing daje identyczne klucze z poprawnie policzonym wyciekiem. W fazie F4 gotowe: skończony klucz (Tomamichel et al. 2012) i atak 6 (Fuchs), czyli komplet czterech wyników kontrolnych z planu; dalej MITM z uwierzytelnianiem PQC: [ROADMAP.md](ROADMAP.md).
+> **Status:** fazy F1 i F2 zakończone (bramki G1 i G2 zaliczone), faza F3 zakończona (bramka G3 zaliczona): ataki 1 (intercept-resend), 2 (oślepianie detektorów z obronami) i 3 (PNS ze stanami decoy). Fizyka bez ataków zgadza się ze wzorami na 0–150 km, postprocessing daje identyczne klucze z poprawnie policzonym wyciekiem. W fazie F4 gotowe: skończony klucz (Tomamichel et al. 2012) atak 6 (Fuchs), czyli komplet czterech wyników kontrolnych z planu, oraz atak 7 (MITM z uwierzytelnianiem Wegmana–Cartera); dalej uwierzytelnianie postkwantowe (wariant E): [ROADMAP.md](ROADMAP.md).
 
 ## Wyniki
 
@@ -37,6 +37,10 @@ Skończony klucz (Tomamichel et al. 2012): stopa rośnie z blokiem n w stronę g
 ![Atak indywidualny i ataki ogólne](figures/e08_individual_attack.png)
 
 Optymalny atak indywidualny (Fuchs et al. 1997) jako kloner fazowo-kowariantny, zweryfikowany w QuTiP: I_AB = I_AE przy D* = 14,64%, a próg dla ataków ogólnych (Shor–Preskill) to 11,00%. Zacieniony obszar to klucz, który byłby bezpieczny tylko wobec ataków indywidualnych.
+
+![MITM i uwierzytelnianie](figures/e09_mitm.png)
+
+Atak MITM ([tabela przebiegu](figures/e09_mitm.md)): bez uwierzytelniania Ewa zna klucze Alice i Boba przy QBER jak bez ataku; z Wegmanem–Carterem protokół przerywa się przy pierwszej wiadomości Ewy. Tag na każdą wiadomość zjada więcej klucza, niż QKD wytwarza; tag na transkrypt rundy kosztuje 122 bity.
 
 [Bilans klucza dla GYS przy 25 i 50 km](figures/e03_key_balance.md): od 10⁸ impulsów do klucza końcowego, oraz pomiar wiedzy pasywnej Ewy, gdy wyciek z korekcji błędów zostanie (albo nie) odjęty.
 
