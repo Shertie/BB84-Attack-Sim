@@ -116,3 +116,9 @@ Przy Z5a widać różnicę między QKD a ML-KEM (ROADMAP, rozdz. 2.2a). QKD potr
 - **Rachunek:** `postprocessing/finite_key.py` implementuje twierdzenie Tomamichela et al. 2012 w dwóch wydrukowanych wersjach (tekst główny i Methods) oraz uproszczenie z planu (Hoeffding na samej próbce) do porównania. Protokół asymetryczny: n bitów klucza, k bitów testu, z góry ustalony próg Q_tol, przerwanie, gdy QBER z próbki go przekroczy. M(n, k) = (√n + √k)².
 - **Robustness:** p-stwo przerwania uczciwego przebiegu liczone jest dokładnie z ogona rozkładu dwumianowego.
 - **Zakres:** tylko źródło jednofotonowe. Skończony klucz dla WCP z decoy (Lim et al. 2014) to F7 (ROADMAP, K3 i K17).
+
+## 10. Atak indywidualny (F4)
+
+- **Konstrukcja:** optymalny atak indywidualny to fazowo-kowariantny kloner (częściowa zamiana o kąt η w podprzestrzeni {|01⟩, |10⟩}) w układzie obróconym o 120° wokół (1, 1, 1), tak by bazy Z i X leżały na równiku. Daje on D = sin²(η/2) u Boba i błąd Ewy ½ − √(D(1 − D)), czyli dokładnie granicę Fuchsa, dla wszystkich czterech stanów BB84.
+- **Weryfikacja:** QuTiP buduje tę samą operację niezależnie, z generatora i operatorów Pauliego. Wierności Boba i Ewy wynikają ze śladów częściowych, a prawdopodobieństwa wyników z projektorów.
+- **Zakres:** atak działa na pojedynczych fotonach i idealnych detektorach (granica teoretyczna), więc ma własny sampler zamiast toru impulsów.

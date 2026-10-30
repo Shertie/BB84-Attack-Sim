@@ -15,7 +15,7 @@ help:
 
 install:
 	python3 -m venv .venv
-	$(PY) -m pip install -e '.[dev,crosscheck]'
+	$(PY) -m pip install -e '.[dev,crosscheck,verify]'
 
 lint:
 	$(PY) -m ruff check .

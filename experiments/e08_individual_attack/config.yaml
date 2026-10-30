@@ -1,0 +1,4 @@
+# E08: optymalny atak indywidualny (Fuchs et al. 1997) vs ataki ogólne (Shor–Preskill), F4.10.
+seed: 20261102
+errors: [0.0, 0.02, 0.04, 0.06, 0.08, 0.10, 0.12, 0.14, 0.16, 0.18, 0.20, 0.22, 0.25, 0.30]
+photons: 400_000
