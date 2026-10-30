@@ -10,6 +10,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from qkdsim.defenses.random_attenuation import AttenuationTally
 from qkdsim.pipeline import Counts, Table
 from qkdsim.protocol import SiftedKey
 
@@ -97,4 +98,14 @@ def eve_known_fraction(counts: Counts, intensity: int = 0) -> Estimate:
     """Odsetek bitów po siftingu, które Ewa zna na pewno (dla intercept-resend: I_AE)."""
     return Estimate(
         _matched(counts.eve_known[intensity], None), _matched(counts.detected[intensity], None)
+    )
+
+
+def attenuation_tally(counts: Counts, intensity: int = 0) -> AttenuationTally:
+    """Dane do testu losowego tłumienia (defenses/random_attenuation.py), wszystkie bazy."""
+    return AttenuationTally(
+        sent=int(counts.sent[intensity].sum()),
+        detected=int(counts.detected[intensity].sum()),
+        sent_attenuated=int(counts.sent_attenuated[intensity].sum()),
+        detected_attenuated=int(counts.detected_attenuated[intensity].sum()),
     )

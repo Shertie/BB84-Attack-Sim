@@ -6,7 +6,7 @@ Model: polaryzacyjny BB84, światłowód 1550 nm, źródło słabych impulsów k
 
 Pomost do kryptografii postkwantowej: kanał klasyczny można uwierzytelniać kluczem współdzielonym (Wegman–Carter), podpisem ML-DSA (FIPS 204) albo hybrydowo. Symulator pokazuje, kiedy takie uwierzytelnianie chroni klucz QKD, i porównuje QKD z ML-KEM w różnych modelach zagrożeń.
 
-> **Status:** fazy F1 i F2 zakończone (bramki G1 i G2 zaliczone), w fazie F3 gotowy atak 1 (intercept-resend). Fizyka bez ataków zgadza się ze wzorami na 0–150 km, postprocessing daje identyczne klucze z poprawnie policzonym wyciekiem. Kolejne ataki: [ROADMAP.md](ROADMAP.md).
+> **Status:** fazy F1 i F2 zakończone (bramki G1 i G2 zaliczone), w fazie F3 gotowe ataki 1 (intercept-resend) i 2 (oślepianie detektorów z obronami). Fizyka bez ataków zgadza się ze wzorami na 0–150 km, postprocessing daje identyczne klucze z poprawnie policzonym wyciekiem. Kolejne ataki: [ROADMAP.md](ROADMAP.md).
 
 ## Wyniki
 
@@ -22,9 +22,13 @@ Cascade (4 przebiegi) ujawnia 1,11–1,19 razy więcej bitów niż granica Shann
 
 Atak intercept-resend przy 25 km: QBER rośnie do ~26,5% (fizyka wykrywa podsłuch), a Ewa tuż za Alice zdradza się dodatkowo spadkiem zysku o 20%. Przy pełnym ataku Ewa zna połowę bitów po siftingu na pewno, a zgaduje 75%. QBER(p) dla źródła WCP leży poniżej prostej z planu, bo impulsy przechwycone są wykrywane rzadziej.
 
+![Oślepianie detektorów](figures/e05_blinding.png)
+
+Oślepianie detektorów (progi Clavis2 z Lydersena et al.): skalibrowana Ewa przy mocy impulsu 950–1300 µW zostawia QBER i zysk bez zmian, a zna 100% klucza. Losowe tłumienie 3 dB w 10% bramek wykrywa ją z z ≈ −35. Żadna moc impulsu nie przechodzi jednocześnie testu QBER i testu tłumienia. Krzywe ROC obu obron: [figures/e05_blinding_roc.png](figures/e05_blinding_roc.png).
+
 [Bilans klucza dla GYS przy 25 i 50 km](figures/e03_key_balance.md): od 10⁸ impulsów do klucza końcowego, oraz pomiar wiedzy pasywnej Ewy, gdy wyciek z korekcji błędów zostanie (albo nie) odjęty.
 
-Wszystkie wyniki odtwarza `make figures` (około 2 min na 12 rdzeniach).
+Wszystkie wyniki odtwarza `make figures` (około 2,5 min na 12 rdzeniach).
 
 ## Szybki start
 

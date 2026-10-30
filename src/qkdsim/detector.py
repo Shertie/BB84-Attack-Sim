@@ -1,12 +1,17 @@
-"""Para progowych detektorów SPAD za PBS Boba (F1.7).
+"""Para progowych detektorów SPAD za PBS Boba (F1.7, tryb liniowy F3.5).
 
-Model (docs/model.md, rozdz. 4): fotony rozdzielają się na detektory według reguły Borna,
-każdy jest wykryty z prawdopodobieństwem `efficiency`, a każdy detektor ma niezależne ciemne
-zliczenia z prawdopodobieństwem `dark_count` na bramkę.
+Tryb Geigera (docs/model.md, rozdz. 4): fotony rozdzielają się na detektory według reguły
+Borna, każdy jest wykryty z p-stwem `efficiency`, a każdy detektor ma niezależne ciemne
+zliczenia z p-stwem `dark_count` na bramkę. Impuls klasyczny o mocy P to średnio
+P·`gate_s`/hν fotonów, więc w trybie Geigera jasne światło po prostu wywołuje kliknięcie.
 
-Na razie bez trybu liniowego (oślepianie, F3), krzywych sprawności w czasie (time-shift, F6)
-i czasu martwego. Pole `Pulses.t` jest ignorowane, a jasne impulsy są odrzucane z błędem
-zamiast liczone po cichu źle.
+Tryb liniowy (oślepianie, Lydersen et al. 2010): ciągłe światło o mocy ≥ `blind_power_w`
+zbija napięcie na diodzie poniżej przebicia. Oślepiony detektor nie widzi pojedynczych fotonów
+ani nie ma ciemnych zliczeń, a klika tylko od impulsu klasycznego: nigdy dla P ≤ P_never,
+zawsze dla P ≥ P_always, pomiędzy z p-stwem rosnącym liniowo (to założenie modelu; artykuł
+podaje tylko oba progi).
+
+Pole `Pulses.t` jest na razie ignorowane (krzywe sprawności w czasie: atak 4, F6).
 """
 
 from dataclasses import dataclass
@@ -19,14 +24,58 @@ from qkdsim.pulses import Pulses
 from qkdsim.rng import Bits
 
 Clicks = npt.NDArray[np.bool_]
+Floats = npt.NDArray[np.float64]
+
+PHOTON_ENERGY_J = 6.62607015e-34 * 299_792_458.0 / 1550e-9  # hν przy 1550 nm
+
+
+@dataclass(frozen=True)
+class LinearMode:
+    """Progi trybu liniowego dla detektora 0 i 1 [W, moc na wejściu Boba]."""
+
+    blind_power_w: tuple[float, float]  # ciągłe światło, które oślepia detektor
+    never_w: tuple[float, float]  # impuls nie wywołuje kliknięcia, gdy P ≤ P_never
+    always_w: tuple[float, float]  # impuls zawsze wywołuje kliknięcie, gdy P ≥ P_always
+
+    def __post_init__(self) -> None:
+        for i in (0, 1):
+            if not 0.0 < self.never_w[i] <= self.always_w[i]:
+                raise ValueError("wymagane 0 < P_never ≤ P_always dla obu detektorów")
+            if self.blind_power_w[i] <= 0.0:
+                raise ValueError("moc oślepiania musi być dodatnia")
+
+    def response(self, power: Floats, detector: int) -> Floats:
+        """P-stwo kliknięcia oślepionego detektora od impulsu o mocy `power`."""
+        never, always = self.never_w[detector], self.always_w[detector]
+        if always == never:
+            return (power >= always).astype(np.float64)
+        return np.clip((power - never) / (always - never), 0.0, 1.0)
+
+    @property
+    def perfect_window_w(self) -> tuple[float, float]:
+        """[max P_always, 2·min P_never]: moc impulsu wyzwalającego dla doskonałego ataku.
+
+        Pusty (dolna granica > górna), gdy nie zachodzi warunek Lydersena (wzór (1)):
+        max P_always < 2·min P_never.
+        """
+        return max(self.always_w), 2.0 * min(self.never_w)
+
+
+# Lydersen et al. 2010, Clavis2: oślepienie przy 397 µW (detektor 0) i 765 µW (detektor 1)
+# światła ciągłego; impuls wyzwalający: P_never = 647 / 697 µW, P_always = 808 / 932 µW.
+CLAVIS2 = LinearMode(
+    blind_power_w=(397e-6, 765e-6), never_w=(647e-6, 697e-6), always_w=(808e-6, 932e-6)
+)
 
 
 @dataclass(frozen=True)
 class DetectorPair:
-    """Dwa identyczne detektory progowe."""
+    """Dwa detektory progowe; `linear` = None oznacza detektory, których nie da się oślepić."""
 
     efficiency: float  # p-stwo wykrycia fotonu, ze stratami wewnątrz Boba (η_Bob dla GYS)
     dark_count: float  # p-stwo ciemnego zliczenia na detektor i bramkę
+    linear: LinearMode | None = None
+    gate_s: float = 2.5e-9  # długość bramki i impulsu wyzwalającego [s]
 
     def __post_init__(self) -> None:
         if not 0.0 < self.efficiency <= 1.0:
@@ -34,20 +83,45 @@ class DetectorPair:
         if not 0.0 <= self.dark_count < 1.0:
             raise ValueError(f"dark_count musi być w [0, 1), jest {self.dark_count}")
 
+    def blinded(self, cw_power: Floats, detector: int) -> npt.NDArray[np.bool_]:
+        if self.linear is None:
+            return np.zeros(cw_power.shape, dtype=np.bool_)
+        return cw_power >= self.linear.blind_power_w[detector]
+
+    def silent_probability(
+        self,
+        photons: npt.NDArray[np.int64],
+        classical_power: Floats,
+        blinded: npt.NDArray[np.bool_],
+        detector: int,
+    ) -> Floats:
+        """P-stwo, że detektor nie kliknie: `photons` fotonów kwantowych plus impuls klasyczny."""
+        classical_photons = classical_power * self.gate_s / PHOTON_ENERGY_J
+        geiger: Floats = np.asarray(
+            (1.0 - self.dark_count)
+            * (1.0 - self.efficiency) ** photons
+            * np.exp(-self.efficiency * classical_photons),
+            dtype=np.float64,
+        )
+        if self.linear is None or not blinded.any():
+            return geiger
+        return np.where(blinded, 1.0 - self.linear.response(classical_power, detector), geiger)
+
     def clicks(
         self, pulses: Pulses, bob_bases: Bits, nature: np.random.Generator
     ) -> tuple[Clicks, Clicks]:
         """Kliknięcia detektora 0 i detektora 1 dla każdego impulsu."""
-        if not np.all(np.isnan(pulses.power)):
-            raise NotImplementedError("jasne impulsy wymagają trybu liniowego detektora (F3)")
         p0 = prob_detector0(pulses.theta, analyzer_angle(bob_bases))
         to0 = nature.binomial(pulses.n, p0)
         to1 = pulses.n - to0
-        # Detektor nie klika, gdy nie wykrył żadnego fotonu i nie miał ciemnego zliczenia.
-        miss = 1.0 - self.efficiency
-        silent = 1.0 - self.dark_count
+        classical = np.nan_to_num(pulses.power, nan=0.0)
+        silent0 = self.silent_probability(to0, classical * p0, self.blinded(pulses.cw_power, 0), 0)
+        silent1 = self.silent_probability(
+            to1, classical * (1.0 - p0), self.blinded(pulses.cw_power, 1), 1
+        )
+        # Porównanie z p-stwem ciszy (u ≥ cisza), jak w F1: te same ziarna dają te same wyniki.
         u = nature.random((2, len(pulses)))
-        return u[0] >= silent * miss**to0, u[1] >= silent * miss**to1
+        return u[0] >= silent0, u[1] >= silent1
 
 
 def dark_count_per_detector(background_per_pulse: float) -> float:

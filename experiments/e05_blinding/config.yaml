@@ -1,0 +1,15 @@
+# E05: oślepianie detektorów (Lydersen et al. 2010, progi Clavis2) przy 25 km, GYS (F3.8–F3.9).
+seed: 20261102
+mu: 0.48
+length_km: 25.0
+trigger_powers_uw: [300, 400, 500, 600, 700, 800, 850, 900, 950, 1000, 1100, 1200, 1300, 1400, 1500, 1700, 1900, 2200]
+pulses: 4_000_000
+attenuator_fraction: 0.1
+attenuator_factor: 0.5
+roc_trigger_uw: 1100
+roc_session_pulses: [10_000, 30_000, 100_000]
+roc_sessions: 100
+monitor_tap: 0.01
+monitor_noise_w: 1.0e-8
+monitor_cw_w: [5.0e-7, 1.0e-6, 2.0e-6, 1.08e-3]
+monitor_windows: 2000

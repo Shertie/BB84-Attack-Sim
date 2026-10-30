@@ -18,6 +18,7 @@ import numpy as np
 import numpy.typing as npt
 
 from qkdsim.channel import FiberChannel
+from qkdsim.defenses.random_attenuation import RandomAttenuator
 from qkdsim.detector import DetectorPair
 from qkdsim.eve import ChannelAttack, EveLog
 from qkdsim.protocol import AliceRecord, BobRecord, SiftedKey, bob_measure, sift
@@ -37,6 +38,7 @@ class Link:
     channel: FiberChannel
     detectors: DetectorPair
     eve: ChannelAttack | None = None
+    attenuator: RandomAttenuator | None = None  # obrona Boba przed oślepianiem (F3.9)
 
 
 def simulate(
@@ -52,7 +54,12 @@ def simulate(
         pulses = before.transmit(pulses, streams.nature)
         pulses, eve = link.eve.intercept(pulses, streams.eve)
         pulses = after.transmit(pulses, streams.nature)
-    bob = bob_measure(pulses, link.detectors, streams.bob, streams.nature)
+    if link.attenuator is None:
+        bob = bob_measure(pulses, link.detectors, streams.bob, streams.nature)
+    else:
+        pulses, attenuated = link.attenuator.apply(pulses, streams.bob, streams.nature)
+        bob = bob_measure(pulses, link.detectors, streams.bob, streams.nature)
+        bob = dataclasses.replace(bob, attenuated=attenuated)
     return alice, bob, eve
 
 
@@ -80,6 +87,8 @@ class Counts:
     - `eve_measured`: Ewa zmierzyła impuls;
     - `eve_correct`: jej wynik równa się bitowi Alice;
     - `eve_known`: mierzyła w bazie Alice, więc po siftingu zna bit na pewno.
+
+    `sent_attenuated` i `detected_attenuated` liczą bramki z tłumikiem Boba (obrona F3.9).
     """
 
     sent: Table
@@ -89,6 +98,8 @@ class Counts:
     eve_measured: Table
     eve_correct: Table
     eve_known: Table
+    sent_attenuated: Table
+    detected_attenuated: Table
 
     @classmethod
     def zeros(cls, n_intensities: int) -> Self:
@@ -109,6 +120,9 @@ class Counts:
 
         eve = EveLog.empty(len(cell)) if eve is None else eve
         measured = bob.detected & eve.measured
+        attenuated = (
+            np.zeros(len(cell), dtype=np.bool_) if bob.attenuated is None else bob.attenuated
+        )
         return cls(
             sent=table(None),
             detected=table(bob.detected),
@@ -117,6 +131,8 @@ class Counts:
             eve_measured=table(measured),
             eve_correct=table(measured & (eve.bit == alice.bits)),
             eve_known=table(measured & (eve.basis == alice.bases)),
+            sent_attenuated=table(attenuated),
+            detected_attenuated=table(bob.detected & attenuated),
         )
 
     def __add__(self, other: Self) -> Self:

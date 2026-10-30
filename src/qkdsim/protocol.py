@@ -35,6 +35,7 @@ class BobRecord:
     bits: Bits
     detected: npt.NDArray[np.bool_]
     double: npt.NDArray[np.bool_]  # kliknęły oba detektory; bit wylosowany (squashing)
+    attenuated: npt.NDArray[np.bool_] | None = None  # bramki z tłumikiem Boba (obrona F3.9)
 
 
 @dataclass(frozen=True, eq=False)

@@ -1,7 +1,7 @@
 """Impulsy jako struktura tablic (ADR 0001).
 
 Pulses niesie pełną prawdę o każdym impulsie. Funkcje fizyki czytają tylko pola fizyczne
-(n, theta, t, power); bit, basis i intensity to etykiety Alice potrzebne do metryk.
+(n, theta, t, power, cw_power); bit, basis i intensity to etykiety Alice potrzebne do metryk.
 Estymacje Alice i Boba nie przyjmują Pulses, tylko własne rekordy (protocol.py).
 """
 
@@ -20,6 +20,7 @@ _DTYPES: dict[str, type[np.generic]] = {
     "theta": np.float64,
     "t": np.float64,
     "power": np.float64,
+    "cw_power": np.float64,
 }
 
 
@@ -33,7 +34,10 @@ class Pulses:
     intensity: npt.NDArray[np.uint8]  # indeks w tabeli intensywności źródła
     theta: npt.NDArray[np.float64]  # kąt polaryzacji [rad]
     t: npt.NDArray[np.float64]  # przesunięcie czasu [ns]
-    power: npt.NDArray[np.float64]  # moc klasyczna [W]; NaN dla impulsów kwantowych
+    power: npt.NDArray[np.float64]  # moc szczytowa impulsu klasycznego [W]; NaN = impuls kwantowy
+    cw_power: npt.NDArray[
+        np.float64
+    ]  # ciągłe światło na wejściu Boba w tej bramce [W] (oślepianie)
 
     def __post_init__(self) -> None:
         size: int | None = None
@@ -68,6 +72,7 @@ class Pulses:
         intensity: npt.ArrayLike | None = None,
         t: npt.ArrayLike | None = None,
         power: npt.ArrayLike | None = None,
+        cw_power: npt.ArrayLike | None = None,
     ) -> Self:
         """Tworzy impulsy z konwersją typów; brakujące pola dostają wartości domyślne."""
         n_arr = _convert(n, np.int64, "n")
@@ -84,6 +89,9 @@ class Pulses:
             ),
             t=np.zeros(size) if t is None else _convert(t, np.float64, "t"),
             power=np.full(size, np.nan) if power is None else _convert(power, np.float64, "power"),
+            cw_power=(
+                np.zeros(size) if cw_power is None else _convert(cw_power, np.float64, "cw_power")
+            ),
         )
 
     def replace(self, **changes: npt.NDArray[Any]) -> Self:

@@ -133,12 +133,6 @@ def test_vacuum_pulses_click_only_through_dark_counts() -> None:
     assert _within((click0 & click1).mean(), p_d**2, math.sqrt(p_d**2 / N))
 
 
-def test_bright_pulses_are_rejected_until_linear_mode_exists() -> None:
-    pulses = Pulses.build(n=[0], bit=[0], basis=[0], theta=[0.0], power=[1e-3])
-    with pytest.raises(NotImplementedError, match="liniowego"):
-        DetectorPair(0.5, 0.0).clicks(pulses, np.zeros(1, np.uint8), np.random.default_rng(0))
-
-
 def test_double_clicks_get_random_bits() -> None:
     """Przy samych ciemnych zliczeniach p_d = 1/2 podwójne kliknięcia to 1/4 impulsów."""
     streams = RandomStreams.from_seed(SEED)
