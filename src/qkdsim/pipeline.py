@@ -9,6 +9,7 @@
 Wszystkie warstwy wywołują tę samą funkcję `simulate`, więc fizyka jest jedna.
 """
 
+import dataclasses
 from concurrent.futures import ProcessPoolExecutor
 from dataclasses import dataclass
 from typing import Self
@@ -18,6 +19,7 @@ import numpy.typing as npt
 
 from qkdsim.channel import FiberChannel
 from qkdsim.detector import DetectorPair
+from qkdsim.eve import ChannelAttack, EveLog
 from qkdsim.protocol import AliceRecord, BobRecord, SiftedKey, bob_measure, sift
 from qkdsim.rng import RandomStreams
 from qkdsim.source import WCPSource
@@ -29,31 +31,42 @@ Table = npt.NDArray[np.int64]
 
 @dataclass(frozen=True)
 class Link:
-    """Fizyczna konfiguracja łącza bez Ewy."""
+    """Fizyczna konfiguracja łącza, opcjonalnie z Ewą w światłowodzie."""
 
     source: WCPSource
     channel: FiberChannel
     detectors: DetectorPair
+    eve: ChannelAttack | None = None
 
 
-def simulate(link: Link, n_pulses: int, streams: RandomStreams) -> tuple[AliceRecord, BobRecord]:
-    """Jedna paczka impulsów przez cały tor."""
+def simulate(
+    link: Link, n_pulses: int, streams: RandomStreams
+) -> tuple[AliceRecord, BobRecord, EveLog]:
+    """Jedna paczka impulsów przez cały tor. Bez Ewy jej log jest pusty."""
     alice, pulses = link.source.emit(n_pulses, streams.alice, streams.nature)
-    pulses = link.channel.transmit(pulses, streams.nature)
+    if link.eve is None:
+        pulses = link.channel.transmit(pulses, streams.nature)
+        eve = EveLog.empty(n_pulses)
+    else:
+        before, after = link.channel.split(link.eve.position, link.eve.lossless_after)
+        pulses = before.transmit(pulses, streams.nature)
+        pulses, eve = link.eve.intercept(pulses, streams.eve)
+        pulses = after.transmit(pulses, streams.nature)
     bob = bob_measure(pulses, link.detectors, streams.bob, streams.nature)
-    return alice, bob
+    return alice, bob, eve
 
 
 @dataclass(frozen=True)
 class BitsRun:
     alice: AliceRecord
     bob: BobRecord
+    eve: EveLog
     key: SiftedKey
 
 
 def run_bits(link: Link, n_pulses: int, streams: RandomStreams) -> BitsRun:
-    alice, bob = simulate(link, n_pulses, streams)
-    return BitsRun(alice=alice, bob=bob, key=sift(alice, bob))
+    alice, bob, eve = simulate(link, n_pulses, streams)
+    return BitsRun(alice=alice, bob=bob, eve=eve, key=sift(alice, bob))
 
 
 @dataclass(frozen=True, eq=False)
@@ -62,20 +75,30 @@ class Counts:
 
     `errors` liczy wykryte impulsy, w których bit Boba różni się od bitu Alice, także
     w niezgodnych bazach; QBER bierze się tylko z przekątnej baz.
+
+    Liczniki Ewy dotyczą wykrytych impulsów:
+    - `eve_measured`: Ewa zmierzyła impuls;
+    - `eve_correct`: jej wynik równa się bitowi Alice;
+    - `eve_known`: mierzyła w bazie Alice, więc po siftingu zna bit na pewno.
     """
 
     sent: Table
     detected: Table
     errors: Table
     double: Table
+    eve_measured: Table
+    eve_correct: Table
+    eve_known: Table
 
     @classmethod
     def zeros(cls, n_intensities: int) -> Self:
         shape = (n_intensities, 2, 2)
-        return cls(*(np.zeros(shape, dtype=np.int64) for _ in range(4)))
+        return cls(*(np.zeros(shape, dtype=np.int64) for _ in dataclasses.fields(cls)))
 
     @classmethod
-    def from_records(cls, alice: AliceRecord, bob: BobRecord, n_intensities: int) -> Self:
+    def from_records(
+        cls, alice: AliceRecord, bob: BobRecord, n_intensities: int, eve: EveLog | None = None
+    ) -> Self:
         cell = (alice.intensity.astype(np.intp) * 2 + alice.bases) * 2 + bob.bases
         size = n_intensities * 4
 
@@ -84,19 +107,24 @@ class Counts:
             counts = np.bincount(selected, minlength=size).astype(np.int64)
             return counts.reshape(n_intensities, 2, 2)
 
+        eve = EveLog.empty(len(cell)) if eve is None else eve
+        measured = bob.detected & eve.measured
         return cls(
             sent=table(None),
             detected=table(bob.detected),
             errors=table(bob.detected & (alice.bits != bob.bits)),
             double=table(bob.double),
+            eve_measured=table(measured),
+            eve_correct=table(measured & (eve.bit == alice.bits)),
+            eve_known=table(measured & (eve.basis == alice.bases)),
         )
 
     def __add__(self, other: Self) -> Self:
         return type(self)(
-            sent=self.sent + other.sent,
-            detected=self.detected + other.detected,
-            errors=self.errors + other.errors,
-            double=self.double + other.double,
+            **{
+                f.name: getattr(self, f.name) + getattr(other, f.name)
+                for f in dataclasses.fields(self)
+            }
         )
 
     @property
@@ -117,8 +145,8 @@ def run_counts(
     done = 0
     while done < n_pulses:
         size = min(batch_size, n_pulses - done)
-        alice, bob = simulate(link, size, streams)
-        total = total + Counts.from_records(alice, bob, n_intensities)
+        alice, bob, eve = simulate(link, size, streams)
+        total = total + Counts.from_records(alice, bob, n_intensities, eve)
         done += size
     return total
 
@@ -182,7 +210,7 @@ def run_sifted(
     done = 0
     while done < n_pulses:
         size = min(batch_size, n_pulses - done)
-        alice, bob = simulate(link, size, streams)
+        alice, bob, _eve = simulate(link, size, streams)
         key = sift(alice, bob)
         parts.append(SiftedKey(index=key.index + done, alice=key.alice, bob=key.bob))
         done += size

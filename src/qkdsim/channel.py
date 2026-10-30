@@ -2,6 +2,7 @@
 
 import math
 from dataclasses import dataclass
+from typing import Self
 
 import numpy as np
 
@@ -38,3 +39,19 @@ class FiberChannel:
             n=nature.binomial(pulses.n, self.transmittance),
             theta=pulses.theta + self.rotation,
         )
+
+    def split(self, position: float, lossless_after: bool = False) -> tuple[Self, Self]:
+        """Dwa odcinki: do Ewy (bez błędu optyki) i od Ewy do Boba (z błędem optyki).
+
+        Złożenie obu odcinków ma tę samą transmisję co cały kanał, bo przerzedzanie
+        dwumianowe się składa: Binomial(Binomial(n, T₁), T₂) ~ Binomial(n, T₁T₂).
+        """
+        if not 0.0 <= position <= 1.0:
+            raise ValueError(f"position musi być w [0, 1], jest {position}")
+        before = type(self)(self.length_km * position, self.alpha_db_per_km, 0.0)
+        after = type(self)(
+            self.length_km * (1.0 - position),
+            0.0 if lossless_after else self.alpha_db_per_km,
+            self.misalignment,
+        )
+        return before, after

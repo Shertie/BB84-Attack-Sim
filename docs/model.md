@@ -98,3 +98,10 @@ Przy Z5a widać różnicę między QKD a ML-KEM (ROADMAP, rozdz. 2.2a). QKD potr
 - **Hasz:** macierz Toeplitza T[i, j] = s[i − j + n − 1]; ta sama rodzina 2-uniwersalna służy do weryfikacji (64 bity, ε_cor = 2⁻⁶⁴) i do wzmacniania prywatności.
 - **Długość klucza (asymptotycznie):** ℓ = ⌊n·s·[1 − h(e_ph)] − leak_EC − leak_ver⌋. Dla źródła jednofotonowego s = 1 i e_ph to błąd fazowy. Dla WCP s = Q₁/Q_μ i e_ph = e₁ (GLLP). Poprawki skończonego klucza dochodzą w F4.
 - **Wiedza pasywnej Ewy:** dokładnie dim(span P ∩ span T) bitów klucza końcowego, gdzie P to ujawnione funkcje liniowe, a T macierz wzmacniania prywatności. Dlatego zapomniany wyciek daje Ewie co najmniej ℓ − (n − rank P) bitów bez żadnego ataku na kanał kwantowy.
+
+## 8. Ataki w światłowodzie (F3)
+
+- **Położenie Ewy:** parametr `position` ∈ [0, 1] dzieli światłowód na odcinek do Ewy (bez błędu optyki) i od Ewy do Boba (z błędem optyki). Złożenie odcinków ma tę samą transmisję co cały kanał. Błąd optyki jest po stronie Boba, więc Ewa mierzy stan Alice bez obrotu.
+- **Wiedza Ewy:** `EveLog` (impulsy zmierzone, baza, wynik) jest osobny od rekordów Alice i Boba. `Counts` liczy wśród wykrytych impulsów te zmierzone przez Ewę, te z trafnym wynikiem i te, które zna na pewno (mierzyła w bazie Alice).
+- **Intercept-resend (atak 1):** Ewa mierzy w losowej bazie idealnym detektorem i wysyła 1 foton; impuls bez fotonów w jej punkcie zostaje próżnią. Model analityczny w `analysis/intercept_resend.py` jest dokładną wartością oczekiwaną dla symulatora (mieszanina: impuls nieprzechwycony, próżnia u Ewy, foton w bazie Alice, foton w bazie sprzężonej).
+- **QBER(p) dla WCP nie jest liniowe** (ROADMAP, K14): prosta e_d + p(¼ − e_d/2) jest dokładna dla p ∈ {0, 1}, a pomiędzy obowiązuje tylko przy μT₁ ≪ 1.

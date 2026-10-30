@@ -83,3 +83,18 @@ def double_click_rate(counts: Counts, intensity: int = 0, matched: bool = True) 
     if matched:
         return Estimate(_matched(double, None), _matched(sent, None))
     return Estimate(int(double[0, 1] + double[1, 0]), int(sent[0, 1] + sent[1, 0]))
+
+
+def eve_guess_accuracy(counts: Counts, intensity: int = 0) -> Estimate:
+    """Odsetek zmierzonych przez Ewę i wykrytych impulsów, w których jej bit = bit Alice."""
+    return Estimate(
+        _matched(counts.eve_correct[intensity], None),
+        _matched(counts.eve_measured[intensity], None),
+    )
+
+
+def eve_known_fraction(counts: Counts, intensity: int = 0) -> Estimate:
+    """Odsetek bitów po siftingu, które Ewa zna na pewno (dla intercept-resend: I_AE)."""
+    return Estimate(
+        _matched(counts.eve_known[intensity], None), _matched(counts.detected[intensity], None)
+    )
