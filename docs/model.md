@@ -20,7 +20,7 @@ Dokument referencyjny dla kodu w `src/qkdsim/`. Zmiana modelu = zmiana tego plik
 | Tłumienie | dB/km (α), dB (straty skupione, izolacja) |
 | Moc | W |
 | Prawdopodobieństwa | nazwa parametru mówi, czego dotyczą: `*_per_pulse`, `*_per_gate`, `*_per_detector` |
-| Losowość | wyłącznie przez wstrzykiwany `RandomSource` (ADR 0003); żadnych globalnych `np.random.*` |
+| Losowość | wybory Alice i Boba przez wstrzykiwany `RandomSource`; przyroda (liczba fotonów, wynik pomiaru) i Ewa mają osobne generatory. Wszystkie cztery strumienie pochodzą z jednego ziarna (`RandomStreams.from_seed`, ADR 0003); żadnych globalnych `np.random.*` |
 | Wyniki | każdy eksperyment zapisuje konfigurację, ziarno, hash commita i wersje bibliotek |
 
 ## 3. Parametry startowe: eksperyment GYS
@@ -47,7 +47,7 @@ Wartości kontrolne wynikające z tych parametrów: ROADMAP.md, rozdz. 3.2.
 
 1. **Źródło:** liczba fotonów n ~ Poisson(μ_i) dla intensywności wybranej w danym impulsie. n jest zapisywane, bo potrzebuje go atak PNS, ale Alice i Bob go nie znają (ADR 0001).
 2. **Kanał:** liczba ocalałych fotonów ~ Binomial(n, 10^(−αL/10)). Błąd optyki to obrót polaryzacji o kąt θ_e z sin²θ_e = e_d.
-3. **Bob:** wybór bazy, PBS, rozkład fotonów na detektory ~ Binomial(n, cos²(θ − φ)), każdy foton wykryty z prawdopodobieństwem η, a do tego niezależne ciemne zliczenia p_d na detektor i bramkę.
+3. **Bob:** wybór bazy, PBS (φ = 0 dla Z, π/4 dla X), rozkład fotonów na detektory ~ Binomial(n, cos²(θ − φ)). Prawdopodobieństwo liczy się jako (1 + cos 2(θ − φ))/2, co daje dokładnie 0 i 1 dla stanów z bazy analizatora; wprost liczone cos² zostawiłoby resztę rzędu 10⁻³³. Dalej: każdy foton wykryty z prawdopodobieństwem η, a do tego niezależne ciemne zliczenia p_d na detektor i bramkę.
 4. **Klasyfikacja zdarzeń:** brak kliknięcia, pojedyncze, podwójne. Podwójne kliknięcie dostaje losowy bit i nie jest odrzucane (squashing, Beaudry, Moroder, Lütkenhaus 2008).
 5. **Później (F3, F6):** tryb liniowy detektora (oślepianie), krzywe sprawności w czasie η_i(t) (time-shift), czas martwy i afterpulsing (F7).
 

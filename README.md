@@ -6,7 +6,7 @@ Model: polaryzacyjny BB84, światłowód 1550 nm, źródło słabych impulsów k
 
 Pomost do kryptografii postkwantowej: kanał klasyczny można uwierzytelniać kluczem współdzielonym (Wegman–Carter), podpisem ML-DSA (FIPS 204) albo hybrydowo. Symulator pokazuje, kiedy takie uwierzytelnianie chroni klucz QKD, i porównuje QKD z ML-KEM w różnych modelach zagrożeń.
 
-> **Status:** faza F0 (szkielet repozytorium). Fizyka, ataki i wykresy kontrolne powstają w kolejnych fazach, patrz [ROADMAP.md](ROADMAP.md).
+> **Status:** faza F1. Etap 1 (idealny BB84: `rng`, `pulses`, `protocol`, `metrics`) jest gotowy; realistyczny kanał i detektory (etap 2), ataki i wykresy kontrolne powstają w kolejnych krokach, patrz [ROADMAP.md](ROADMAP.md).
 
 ## Szybki start
 
