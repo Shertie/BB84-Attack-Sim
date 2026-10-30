@@ -6,7 +6,7 @@ Model: polaryzacyjny BB84, światłowód 1550 nm, źródło słabych impulsów k
 
 Pomost do kryptografii postkwantowej: kanał klasyczny można uwierzytelniać kluczem współdzielonym (Wegman–Carter), podpisem ML-DSA (FIPS 204) albo hybrydowo. Symulator pokazuje, kiedy takie uwierzytelnianie chroni klucz QKD, i porównuje QKD z ML-KEM w różnych modelach zagrożeń.
 
-> **Status:** fazy F1 i F2 zakończone (bramki G1 i G2 zaliczone), w fazie F3 gotowe ataki 1 (intercept-resend) i 2 (oślepianie detektorów z obronami). Fizyka bez ataków zgadza się ze wzorami na 0–150 km, postprocessing daje identyczne klucze z poprawnie policzonym wyciekiem. Kolejne ataki: [ROADMAP.md](ROADMAP.md).
+> **Status:** fazy F1 i F2 zakończone (bramki G1 i G2 zaliczone), faza F3 zakończona (bramka G3 zaliczona): ataki 1 (intercept-resend), 2 (oślepianie detektorów z obronami) i 3 (PNS ze stanami decoy). Fizyka bez ataków zgadza się ze wzorami na 0–150 km, postprocessing daje identyczne klucze z poprawnie policzonym wyciekiem. Kolejna faza (F4: skończony klucz, atak 6, MITM z uwierzytelnianiem PQC): [ROADMAP.md](ROADMAP.md).
 
 ## Wyniki
 
@@ -26,9 +26,13 @@ Atak intercept-resend przy 25 km: QBER rośnie do ~26,5% (fizyka wykrywa podsłu
 
 Oślepianie detektorów (progi Clavis2 z Lydersena et al.): skalibrowana Ewa przy mocy impulsu 950–1300 µW zostawia QBER i zysk bez zmian, a zna 100% klucza. Losowe tłumienie 3 dB w 10% bramek wykrywa ją z z ≈ −35. Żadna moc impulsu nie przechodzi jednocześnie testu QBER i testu tłumienia. Krzywe ROC obu obron: [figures/e05_blinding_roc.png](figures/e05_blinding_roc.png).
 
+![PNS i stany decoy](figures/e06_decoy_pns.png)
+
+Atak PNS i stany decoy: GLLP bez decoy kończy się przy ~40 km, decoy vacuum+weak sięga ~140 km (punkty: estymata z Monte Carlo). Za odległością krytyczną 32,8 km Ewa zna 98–100% klucza przy niezmienionym QBER i zysku. Rachunek naiwny („wszystkie detekcje są jednofotonowe”) daje wtedy dodatnią stopę, a decoy przerywa protokół.
+
 [Bilans klucza dla GYS przy 25 i 50 km](figures/e03_key_balance.md): od 10⁸ impulsów do klucza końcowego, oraz pomiar wiedzy pasywnej Ewy, gdy wyciek z korekcji błędów zostanie (albo nie) odjęty.
 
-Wszystkie wyniki odtwarza `make figures` (około 2,5 min na 12 rdzeniach).
+Wszystkie wyniki odtwarza `make figures` (około 5 min na 12 rdzeniach).
 
 ## Szybki start
 
