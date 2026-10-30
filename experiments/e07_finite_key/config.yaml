@@ -1,0 +1,15 @@
+# E07: skończony klucz (Tomamichel et al. 2012), F4.1–F4.5. Źródło jednofotonowe w rachunku ℓ.
+seed: 20261102
+eps_sec: 1.0e-10
+eps_cor: 1.0e-12
+qbers: [0.01, 0.025, 0.05]
+block_sizes: [1000, 3000, 10000, 30000, 100000, 300000, 1000000, 3000000, 10000000, 100000000]
+compare_qber: 0.02
+# Ewa w szumie: intercept-resend przy e_d = 2%, L = 0 km; próg Q_tol z 1% fałszywych przerwań.
+noise_misalignment: 0.02
+noise_fractions: [0.0, 0.01, 0.02, 0.03, 0.04, 0.05, 0.06, 0.08, 0.1]
+noise_samples: [1000, 10000, 100000]
+mc_sample: 1000
+mc_fractions: [0.0, 0.04, 0.08]
+mc_sessions: 300
+mc_session_pulses: 120_000

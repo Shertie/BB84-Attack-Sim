@@ -6,7 +6,7 @@ Model: polaryzacyjny BB84, światłowód 1550 nm, źródło słabych impulsów k
 
 Pomost do kryptografii postkwantowej: kanał klasyczny można uwierzytelniać kluczem współdzielonym (Wegman–Carter), podpisem ML-DSA (FIPS 204) albo hybrydowo. Symulator pokazuje, kiedy takie uwierzytelnianie chroni klucz QKD, i porównuje QKD z ML-KEM w różnych modelach zagrożeń.
 
-> **Status:** fazy F1 i F2 zakończone (bramki G1 i G2 zaliczone), faza F3 zakończona (bramka G3 zaliczona): ataki 1 (intercept-resend), 2 (oślepianie detektorów z obronami) i 3 (PNS ze stanami decoy). Fizyka bez ataków zgadza się ze wzorami na 0–150 km, postprocessing daje identyczne klucze z poprawnie policzonym wyciekiem. Kolejna faza (F4: skończony klucz, atak 6, MITM z uwierzytelnianiem PQC): [ROADMAP.md](ROADMAP.md).
+> **Status:** fazy F1 i F2 zakończone (bramki G1 i G2 zaliczone), faza F3 zakończona (bramka G3 zaliczona): ataki 1 (intercept-resend), 2 (oślepianie detektorów z obronami) i 3 (PNS ze stanami decoy). Fizyka bez ataków zgadza się ze wzorami na 0–150 km, postprocessing daje identyczne klucze z poprawnie policzonym wyciekiem. W fazie F4 gotowy skończony klucz (Tomamichel et al. 2012); dalej atak 6 i MITM z uwierzytelnianiem PQC: [ROADMAP.md](ROADMAP.md).
 
 ## Wyniki
 
@@ -29,6 +29,10 @@ Oślepianie detektorów (progi Clavis2 z Lydersena et al.): skalibrowana Ewa prz
 ![PNS i stany decoy](figures/e06_decoy_pns.png)
 
 Atak PNS i stany decoy: GLLP bez decoy kończy się przy ~40 km, decoy vacuum+weak sięga ~140 km (punkty: estymata z Monte Carlo). Za odległością krytyczną 32,8 km Ewa zna 98–100% klucza przy niezmienionym QBER i zysku. Rachunek naiwny („wszystkie detekcje są jednofotonowe”) daje wtedy dodatnią stopę, a decoy przerywa protokół.
+
+![Skończony klucz](figures/e07_finite_key.png)
+
+Skończony klucz (Tomamichel et al. 2012): stopa rośnie z blokiem n w stronę granicy 1 − 2h(Q), a kwadraty to Tabela 1 artykułu. Uproszczenie z planu (Hoeffding na samej próbce) zawyża długość klucza o 95% przy n = 3000 i o 15% przy 10⁵. „Ewa w szumie”: przy próbce 1000 bitów przechwycenie 4% impulsów wykrywa się tylko w 23% przypadków.
 
 [Bilans klucza dla GYS przy 25 i 50 km](figures/e03_key_balance.md): od 10⁸ impulsów do klucza końcowego, oraz pomiar wiedzy pasywnej Ewy, gdy wyciek z korekcji błędów zostanie (albo nie) odjęty.
 

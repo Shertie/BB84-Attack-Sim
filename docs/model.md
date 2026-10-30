@@ -110,3 +110,9 @@ Przy Z5a widać różnicę między QKD a ML-KEM (ROADMAP, rozdz. 2.2a). QKD potr
 - **Obrony:** monitor mocy (odczep + szum, próg na odczycie) i losowe tłumienie przed detektorami (test z: odsetek kliknięć w bramkach tłumionych vs oczekiwany czynnik). Tłumik nie zmienia stanu oślepienia, bo ten zależy od średniego fotoprądu.
 - **PNS (atak 3):** Ewa tuż za Alice mierzy liczbę fotonów (QND), blokuje impulsy jednofotonowe, z wielofotonowych zabiera 1 foton (zna bit po ujawnieniu baz), a resztę wysyła bezstratnie. Strategia (`pns_strategy`) dobiera blokowanie i przepuszczanie tak, by zysk sygnału był jak bez ataku. Od L_kryt = 32,8 km (GYS, μ = 0,48) wystarcza do tego samo przepuszczanie impulsów wielofotonowych. Ewa nie widzi intensywności, więc decoy dostaje tę samą strategię i jego zysk wychodzi niespójny.
 - **Decoy z danych:** `postprocessing/decoy.py` liczy Y₁^L, e₁^U i R z liczników MC (vacuum+weak, asymptotycznie). `defenses/decoy_check.py` testuje spójność: z Q_μ i Y₀ wyznacza η̂ i przewiduje Q_ν. Szum estymaty decoy jest duży (ROADMAP, K17).
+
+## 9. Skończony klucz (F4)
+
+- **Rachunek:** `postprocessing/finite_key.py` implementuje twierdzenie Tomamichela et al. 2012 w dwóch wydrukowanych wersjach (tekst główny i Methods) oraz uproszczenie z planu (Hoeffding na samej próbce) do porównania. Protokół asymetryczny: n bitów klucza, k bitów testu, z góry ustalony próg Q_tol, przerwanie, gdy QBER z próbki go przekroczy. M(n, k) = (√n + √k)².
+- **Robustness:** p-stwo przerwania uczciwego przebiegu liczone jest dokładnie z ogona rozkładu dwumianowego.
+- **Zakres:** tylko źródło jednofotonowe. Skończony klucz dla WCP z decoy (Lim et al. 2014) to F7 (ROADMAP, K3 i K17).
