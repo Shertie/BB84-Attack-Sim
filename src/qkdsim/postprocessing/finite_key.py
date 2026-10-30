@@ -46,6 +46,7 @@ def key_length(
     eps_cor: float,
     preparation_quality: float = 1.0,
 ) -> int:
+    """ℓ z twierdzenia w tekście głównym (wzór (2)); 0, gdy wychodzi ujemne."""
     mu = statistical_deviation(n, k, math.log(4.0 / eps_sec))
     secret = n * (preparation_quality - _h(q_tol + mu))
     return max(0, math.floor(secret - leak_ec - math.log2(2.0 / (eps_sec**2 * eps_cor))))
@@ -61,6 +62,7 @@ def key_length_tight(
     preparation_quality: float = 1.0,
     grid: int = 199,
 ) -> int:
+    """ℓ z twierdzenia z Methods, najlepsze po podziale ε_sec na ε i ε̄."""
     best = -math.inf
     for fraction in np.linspace(0.005, 0.995, grid):
         eps = float(fraction) * eps_sec / 2.0

@@ -24,6 +24,8 @@ from qkdsim.detector import DetectorPair
 
 @dataclass(frozen=True)
 class BlindingModel:
+    """P-stwa na impuls przy oślepianiu: detekcja, błąd i detekcja znana Ewie."""
+
     detected: float  # p-stwo detekcji na impuls (równe w zgodnej i niezgodnej bazie)
     errors: float  # p-stwo detekcji z błędem w zgodnej bazie
     known: float  # p-stwo detekcji, której bit Ewa zna na pewno
@@ -44,6 +46,7 @@ def blinding_model(
     misalignment: float,
     transmittance_to_eve: float = 1.0,
 ) -> BlindingModel:
+    """Wartość oczekiwana ataku 2 dla symulatora (przypadki A–C z opisu modułu)."""
     cw = np.array([attack.blind_power_w])
     blinded = [detectors.blinded(cw, i) for i in (0, 1)]
 

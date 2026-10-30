@@ -21,6 +21,8 @@ from qkdsim.rng import Bits
 
 @dataclass(frozen=True)
 class SampleResult:
+    """QBER z ujawnionej próbki i klucz bez tej próbki."""
+
     qber: Estimate  # QBER z ujawnionej próbki
     key: SiftedKey  # klucz bez próbki
 
@@ -32,6 +34,7 @@ def _subset(key: SiftedKey, mask: npt.NDArray[np.bool_]) -> SiftedKey:
 def estimate_random_sample(
     key: SiftedKey, sample_size: int, public: np.random.Generator, channel: ClassicalChannel
 ) -> SampleResult:
+    """Ujawnia losową próbkę `sample_size` bitów i estymuje z niej QBER."""
     n = len(key)
     if not 0 < sample_size < n:
         raise ValueError(f"rozmiar próbki musi być w (0, {n}), jest {sample_size}")

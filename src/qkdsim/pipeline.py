@@ -65,6 +65,8 @@ def simulate(
 
 @dataclass(frozen=True)
 class BitsRun:
+    """Zapisy Alice, Boba i Ewy z warstwy bitów oraz klucz po siftingu."""
+
     alice: AliceRecord
     bob: BobRecord
     eve: EveLog
@@ -72,6 +74,7 @@ class BitsRun:
 
 
 def run_bits(link: Link, n_pulses: int, streams: RandomStreams) -> BitsRun:
+    """Warstwa bitów: `n_pulses` impulsów z pełnymi zapisami i siftingiem."""
     alice, bob, eve = simulate(link, n_pulses, streams)
     return BitsRun(alice=alice, bob=bob, eve=eve, key=sift(alice, bob))
 
@@ -154,6 +157,7 @@ def run_counts(
     streams: RandomStreams,
     batch_size: int = DEFAULT_BATCH_SIZE,
 ) -> Counts:
+    """Warstwa liczników (ADR 0002): impulsy w paczkach, wynik tylko jako zliczenia."""
     if batch_size <= 0:
         raise ValueError("batch_size musi być dodatnie")
     n_intensities = len(link.source.intensities)

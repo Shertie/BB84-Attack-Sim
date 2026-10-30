@@ -243,6 +243,7 @@ def overhead(cfg: Config) -> tuple[list[Overhead], Bits]:
     ]
     rows = []
     transcript: Bits = np.zeros(0, dtype=np.uint8)
+    mldsa_auth(65).genuine("alice", np.zeros(8, dtype=np.uint8))  # rozgrzewka OpenSSL
     for name, mode, factory in methods:
         auth = Timed(factory())
         public = np.random.default_rng([cfg.seed, 5])  # ta sama runda dla każdej metody

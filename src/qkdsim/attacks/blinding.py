@@ -31,6 +31,8 @@ from qkdsim.pulses import Pulses
 
 @dataclass(frozen=True)
 class DetectorBlinding:
+    """Atak 2: ciągłe światło oślepia detektory, a jasny impuls je wyzwala."""
+
     trigger_power_w: float  # moc szczytowa impulsu wyzwalającego na wejściu Boba
     send_fraction: float = 1.0  # w ilu bramkach z wynikiem Ewa wysyła impuls wyzwalający
     blind_power_w: float = 1.08e-3  # ciągłe światło oślepiające (Lydersen: 1,08 mW)

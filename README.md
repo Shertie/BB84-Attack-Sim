@@ -1,54 +1,68 @@
 # bb84-attacks
 
-Symulator BB84 z atakami. Każdy wynik Monte Carlo jest porównywany ze wzorem analitycznym albo z wynikiem z publikacji.
+Symulator Monte Carlo BB84 na poziomie impulsów, w którym ataki są wykonywane, a nie wyceniane wzorem. Każdy wynik jest porównany ze wzorem lub publikacją, od fotonu do klucza końcowego, a obrony są oceniane krzywymi ROC.
 
-Model: polaryzacyjny BB84, światłowód 1550 nm, źródło słabych impulsów koherentnych (WCP), dwa detektory SPAD po stronie Boba. Parametry startowe z eksperymentu GYS (Ma, Qi, Zhao, Lo 2005).
+Model: polaryzacyjny BB84, światłowód 1550 nm, źródło słabych impulsów koherentnych (WCP), dwa detektory SPAD po stronie Boba, Cascade, hasz Toeplitza i skończony klucz. Parametry z eksperymentu GYS (Ma, Qi, Zhao, Lo 2005). Wzory sprawdzamy też niezależną implementacją [`qkd`](https://pypi.org/project/qkd/), która wycenia część tych samych ataków w formie zamkniętej ([porównanie](docs/related.md)).
 
-Pomost do kryptografii postkwantowej: kanał klasyczny można uwierzytelniać kluczem współdzielonym (Wegman–Carter), podpisem ML-DSA (FIPS 204) albo hybrydowo. Symulator pokazuje, kiedy takie uwierzytelnianie chroni klucz QKD, i porównuje QKD z ML-KEM w różnych modelach zagrożeń.
+Pomost do kryptografii postkwantowej (wariant E): kanał klasyczny uwierzytelniany Wegmanem–Carterem, podpisem ML-DSA (FIPS 204) albo hybrydowo, z tabelą modeli zagrożeń QKD wobec ML-KEM.
 
-> **Status:** fazy F1 i F2 zakończone (bramki G1 i G2 zaliczone), faza F3 zakończona (bramka G3 zaliczona): ataki 1 (intercept-resend), 2 (oślepianie detektorów z obronami) i 3 (PNS ze stanami decoy). Fizyka bez ataków zgadza się ze wzorami na 0–150 km, postprocessing daje identyczne klucze z poprawnie policzonym wyciekiem. W fazie F4 gotowe: skończony klucz (Tomamichel et al. 2012), atak 6 (Fuchs), czyli komplet czterech wyników kontrolnych z planu, atak 7 (MITM z uwierzytelnianiem Wegmana–Cartera) i uwierzytelnianie postkwantowe (wariant E: ML-DSA, hybryda, porównanie z ML-KEM). Dalej publikacja v1.0: [ROADMAP.md](ROADMAP.md).
+> **Status: v1.0.** Ataki 1 (intercept-resend), 2 (oślepianie detektorów), 3 (PNS), 6 (optymalny atak indywidualny) i 7 (MITM) z obronami, skończony klucz i uwierzytelnianie postkwantowe. Ataki 4 (time-shift), 5 (Trojan horse) i 8 (słaby generator) są zaplanowane na v1.1: [ROADMAP.md](ROADMAP.md). Raport: [report/main.tex](report/main.tex) (`make report`).
 
-## Wyniki
+## Wyniki kontrolne
 
 ![Zysk i QBER w funkcji długości światłowodu](figures/e01_gain_qber_vs_L.png)
 
-Monte Carlo (punkty) na tle wzorów Ma et al. 2005 (linie) dla parametrów eksperymentu GYS: do 10⁹ impulsów na punkt, wszystkie punkty w granicach |z| < 1,8.
-
-![Sprawność Cascade](figures/e02_cascade_efficiency.png)
-
-Cascade (4 przebiegi) ujawnia 1,11–1,19 razy więcej bitów niż granica Shannona dla QBER 0,5–8%, w przedziale zakładanym w planie.
+Zysk i QBER z Monte Carlo (do 10⁹ impulsów na punkt) zgadzają się ze wzorami Ma et al. 2005 na 0–150 km, wszystkie punkty w granicach |z| < 1,8.
 
 ![Atak intercept-resend](figures/e04_intercept_resend.png)
 
-Atak intercept-resend przy 25 km: QBER rośnie do ~26,5% (fizyka wykrywa podsłuch), a Ewa tuż za Alice zdradza się dodatkowo spadkiem zysku o 20%. Przy pełnym ataku Ewa zna połowę bitów po siftingu na pewno, a zgaduje 75%. QBER(p) dla źródła WCP leży poniżej prostej z planu, bo impulsy przechwycone są wykrywane rzadziej.
-
-![Oślepianie detektorów](figures/e05_blinding.png)
-
-Oślepianie detektorów (progi Clavis2 z Lydersena et al.): skalibrowana Ewa przy mocy impulsu 950–1300 µW zostawia QBER i zysk bez zmian, a zna 100% klucza. Losowe tłumienie 3 dB w 10% bramek wykrywa ją z z ≈ −35. Żadna moc impulsu nie przechodzi jednocześnie testu QBER i testu tłumienia. Krzywe ROC obu obron: [figures/e05_blinding_roc.png](figures/e05_blinding_roc.png).
+Pełny intercept-resend przy 25 km daje QBER 26,5–26,8%: 25% z samego ataku plus błąd optyki e_d (wzór ¼ + ½·e_d daje 26,65%).
 
 ![PNS i stany decoy](figures/e06_decoy_pns.png)
 
-Atak PNS i stany decoy: GLLP bez decoy kończy się przy ~40 km, decoy vacuum+weak sięga ~140 km (punkty: estymata z Monte Carlo). Za odległością krytyczną 32,8 km Ewa zna 98–100% klucza przy niezmienionym QBER i zysku. Rachunek naiwny („wszystkie detekcje są jednofotonowe”) daje wtedy dodatnią stopę, a decoy przerywa protokół.
-
-![Skończony klucz](figures/e07_finite_key.png)
-
-Skończony klucz (Tomamichel et al. 2012): stopa rośnie z blokiem n w stronę granicy 1 − 2h(Q), a kwadraty to Tabela 1 artykułu. Uproszczenie z planu (Hoeffding na samej próbce) zawyża długość klucza o 95% przy n = 3000 i o 15% przy 10⁵. „Ewa w szumie”: przy próbce 1000 bitów przechwycenie 4% impulsów wykrywa się tylko w 23% przypadków.
+Stopa klucza R(L) jak u Ma et al. 2005: GLLP bez decoy kończy się przy ~40 km, decoy vacuum+weak przy 140,6 km (punkty: estymata decoy z Monte Carlo).
 
 ![Atak indywidualny i ataki ogólne](figures/e08_individual_attack.png)
 
-Optymalny atak indywidualny (Fuchs et al. 1997) jako kloner fazowo-kowariantny, zweryfikowany w QuTiP: I_AB = I_AE przy D* = 14,64%, a próg dla ataków ogólnych (Shor–Preskill) to 11,00%. Zacieniony obszar to klucz, który byłby bezpieczny tylko wobec ataków indywidualnych.
+I_AB = I_AE przy D\* = 14,64% dla optymalnego ataku indywidualnego (Fuchs et al. 1997, zweryfikowany w QuTiP), a próg Shora–Preskilla dla ataków ogólnych to 11,00%.
+
+Wszystkie wykresy odtwarza `make figures` (około 5 min na 12 rdzeniach). Każdy skrypt w `experiments/` kończy się błędem, jeśli jego wynik wyjdzie poza tolerancję.
+
+## Mapa ataków
+
+Każdy atak, który nie podnosi QBER, łamie któreś założenie dowodu bezpieczeństwa, a nie wzór na długość klucza. Założenia Z1–Z8 opisuje [docs/model.md](docs/model.md), rozdz. 5.
+
+| Atak | Status | Złamane założenie | Obrona | Metryka (wynik) |
+| --- | --- | --- | --- | --- |
+| 1. Intercept-resend | v1.0, [e04](figures/e04_intercept_resend.png) | żadne: atak mieści się w modelu dowodu; przy małej próbce Z8 | estymacja QBER z progiem 11%; skończony klucz (Tomamichel et al. 2012) | QBER 26,5% przy pełnym ataku; przechwycenie 4% impulsów przy próbce 1000 bitów wykryte w 23% przypadków ([e07](figures/e07_finite_key.png)) |
+| 2. Oślepianie detektorów | v1.0, [e05](figures/e05_blinding.png) | Z3: detektor w trybie jednofotonowym | losowe tłumienie 3 dB w 10% bramek; monitor mocy | QBER i zysk bez zmian, Ewa zna 100% klucza; test tłumienia z ≈ −35; [ROC](figures/e05_blinding_roc.png) |
+| 3. Photon-number splitting | v1.0, [e06](figures/e06_decoy_pns.png) | Z1: rozkład liczby fotonów uwzględniony w długości klucza | stany decoy (vacuum+weak) | od 32,8 km Ewa zna 98–100% klucza przy niezmienionym QBER i zysku; decoy przerywa protokół |
+| 6. Optymalny atak indywidualny | v1.0, [e08](figures/e08_individual_attack.png) | Z7: granica dla ataków indywidualnych nie jest granicą ogólną | próg Shora–Preskilla 11,00% zamiast 14,64% | I_AB = I_AE przy D\* = 14,64%; numpy i QuTiP zgodne do 10⁻¹² |
+| 7. Man-in-the-middle | v1.0, [e09](figures/e09_mitm.md) | Z5a: kanał klasyczny uwierzytelniony | Wegman–Carter z kluczem współdzielonym | przerwanie przy pierwszym tagu Ewy; fałszerstwo z p-stwem 1/p ≈ 2⁻⁶¹; 122 bity klucza na rundę |
+| 7′. MITM przy podpisie ML-DSA | v1.0, [e10](figures/e10_pqc_auth.md) | Z5a w trakcie sesji; Z5b: autentyczne klucze publiczne | hybryda Wegman–Carter + ML-DSA; weryfikacja odcisku klucza | ML-DSA złamane na żywo lub podmieniony klucz: MITM udany; hybryda: wykryty; złamanie po sesji: 0 bitów klucza dla Ewy |
+| 4. Time-shift | v1.1 | Z3: sprawność niezależna od czasu przyjścia | losowe przypisanie bit ↔ detektor, MDI | — |
+| 5. Trojan horse | v1.1 | Z2: brak kanałów bocznych u Alice | izolatory, monitor mocy, filtr | — |
+| 8. Słaby generator | v1.1 | Z6: losowe i prywatne wybory | QRNG; testy losowości | — |
+
+## Pozostałe wyniki
+
+![Sprawność Cascade](figures/e02_cascade_efficiency.png)
+
+Cascade (4 przebiegi) ujawnia 1,11–1,19 razy więcej bitów niż granica Shannona dla QBER 0,5–8%. [Bilans klucza dla GYS przy 25 i 50 km](figures/e03_key_balance.md): od 10⁸ impulsów do klucza końcowego, z pomiarem wiedzy pasywnej Ewy, gdy wyciek z korekcji błędów zostanie (albo nie) odjęty.
+
+Oślepianie detektorów (progi Clavis2 z Lydersena et al. 2010): skalibrowana Ewa przy mocy impulsu 950–1300 µW zostawia QBER i zysk bez zmian. Żadna moc impulsu nie przechodzi jednocześnie testu QBER i testu tłumienia.
+
+![Skończony klucz](figures/e07_finite_key.png)
+
+Skończony klucz (Tomamichel et al. 2012): stopa rośnie z blokiem n w stronę granicy 1 − 2h(Q). Uproszczenie z planu (Hoeffding na samej próbce) zawyża długość klucza o 95% przy n = 3000 i o 15% przy 10⁵.
 
 ![MITM i uwierzytelnianie](figures/e09_mitm.png)
 
-Atak MITM ([tabela przebiegu](figures/e09_mitm.md)): bez uwierzytelniania Ewa zna klucze Alice i Boba przy QBER jak bez ataku; z Wegmanem–Carterem protokół przerywa się przy pierwszej wiadomości Ewy. Tag na każdą wiadomość zjada więcej klucza, niż QKD wytwarza; tag na transkrypt rundy kosztuje 122 bity.
+Atak MITM: bez uwierzytelniania Ewa zna klucze Alice i Boba przy QBER jak bez ataku. Tag Wegmana–Cartera na każdą wiadomość zjada więcej klucza, niż QKD wytwarza; tag na transkrypt rundy kosztuje 122 bity.
 
 ![Uwierzytelnianie postkwantowe](figures/e10_pqc_auth.png)
 
-Wariant E ([scenariusze i tabela modeli zagrożeń](figures/e10_pqc_auth.md)): podpis ML-DSA (FIPS 204) zatrzymuje MITM tak jak Wegman–Carter, ale bez zużywania klucza, więc bilans jest dodatni do ~140 km zamiast 60 km przy 10⁶ impulsów na rundę. Ceną są 2 × 3309 B na rundę i założenie obliczeniowe, które musi stać w trakcie sesji: ML-DSA złamane na żywo albo podmieniony klucz w katalogu oznaczają udany MITM, a hybryda WC + ML-DSA nadal go wykrywa. Złamanie podpisu po sesji nic Ewie nie daje (0 bitów klucza), podczas gdy nagrany szyfrogram ML-KEM-768 oddaje po złamaniu cały sekret.
-
-[Bilans klucza dla GYS przy 25 i 50 km](figures/e03_key_balance.md): od 10⁸ impulsów do klucza końcowego, oraz pomiar wiedzy pasywnej Ewy, gdy wyciek z korekcji błędów zostanie (albo nie) odjęty.
-
-Wszystkie wyniki odtwarza `make figures` (około 5 min na 12 rdzeniach).
+Wariant E ([scenariusze i tabela modeli zagrożeń](figures/e10_pqc_auth.md)): ML-DSA nie zużywa klucza, więc przy 10⁶ impulsów na rundę bilans jest dodatni do ~140 km zamiast 60 km. Ceną są 2 × 3309 B na rundę i założenie obliczeniowe, które musi stać w trakcie sesji. Nagrany szyfrogram ML-KEM-768 oddaje po złamaniu krat cały sekret, a złamanie podpisu po sesji QKD nic Ewie nie daje.
 
 ## Szybki start
 
@@ -64,17 +78,22 @@ python3 -m venv .venv
 make check
 ```
 
-`make check` uruchamia lintera (ruff), sprawdzanie typów (mypy) i szybkie testy. Pozostałe cele: `make test-slow` (testy statystyczne), `make figures` (wszystkie wykresy z `experiments/`), `make report` (raport LaTeX).
+```bash
+make figures
+```
+
+`make check` uruchamia lintera (ruff), sprawdzanie typów (mypy --strict) i szybkie testy. Pozostałe cele: `make test-slow` (testy statystyczne i krzyżowe), `make coverage` (pokrycie rdzenia), `make report` (raport LaTeX).
 
 ## Dokumentacja
 
 - [ROADMAP.md](ROADMAP.md): fazy, bramki jakości, harmonogram
 - [Plan projektu](<assets/Symulator BB84 z atakami – plan projektu.md>): założenia i teoria
-- [docs/model.md](docs/model.md): założenia fizyczne, konwencje, parametry
+- [docs/model.md](docs/model.md): założenia fizyczne i dowodu, konwencje, parametry
 - [docs/architecture.md](docs/architecture.md): tor impulsów i punkty ataku P1–P8
 - [docs/adr/](docs/adr/): decyzje architektoniczne
 - [docs/related.md](docs/related.md): istniejące symulatory i czym ten projekt się od nich różni
+- [CHANGELOG.md](CHANGELOG.md): historia wersji
 
-## Licencja
+## Cytowanie i licencja
 
-MIT, patrz [LICENSE](LICENSE). Artykuły w `assets/` mają własne licencje i nie są częścią repozytorium.
+Metadane do cytowania: [CITATION.cff](CITATION.cff). Licencja MIT, patrz [LICENSE](LICENSE). Artykuły w `assets/` mają własne licencje i nie są częścią repozytorium.

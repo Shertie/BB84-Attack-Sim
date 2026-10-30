@@ -22,6 +22,8 @@ SIGNAL, DECOY, VACUUM = 0, 1, 2
 
 @dataclass(frozen=True)
 class DecoyEstimate:
+    """Zmierzone zyski i QBER, granice Y₁ i e₁ oraz stopa z decoy i naiwna."""
+
     q_mu: float
     e_mu: float
     q_nu: float

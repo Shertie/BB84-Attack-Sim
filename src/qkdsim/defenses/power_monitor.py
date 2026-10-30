@@ -13,6 +13,8 @@ import numpy.typing as npt
 
 @dataclass(frozen=True)
 class PowerMonitor:
+    """Fotodioda na odczepie `tap_fraction` przed detektorami, z szumem odczytu."""
+
     tap_fraction: float = 0.01  # ułamek mocy kierowany do monitora
     noise_w: float = 1e-8  # odchylenie standardowe odczytu w jednym oknie [W]
 

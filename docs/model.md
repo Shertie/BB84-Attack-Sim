@@ -66,7 +66,7 @@ Własność do testów: dla stanu koherentnego liczby fotonów w dwóch wyjścia
 
 ## 5. Założenia dowodu bezpieczeństwa
 
-Lista, na której w F5.1 powstanie mapa „atak → złamane założenie → obrona → metryka”. Kolumna „Atak” to przewidywanie z planu, do potwierdzenia wynikami.
+Mapa „atak → złamane założenie → obrona → metryka” z wynikami jest w README (F5.1). Kolumna „Atak” poniżej to przewidywanie z planu; dla ataków 1, 2, 3, 6 i 7 potwierdzają je eksperymenty e04–e10.
 
 | # | Założenie | Atak, który je łamie | Obrona |
 | --- | --- | --- | --- |
@@ -80,7 +80,7 @@ Lista, na której w F5.1 powstanie mapa „atak → złamane założenie → obr
 | Z7 | Ewa jest ograniczona tylko prawami fizyki; wszystkie błędy przypisujemy jej | 6, granica dla ataków indywidualnych (Fuchs) vs ogólnych (Shor–Preskill) | odpowiednio konserwatywny próg QBER |
 | Z8 | Parametry są estymowane ze skończonej próbki z jawnym ε | „Ewa w szumie”: mały ułamek przechwytu ginie w fluktuacjach | rachunek skończonego klucza (Tomamichel et al. 2012) |
 
-Wspólny wniosek z planu: atak, który nie podnosi QBER (2, 4, 5, 7, 8), łamie jedno z założeń Z2–Z6, a nie wzór na długość klucza.
+Wspólny wniosek z planu: atak, który nie podnosi QBER (2, 4, 5, 7, 8), łamie jedno z założeń Z2–Z6, a nie wzór na długość klucza. Wyniki dodają do tej listy PNS (3): za 32,8 km Ewa zna prawie cały klucz przy niezmienionym QBER i zysku, bo łamie Z1.
 
 Przy Z5a widać różnicę między QKD a ML-KEM (ROADMAP, rozdz. 2.2a). QKD potrzebuje uwierzytelnienia, które jest bezpieczne tylko w chwili sesji. Złamanie ML-DSA po fakcie nie odsłania wcześniejszych kluczy. Klucz z ML-KEM traci bezpieczeństwo, gdy w dowolnym momencie w przyszłości padną problemy kratowe.
 

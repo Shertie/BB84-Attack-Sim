@@ -93,6 +93,8 @@ class Authenticator(Protocol):
 
 @dataclass
 class WegmanCarter:
+    """Hasz wielomianowy nad GF(p) z kluczem k plus klucz jednorazowy r na tag."""
+
     pool: KeyPool
     prime: int = MERSENNE_61
     key: int = field(init=False)
@@ -151,6 +153,8 @@ class WegmanCarter:
 
 
 class AuthenticatedChannel(ClassicalChannel):
+    """Kanał klasyczny z tagiem na wiadomość albo na transkrypt rundy."""
+
     def __init__(
         self,
         auth: Authenticator,

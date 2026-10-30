@@ -25,6 +25,8 @@ from qkdsim.pulses import Pulses
 
 @dataclass(frozen=True)
 class InterceptResend:
+    """Atak 1: Ewa mierzy ułamek impulsów w losowej bazie i wysyła wynik Bobowi."""
+
     fraction: float  # p: ułamek przechwytywanych impulsów
     position: float = 1.0  # 0 = tuż za Alice, 1 = tuż przed Bobem
     lossless_after: bool = False

@@ -13,6 +13,8 @@ from qkdsim.rng import Bits
 
 @dataclass(frozen=True)
 class VerificationResult:
+    """Wynik weryfikacji kluczy haszem: zgodność, długość tagu i ziarno."""
+
     passed: bool
     tag_bits: int
     seed: Bits
@@ -57,6 +59,8 @@ def key_length(
 
 @dataclass(frozen=True)
 class AmplificationResult:
+    """Klucze po wzmacnianiu prywatności i ziarno macierzy Toeplitza."""
+
     alice: Bits
     bob: Bits
     seed: Bits

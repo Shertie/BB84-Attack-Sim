@@ -39,6 +39,8 @@ def fock_clicks(k: int, eta: float, dark_count: float, misalignment: float) -> C
 
 @dataclass(frozen=True)
 class PNSModel:
+    """P-stwa kliknięć przy PNS i detekcji, których bit Ewa zna na pewno."""
+
     clicks: ClickProbabilities  # zgodna baza, na impuls danej intensywności
     known: float  # detekcja z impulsu wielofotonowego: Ewa zna bit na pewno
 

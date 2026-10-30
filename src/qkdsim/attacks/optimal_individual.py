@@ -67,6 +67,8 @@ def attack_unitary(error: float) -> Complex:
 
 @dataclass(frozen=True)
 class OptimalIndividualAttack:
+    """Atak 6: kloner fazowo-kowariantny z błędem D u Boba (granica Fuchsa)."""
+
     error: float  # D: błąd, który Ewa wprowadza u Boba
 
     def joint_probabilities(self) -> npt.NDArray[np.float64]:

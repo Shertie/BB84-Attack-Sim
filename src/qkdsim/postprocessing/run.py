@@ -18,6 +18,8 @@ from qkdsim.rng import Bits
 
 @dataclass(frozen=True)
 class PostprocessingConfig:
+    """Parametry postprocessingu: próbka, Cascade, weryfikacja, model ℓ."""
+
     sample_fraction: float = 0.1
     cascade_passes: int = 4
     tag_bits: int = 64
@@ -58,6 +60,8 @@ class KeyBalance:
 
 @dataclass(frozen=True)
 class PostprocessingResult:
+    """Klucze końcowe, bilans bitów, ziarno PA i kanał z transkryptem."""
+
     balance: KeyBalance
     alice_key: Bits
     bob_key: Bits
@@ -72,6 +76,7 @@ def postprocess(
     config: PostprocessingConfig = PostprocessingConfig(),  # noqa: B008
     channel: ClassicalChannel | None = None,
 ) -> PostprocessingResult:
+    """Estymacja QBER, Cascade, weryfikacja i wzmacnianie prywatności."""
     channel = ClassicalChannel() if channel is None else channel
     sample_size = max(1, round(config.sample_fraction * len(key)))
     estimate = estimate_random_sample(key, sample_size, public, channel)

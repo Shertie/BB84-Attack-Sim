@@ -1,7 +1,7 @@
 PY ?= .venv/bin/python
 EXPERIMENTS := $(sort $(wildcard experiments/e*/run.py))
 
-.PHONY: help install lint typecheck test test-slow check figures report clean
+.PHONY: help install lint typecheck test test-slow coverage check figures report clean
 
 help:
 	@echo "install    - venv z zależnościami deweloperskimi"
@@ -9,6 +9,7 @@ help:
 	@echo "typecheck  - mypy --strict"
 	@echo "test       - szybkie testy (bez @slow)"
 	@echo "test-slow  - testy statystyczne i krzyżowe (@slow)"
+	@echo "coverage   - szybkie testy z pokryciem rdzenia (próg 85%)"
 	@echo "check      - lint + typecheck + test"
 	@echo "figures    - uruchamia experiments/e*/run.py, wykresy trafiają do figures/"
 	@echo "report     - kompiluje report/main.tex"
@@ -29,6 +30,9 @@ test:
 
 test-slow:
 	HYPOTHESIS_PROFILE=ci $(PY) -m pytest -m slow
+
+coverage:
+	$(PY) -m pytest -m "not slow" --cov --cov-report=term
 
 check: lint typecheck test
 

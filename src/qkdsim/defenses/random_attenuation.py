@@ -33,6 +33,8 @@ class AttenuationTally:
 
 @dataclass(frozen=True)
 class RandomAttenuator:
+    """Tłumik o transmisji `factor` w losowym, tajnym ułamku bramek."""
+
     fraction: float = 0.1  # ułamek bramek z tłumikiem
     factor: float = 0.5  # transmisja tłumika
 

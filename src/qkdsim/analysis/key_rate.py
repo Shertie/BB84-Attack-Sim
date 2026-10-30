@@ -87,12 +87,14 @@ def _gain_qber(p: LinkParameters, length_km: float, mu: float) -> tuple[float, f
 
 
 def rate_infinite_decoy(p: LinkParameters, length_km: float, mu: float) -> float:
+    """Stopa GLLP z Y₁ i e₁ dla nieskończenie wielu stanów decoy (Ma et al. 2005)."""
     q_mu, e_mu = _gain_qber(p, length_km, mu)
     y1, e1 = infinite_decoy_singles(p.eta(length_km), p.background, p.misalignment, p.e0)
     return gllp_rate(q_mu, e_mu, y1 * mu * math.exp(-mu), e1, p.f_ec, p.q_sift)
 
 
 def rate_vacuum_weak(p: LinkParameters, length_km: float, mu: float, nu: float) -> float:
+    """Stopa GLLP z granicami Y₁ i e₁ z decoy vacuum + weak (Ma et al. 2005)."""
     q_mu, e_mu = _gain_qber(p, length_km, mu)
     q_nu, e_nu = _gain_qber(p, length_km, nu)
     y1, e1 = vacuum_weak_bounds(mu, nu, q_mu, e_mu, q_nu, e_nu, p.background, p.e0)

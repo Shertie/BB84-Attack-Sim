@@ -22,6 +22,8 @@ from qkdsim.rng import Bits
 
 @dataclass(frozen=True)
 class LinearEveKnowledge:
+    """Wiedza liniowej Ewy: rząd ujawnionych funkcji i znane bity klucza."""
+
     disclosed_rank: int  # rank P: niezależne liniowe funkcje klucza ujawnione w kanale
     known_final_bits: int  # dim(span P ∩ span T)
 

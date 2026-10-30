@@ -27,6 +27,8 @@ SEED_BITS = 64  # permutacja ogłaszana jako ziarno wspólnego generatora
 
 @dataclass(frozen=True)
 class CascadeResult:
+    """Poprawiony klucz Boba, wyciek, liczba poprawek i rozmiary bloków."""
+
     corrected: Bits  # klucz Boba po korekcji
     leaked_bits: int
     corrections: int  # liczba wywołań BINARY, czyli poprawionych bitów

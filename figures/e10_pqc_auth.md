@@ -21,15 +21,15 @@
 
 | Metoda | Tag | Tagi i podpisy | Klucz zużyty [bit] | Łącze klasyczne [B] | CPU [ms] |
 | --- | --- | --- | --- | --- | --- |
-| Wegman–Carter | na transkrypt | 2 | 183 | 16 | 4,0 |
-| Wegman–Carter | na wiadomość | 982 | 59 963 | 7 856 | 10,0 |
-| ML-DSA-65 | na transkrypt | 2 | 0 | 6 618 | 2,6 |
-| ML-DSA-65 | na wiadomość | 982 | 0 | 3 249 438 | 984,4 |
-| hybryda WC + ML-DSA-65 | na transkrypt | 2 | 183 | 6 634 | 8,1 |
+| Wegman–Carter | na transkrypt | 2 | 183 | 16 | 4,3 |
+| Wegman–Carter | na wiadomość | 982 | 59 963 | 7 856 | 10,5 |
+| ML-DSA-65 | na transkrypt | 2 | 0 | 6 618 | 1,5 |
+| ML-DSA-65 | na wiadomość | 982 | 0 | 3 249 438 | 970,9 |
+| hybryda WC + ML-DSA-65 | na transkrypt | 2 | 183 | 6 634 | 7,5 |
 
 Klucz wytworzony w tej rundzie: 15 308 bitów. Wegman–Carter liczy w kolumnie CPU jedno wyliczenie tagu (odbiorca powtarza je przy weryfikacji); ML-DSA podpis i weryfikację. Pierwsza runda Wegmana–Cartera zużywa dodatkowo 61 bitów na klucz haszu, potem tylko klucz jednorazowy na tag.
 
-Decyzja z F4.16: podpis na transkrypt. Podpis na wiadomość kosztuje 491 razy więcej bajtów (3 249 438 B, czyli więcej niż sam klucz) i 377 razy więcej czasu, a bezpieczeństwo jest takie samo: Ewa i tak zostaje wykryta przed użyciem klucza, bo klucz powstaje dopiero po sprawdzeniu transkryptu.
+Decyzja z F4.16: podpis na transkrypt. Podpis na wiadomość kosztuje 491 razy więcej bajtów (3 249 438 B, czyli więcej niż sam klucz) i 635 razy więcej czasu, a bezpieczeństwo jest takie samo: Ewa i tak zostaje wykryta przed użyciem klucza, bo klucz powstaje dopiero po sprawdzeniu transkryptu.
 
 ## Czas na transkrypcie Alice z tej rundy (mediana, ta maszyna)
 
@@ -37,10 +37,10 @@ Transkrypt: 978 208 bitów.
 
 | Metoda | Klucz publiczny [B] | Tag/podpis [B] | Tag/podpis [µs] | Weryfikacja [µs] |
 | --- | --- | --- | --- | --- |
-| Wegman–Carter | — | 8 | 4103 | 4103 |
-| ML-DSA-44 | 1312 | 2420 | 593 | 301 |
-| ML-DSA-65 | 1952 | 3309 | 865 | 353 |
-| ML-DSA-87 | 2592 | 4627 | 973 | 433 |
+| Wegman–Carter | — | 8 | 4163 | 4163 |
+| ML-DSA-44 | 1312 | 2420 | 578 | 303 |
+| ML-DSA-65 | 1952 | 3309 | 866 | 355 |
+| ML-DSA-87 | 2592 | 4627 | 974 | 433 |
 
 Hasz Wegmana–Cartera jest tu pętlą Pythona po 60-bitowych kawałkach (schemat Hornera), więc jego czas mówi o implementacji, a nie o metodzie: w C albo w sprzęcie taki hasz liczy się z przepustowością rzędu GB/s. Czas ML-DSA pochodzi z OpenSSL przez `cryptography` i obejmuje skrót SHAKE256 całego transkryptu; podpis ma zmienny czas, bo losuje, aż przejdzie test odrzucenia (rejection sampling).
 

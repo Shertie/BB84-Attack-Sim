@@ -32,6 +32,8 @@ from qkdsim.rng import Bits, RandomStreams
 
 @dataclass(frozen=True)
 class SessionOutcome:
+    """Jedna z dwóch sesji BB84 prowadzonych przez Ewę i jej koszt uwierzytelniania."""
+
     result: PostprocessingResult | None  # None, gdy uwierzytelnianie przerwało protokół
     failure: AuthenticationFailure | None
     key_bits_used: int  # klucz uwierzytelniania zużyty w tej sesji
@@ -41,6 +43,8 @@ class SessionOutcome:
 
 @dataclass(frozen=True)
 class MITMOutcome:
+    """Obie sesje ataku MITM; `aborted`, gdy któraś strona odrzuciła tag Ewy."""
+
     alice_side: SessionOutcome  # Alice ↔ Ewa udająca Boba
     bob_side: SessionOutcome  # Ewa udająca Alice ↔ Bob
 

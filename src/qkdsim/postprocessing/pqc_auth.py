@@ -37,6 +37,7 @@ FIPS_204_SIZES = {44: (1312, 2420), 65: (1952, 3309), 87: (2592, 4627)}
 
 
 def generate(level: int) -> tuple[PrivateKey, bytes]:
+    """Klucz prywatny ML-DSA danego poziomu i surowy klucz publiczny."""
     private = _KEYS[level][0].generate()
     public = private.public_key().public_bytes(
         serialization.Encoding.Raw, serialization.PublicFormat.Raw
@@ -51,6 +52,8 @@ def transcript_bytes(bits: Bits) -> bytes:
 
 @dataclass
 class MLDSAAuth:
+    """Podpis ML-DSA transkryptu za interfejsem `Authenticator`."""
+
     level: int
     signers: dict[str, PrivateKey]  # prawdziwe klucze prywatne stron
     public_keys: dict[str, bytes]  # prawdziwe klucze publiczne (uczciwa ścieżka)

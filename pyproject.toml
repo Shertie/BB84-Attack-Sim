@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "bb84-attacks"
-version = "0.1.0.dev0"
+version = "1.0.0"
 description = "Symulator BB84 z atakami, walidowany względem wzorów analitycznych i literatury"
 readme = "README.md"
 license = "MIT"
@@ -22,6 +22,7 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0",
+    "pytest-cov>=5.0",
     "hypothesis>=6.100",
     "ruff>=0.6",
     "mypy>=1.11",
@@ -68,3 +69,12 @@ markers = [
     "slow: testy statystyczne Monte Carlo i krzyżowe (make test-slow)",
 ]
 xfail_strict = true
+
+[tool.coverage.run]
+source = ["qkdsim"]
+branch = true
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true
+skip_covered = true

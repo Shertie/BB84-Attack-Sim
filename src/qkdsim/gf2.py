@@ -19,10 +19,12 @@ def row_from_positions(positions: npt.NDArray[np.intp], n: int) -> int:
 
 
 def row_from_dense(dense: Bits) -> int:
+    """Wektor bitów jako liczba całkowita: bit i to współczynnik 2^i."""
     return int.from_bytes(np.packbits(dense, bitorder="little").tobytes(), "little")
 
 
 def rows_from_matrix(matrix: Bits) -> list[int]:
+    """Wiersze macierzy bitów jako liczby całkowite (`row_from_dense`)."""
     return [row_from_dense(row) for row in matrix]
 
 

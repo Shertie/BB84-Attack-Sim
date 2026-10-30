@@ -17,6 +17,8 @@ from qkdsim.pulses import Pulses
 
 @dataclass(frozen=True)
 class PhotonNumberSplitting:
+    """Atak 3: Ewa blokuje impulsy jednofotonowe i zatrzymuje foton z reszty."""
+
     block: float  # p-stwo zablokowania impulsu jednofotonowego
     forward: float = 1.0  # p-stwo przepuszczenia reszty impulsu wielofotonowego
     position: float = 0.0  # Ewa tuż za Alice...

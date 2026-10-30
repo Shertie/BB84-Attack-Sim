@@ -20,6 +20,8 @@ ClassicalHook = Callable[["Message"], "Message"]
 
 @dataclass(frozen=True)
 class Message:
+    """Wiadomość w kanale klasycznym: nadawca, rodzaj, rozmiar i bity ujawnione Ewie."""
+
     sender: str  # "alice" albo "bob"
     kind: str  # np. "sample", "cascade_parities", "cascade_binary", "verify_hash"
     size_bits: int

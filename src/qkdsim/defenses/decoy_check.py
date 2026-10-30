@@ -15,6 +15,7 @@ from qkdsim.postprocessing.decoy import DECOY, SIGNAL, VACUUM
 
 
 def decoy_consistency_z(counts: Counts, mu: float, nu: float) -> float:
+    """z = (Q̂_ν − Q_ν przewidziane z Q_μ i Y₀)/σ; silnie ujemne przy PNS."""
     signal, decoy, vacuum = gain(counts, SIGNAL), gain(counts, DECOY), gain(counts, VACUUM)
     silent = 1.0 - vacuum.value
     if not 0.0 < signal.value < 1.0 or silent <= 0.0:

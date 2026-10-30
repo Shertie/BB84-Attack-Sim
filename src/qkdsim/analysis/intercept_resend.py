@@ -71,6 +71,7 @@ def intercept_resend_model(
     position: float,
     dark_count: float,
 ) -> InterceptResendModel:
+    """Model ataku 1: Ewa przechwytuje ułamek `fraction` w punkcie `position`."""
     t_before = 10.0 ** (-p.alpha_db_per_km * length_km * position / 10.0)
     t_after = 10.0 ** (-p.alpha_db_per_km * length_km * (1.0 - position) / 10.0)
     eta_resent = p.eta_bob * t_after

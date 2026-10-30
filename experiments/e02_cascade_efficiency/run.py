@@ -86,7 +86,8 @@ def main() -> int:
     out = ROOT / "results" / f"{NAME}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({"config": asdict(cfg), "points": points}, indent=2), "utf-8")
-    return 0
+    in_target = all(1.1 <= p["f_mean"] <= 1.2 for p in points)  # cel z planu
+    return 0 if in_target else 1
 
 
 if __name__ == "__main__":

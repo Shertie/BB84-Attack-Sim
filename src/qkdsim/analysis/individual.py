@@ -17,6 +17,7 @@ FUCHS_CROSSING = (1.0 - 1.0 / math.sqrt(2.0)) / 2.0
 
 
 def bob_information(error: float) -> float:
+    """I_AB = 1 − h(D): informacja Boba przy błędzie D."""
     return 1.0 - h2(error)
 
 
@@ -26,6 +27,7 @@ def eve_error_individual(error: float) -> float:
 
 
 def eve_information_individual(error: float) -> float:
+    """I_AE = 1 − h(½ − √(D(1 − D))): granica Fuchsa dla Ewy."""
     return 1.0 - h2(eve_error_individual(error))
 
 
