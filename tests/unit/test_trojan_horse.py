@@ -17,6 +17,7 @@ from qkdsim.analysis.trojan_horse import (
     bit_guess_probability,
     bit_information,
     helstrom_probability,
+    lidt_probe_photons,
     probe_density,
     required_isolation_db,
     returned_photons,
@@ -102,3 +103,10 @@ def test_attack_leaves_signal_and_samples_eves_measurement(random_phase: bool) -
     else:
         assert (log.bit == bits).mean() == pytest.approx(bit_guess_probability(mu), abs=4e-3)
         assert (log.basis == 255).all()
+
+
+def test_lidt_bound_reproduces_lucamarini_table_i() -> None:
+    """μ_out = Nγ/f_A z N = 10²⁰/s: μ_out = 10⁻⁶ wymaga 170, 200 i 230 dB (Tabela I artykułu)."""
+    for clock, gamma in ((1e9, 170.0), (1e6, 200.0), (1e3, 230.0)):
+        assert returned_photons(lidt_probe_photons(clock), gamma) == pytest.approx(1e-6)
+    assert round_trip_attenuation_db(60.0, 40.0, 35.0) == 170.0  # pierwszy wiersz tabeli

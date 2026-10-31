@@ -42,4 +42,16 @@ Każdy rząd wielkości μ_in to 10 dB izolacji więcej, a losowa faza oszczędz
 
 Koszt w kluczu: przy 25 km decoy vacuum+weak daje 0,221 bitu klucza na bit po siftingu. Wyciek I na impuls trzeba usunąć dodatkowym wzmacnianiem prywatności: I = 10⁻³ zabiera 0,45% klucza, I = 0,135 (przykład Gisina) 61%.
 
-Porównania z Lucamarini et al. 2015 nie ma: artykułu nie ma w `assets/` (ROADMAP, F6.7).
+
+## Budżet izolacji według Lucamariniego et al. 2015 (μ_out = 1,0·10^-6, N = 10²⁰ fotonów/s)
+
+| f_A | μ_in = N/f_A | γ z wzoru (nasz rachunek) | γ w Tabeli I | |Ṙ| + 2|Ȧ| + n|İ| | Informacja Ewy przy μ_out (stała / losowa faza) |
+| --- | --- | --- | --- | --- | --- |
+| 1,0·10^9 Hz | 1,0·10^11 | 170,0 dB | 170 dB | 40 + 2·35 + 1·60 = 170 dB | 1,4·10^-6 / 1,0·10^-6 bitu |
+| 1,0·10^9 Hz | 1,0·10^11 | 170,0 dB | 170 dB | 50 + 2·0 + 2·60 = 170 dB | 1,4·10^-6 / 1,0·10^-6 bitu |
+| 1,0·10^6 Hz | 1,0·10^14 | 200,0 dB | 200 dB | 40 + 2·30 + 2·50 = 200 dB | 1,4·10^-6 / 1,0·10^-6 bitu |
+| 1,0·10^6 Hz | 1,0·10^14 | 200,0 dB | 200 dB | 50 + 2·0 + 3·50 = 200 dB | 1,4·10^-6 / 1,0·10^-6 bitu |
+| 1,0·10^3 Hz | 1,0·10^17 | 230,0 dB | 230 dB | 40 + 2·35 + 2·60 = 230 dB | 1,4·10^-6 / 1,0·10^-6 bitu |
+| 1,0·10^3 Hz | 1,0·10^17 | 230,0 dB | 230 dB | 50 + 2·0 + 3·60 = 230 dB | 1,4·10^-6 / 1,0·10^-6 bitu |
+
+Wzór (4) artykułu, μ_out = Nγ/f_A, to nasz μ_out = μ_in·10^(−A/10) z μ_in ograniczonym progiem uszkodzenia światłowodu; składowe izolacji sumują się jak w naszym `round_trip_attenuation_db` (odbicie raz, tłumik dwa razy). Kryterium artykułu μ_out = 10⁻⁶ daje Ewie ok. 10⁻⁶ bitu na impuls; przy naszym progu wycieku 1,0·10^-3 bitu wystarcza μ_out ≤ 6,9·10^-4, czyli przy 1 GHz 142 dB zamiast 170 dB. Stopy klucza pod atakiem (wzór (6) artykułu) nie liczymy.

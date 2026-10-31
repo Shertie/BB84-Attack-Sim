@@ -15,6 +15,10 @@ Wiedza Ewy (ROADMAP, K6):
 - baza w czasie rzeczywistym (pozwala na intercept-resend bez błędów): Helstrom dla stanów
   mieszanych ρ_Z = ½(ρ_H + ρ_V) i ρ_X = ½(ρ_D + ρ_A) w obciętej przestrzeni Focka dwóch modów
   polaryzacji. Weryfikacja w QuTiP: tests/crosscheck/test_trojan_qutip.py.
+
+Granica sondy (Lucamarini i in. 2015): Ewa nie wpuści więcej niż N fotonów na sekundę bez
+uszkodzenia światłowodu (próg LIDT, N = 10²⁰), więc na jedno ustawienie modulatora o częstości
+f_A przypada najwyżej μ_in = N/f_A fotonów (ich wzór (4): μ_out = Nγ/f_A).
 """
 
 import math
@@ -30,6 +34,8 @@ Floats = npt.NDArray[np.float64]
 # Gisin et al. 2006, rozdz. II: odbicie wsteczne typowych elementów [dB tłumienia].
 GISIN_REFLECTION_DB = {"łącznik ze skośnym szlifem": 40.0, "modulator fazy": 20.0, "lustro": 1.0}
 BASIS_ANGLES = {"Z": (0.0, math.pi / 2), "X": (math.pi / 4, 3 * math.pi / 4)}
+# Lucamarini et al. 2015, rozdz. III.B: próg uszkodzenia (LIDT) w fotonach na sekundę.
+LIDT_PHOTONS_PER_S = 1e20
 
 
 def round_trip_attenuation_db(
@@ -37,6 +43,11 @@ def round_trip_attenuation_db(
 ) -> float:
     """A: izolator raz (w kierunku zaporowym), odbicie raz, tłumik Alice tam i z powrotem."""
     return isolation_db + reflection_db + 2.0 * attenuator_db
+
+
+def lidt_probe_photons(clock_hz: float, lidt_photons_per_s: float = LIDT_PHOTONS_PER_S) -> float:
+    """μ_in = N/f_A: najwięcej fotonów sondy na ustawienie modulatora poniżej progu LIDT."""
+    return lidt_photons_per_s / clock_hz
 
 
 def returned_photons(probe_photons: float, attenuation_db: float) -> float:

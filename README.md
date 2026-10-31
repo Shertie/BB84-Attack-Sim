@@ -70,7 +70,7 @@ Atak time-shift ([tabele](figures/e11_time_shift.md)): z krzywymi sprawności do
 
 ![Atak Trojan horse](figures/e12_trojan_horse.png)
 
-Atak Trojan horse ([tabele](figures/e12_trojan_horse.md)): odtwarzamy liczby Gisina et al. 2006 (0,135 i 0,095 bitu przy 0,1 fotonu wracającym do Ewy), a Monte Carlo w łączu GYS potwierdza, że QBER i zysk się nie zmieniają. Bazę w czasie rzeczywistym (do intercept-resend bez śladu w QBER) Ewa zgaduje dużo gorzej, gdy Alice losuje fazę: bez odniesienia fazowego pojedynczy foton nic o bazie nie mówi. Każdy rząd wielkości mocy sondy to 10 dB izolacji więcej, a losowa faza oszczędza 1,6 dB.
+Atak Trojan horse ([tabele](figures/e12_trojan_horse.md)): odtwarzamy liczby Gisina et al. 2006 (0,135 i 0,095 bitu przy 0,1 fotonu wracającym do Ewy), a Monte Carlo w łączu GYS potwierdza, że QBER i zysk się nie zmieniają. Bazę w czasie rzeczywistym (do intercept-resend bez śladu w QBER) Ewa zgaduje dużo gorzej, gdy Alice losuje fazę: bez odniesienia fazowego pojedynczy foton nic o bazie nie mówi. Każdy rząd wielkości mocy sondy to 10 dB izolacji więcej, a losowa faza oszczędza 1,6 dB. Z sondą ograniczoną progiem uszkodzenia światłowodu ten sam rachunek odtwarza Tabelę I Lucamariniego et al. 2015: 170, 200 i 230 dB izolacji przy 1 GHz, 1 MHz i 1 kHz.
 
 ![Słaby generator losowy](figures/e13_weak_rng.png)
 

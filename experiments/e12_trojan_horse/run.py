@@ -5,7 +5,8 @@ Wynik: figures/e12_trojan_horse.png, figures/e12_trojan_horse.md i results/e12_t
     Monte Carlo w łączu GYS i punkty z artykułu;
 (b) przewaga Ewy w odgadywaniu bazy (Helstrom dla stanów mieszanych) i próg, od którego
     intercept-resend z tą wiedzą mieści się pod progiem QBER;
-(c) wymagana izolacja w funkcji dopuszczalnego wycieku dla odbić z Gisina et al. 2006.
+(c) wymagana izolacja w funkcji dopuszczalnego wycieku dla odbić z Gisina et al. 2006;
+(d) budżet izolacji z Tabeli I Lucamariniego et al. 2015 (sonda ograniczona progiem LIDT).
 """
 
 import json
@@ -28,7 +29,10 @@ from qkdsim.analysis.trojan_horse import (
     basis_guess_probability,
     bit_guess_probability,
     bit_information,
+    lidt_probe_photons,
     required_isolation_db,
+    round_trip_attenuation_db,
+    tolerable_photons,
 )
 from qkdsim.analysis.wcp import gain, matched_basis_clicks
 from qkdsim.attacks.trojan_horse import TrojanHorse
@@ -40,6 +44,16 @@ from qkdsim.metrics import gain as measured_gain
 from qkdsim.pipeline import Link, run_counts_parallel
 from qkdsim.source import WCPSource
 
+# Lucamarini et al. 2015, Tabela I: (f_A [Hz], |γ̇|, |Ṙ|, |Ȧ|, |İ|, n) w dB, filtr Ḟ = 0.
+LUCAMARINI_TABLE_I = (
+    (1e9, 170, 40, 35, 60, 1),
+    (1e9, 170, 50, 0, 60, 2),
+    (1e6, 200, 40, 30, 50, 2),
+    (1e6, 200, 50, 0, 50, 3),
+    (1e3, 230, 40, 35, 60, 2),
+    (1e3, 230, 50, 0, 60, 3),
+)
+LUCAMARINI_TARGET = 1e-6  # μ_out z artykułu
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 NAME = HERE.name
@@ -216,7 +230,42 @@ def main() -> int:
         f"{comma(100 * 1e-3 / key_per_sifted, 2)}% klucza, I = 0,135 (przykład Gisina) "
         f"{comma(100 * 0.135 / key_per_sifted, 0)}%.",
         "",
-        "Porównania z Lucamarini et al. 2015 nie ma: artykułu nie ma w `assets/` (ROADMAP, F6.7).",
+    ]
+
+    # (d) Lucamarini et al. 2015, Tabela I: μ_out = 10⁻⁶ przy N = 10²⁰ fotonów/s.
+    lines += [
+        "",
+        "## Budżet izolacji według Lucamariniego et al. 2015 "
+        f"(μ_out = {scientific(LUCAMARINI_TARGET)}, N = 10²⁰ fotonów/s)",
+        "",
+        "| f_A | μ_in = N/f_A | γ z wzoru (nasz rachunek) | γ w Tabeli I | |Ṙ| + 2|Ȧ| + n|İ| | "
+        "Informacja Ewy przy μ_out (stała / losowa faza) |",
+        "| --- | --- | --- | --- | --- | --- |",
+    ]
+    lucamarini = []
+    for clock, gamma, reflection, attenuator, isolator, count in LUCAMARINI_TABLE_I:
+        probe = lidt_probe_photons(clock)
+        ours = 10.0 * math.log10(probe / LUCAMARINI_TARGET)
+        components = round_trip_attenuation_db(count * isolator, reflection, attenuator)
+        lucamarini.append((clock, ours, gamma, components))
+        lines.append(
+            f"| {scientific(clock)} Hz | {scientific(probe)} | {comma(ours, 1)} dB | "
+            f"{gamma:g} dB | "
+            f"{reflection:g} + 2·{attenuator:g} + {count}·{isolator:g} = {components:g} dB | "
+            f"{scientific(bit_information(LUCAMARINI_TARGET))} / "
+            f"{scientific(bit_information(LUCAMARINI_TARGET, True))} bitu |"
+        )
+    loose = required_isolation_db(lidt_probe_photons(1e9), cfg.max_information[0], 0.0)
+    lines += [
+        "",
+        "Wzór (4) artykułu, μ_out = Nγ/f_A, to nasz μ_out = μ_in·10^(−A/10) z μ_in ograniczonym "
+        "progiem uszkodzenia światłowodu; składowe izolacji sumują się jak w naszym "
+        "`round_trip_attenuation_db` (odbicie raz, tłumik dwa razy). Kryterium artykułu "
+        "μ_out = 10⁻⁶ daje Ewie ok. 10⁻⁶ bitu na impuls; przy naszym progu wycieku "
+        f"{scientific(cfg.max_information[0])} bitu wystarcza μ_out ≤ "
+        f"{scientific(tolerable_photons(cfg.max_information[0]))}, czyli przy 1 GHz "
+        f"{comma(loose, 0)} dB zamiast 170 dB. Stopy klucza pod atakiem (wzór (6) artykułu) "
+        "nie liczymy.",
     ]
 
     grid = np.logspace(-6, 1, 141)
@@ -315,6 +364,7 @@ def main() -> int:
                 },
                 "isolation_db": isolation,
                 "key_per_sifted_bit": key_per_sifted,
+                "lucamarini": lucamarini,
             },
             indent=2,
         ),
@@ -326,6 +376,10 @@ def main() -> int:
         all(abs(p.information - p.model) < 4.0 * p.sigma for p in points),
         all(abs(p.qber_z) < 4.0 and abs(p.gain_z) < 4.0 for p in points),
         all(bit_guess_probability(p.returned, p.random_phase) > 0.5 for p in points),
+        all(
+            abs(ours - gamma) < 0.05 and components == gamma
+            for _, ours, gamma, components in lucamarini
+        ),
     ]
     print("sprawdzenia:", checks)
     return 0 if all(checks) else 1

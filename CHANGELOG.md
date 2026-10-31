@@ -16,6 +16,8 @@ Wszystkie rozszerzenia z fazy F7 i audyt definicji ukończenia dla ośmiu atakó
 
 - Symulator QRNG na dzielniku wiązki (F7, przedłużenie ataku 8): `qrng.BeamSplitterQrng` z niedopasowaniem i pamięcią detektorów, dokładne obciążenie bitów, min-entropia metodą najczęstszej wartości z NIST SP 800-90B z kontekstem, ekstrakcja Toeplitzem, `QrngSource` jako generator Alice; testy zdrowia RCT i APT z progami zgodnymi z Tabelą 2 normy (`defenses/health_tests.py`), eksperyment e19.
 
+- Porównanie ataku Trojan horse z Lucamarinim et al. 2015 (e12): sonda ograniczona progiem uszkodzenia światłowodu (`analysis.trojan_horse.lidt_probe_photons`), budżet izolacji z Tabeli I odtworzony co do decybela. Pobrane do `assets/` 13 brakujących prac dostępnych na arXiv.
+
 - Uzgadnianie LDPC z syndromem (F7): kody o stałym stopniu zmiennych, dekoder BP, ramki równej długości ze skracaniem i odrzucaniem niezdekodowanych ramek, `PostprocessingConfig(reconciliation="ldpc")`, wiersze syndromu w analizie liniowej Ewy, ewolucja gęstości z progiem BP kodu (3,6) 0,0841 (literatura: 0,084), eksperyment e20.
 
 - Skończony klucz dla WCP ze stanami decoy (Lim et al. 2014, F7): wzory (1)–(5) z liczników (`postprocessing/finite_key_decoy.py`), oczekiwane liczniki dla modelu z artykułu i dla detektorów symulatora, optymalizacja parametrów protokołu, test krzyżowy z `qkd` (zgodność do 10⁻¹²), eksperyment e14. Odtworzone 135 km przy n_X = 10⁴ i stosunek ≈ 1,75 stóp przy 100 km.
@@ -31,7 +33,7 @@ Wszystkie rozszerzenia z fazy F7 i audyt definicji ukończenia dla ośmiu atakó
 - e07 korzysta z progu z `defenses/qber_test.py`; wyniki identyczne co do bajtu.
 - ROADMAP: audyt definicji ukończenia (rozdz. 7.1) dla ataków 1–8 zamiast szablonu; README i raport (mapa ataków, podrozdziały F7); `docs/model.md` rozdz. 14–17.
 - Bez nowych opcji (czas martwy, afterpulsy, QRNG, LDPC) wyniki są identyczne jak w 1.1.0.
-- 527 szybkich i 57 wolnych testów, pokrycie gałęzi rdzenia 96%. `make figures` z czystego klonu: 20 eksperymentów w 780 s na 12 rdzeniach; poza czasami CPU w e10 wyniki identyczne z repozytorium.
+- 528 szybkich i 57 wolnych testów, pokrycie gałęzi rdzenia 96%. `make figures` z czystego klonu: 20 eksperymentów w 780 s na 12 rdzeniach; poza czasami CPU w e10 wyniki identyczne z repozytorium.
 
 ## [1.1.0] – 2026-10-31
 
