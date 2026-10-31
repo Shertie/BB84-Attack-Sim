@@ -62,3 +62,9 @@ GISIN_ROUNDING = 5e-4
 NIST_MONOBIT_EXAMPLE = ("1011010101", 0.527089)
 NIST_RUNS_EXAMPLE = ("1001101011", 0.147232)
 NIST_PVALUE_DIGITS = 5e-7
+
+# Lim et al. 2014 (arXiv:1311.7129), tekst pod rys. 1: przy n_X = 10⁴ klucz do 135 km, a przy
+# 100 km stopa dla n_X = 10⁹ to „about 1.75 times” stopy dla 10⁷.
+LIM_MAX_DISTANCE_KM_1E4 = 135.0
+LIM_RATIO_100KM = 1.75
+LIM_RATIO_TOLERANCE = 0.05  # „about” w tekście

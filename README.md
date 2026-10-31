@@ -76,6 +76,10 @@ Atak Trojan horse ([tabele](figures/e12_trojan_horse.md)): odtwarzamy liczby Gis
 
 Słaby generator Alice ([tabele](figures/e13_weak_rng.md)): MT19937 o znanym ziarnie przechodzi testy monobit, runs i autokorelacji jak prawdziwy generator, a Ewa, odtwarzając go, zna cały klucz przy niezmienionym QBER i zysku. Obciążenie baz pozwala na intercept-resend z mniejszym QBER (pod progiem 11% od p ≈ 0,84). Obciążenie bitów 0,55 kosztuje 3,3% klucza asymptotycznie, ale w rachunku min-entropii ponad połowę. Korelacje Markowa w bitach sifting prawie wymazuje: przy 25 km zostaje 0,3% impulsów.
 
+![Skończony klucz z decoy](figures/e14_finite_key_decoy.png)
+
+Skończony klucz dla WCP ze stanami decoy (Lim et al. 2014, [tabele](figures/e14_finite_key_decoy.md)): odtwarzamy liczby z artykułu (135 km przy bloku 10⁴ bitów, stopa dla 10⁹ ok. 1,78 razy wyższa niż dla 10⁷ przy 100 km), a każdy krok wzorów zgadza się z `qkd`. W łączu GYS blok 10⁵ bitów skraca zasięg ze 148 do 121 km. Rachunek na licznikach z Monte Carlo daje długość klucza w granicach kilku procent od modelu.
+
 ## Szybki start
 
 ```bash

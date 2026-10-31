@@ -124,7 +124,9 @@ Przy Z5a widać różnicę między QKD a ML-KEM (ROADMAP, rozdz. 2.2a). QKD potr
 
 - **Rachunek:** `postprocessing/finite_key.py` implementuje twierdzenie Tomamichela et al. 2012 w dwóch wydrukowanych wersjach (tekst główny i Methods) oraz uproszczenie z planu (Hoeffding na samej próbce) do porównania. Protokół asymetryczny: n bitów klucza, k bitów testu, z góry ustalony próg Q_tol, przerwanie, gdy QBER z próbki go przekroczy. M(n, k) = (√n + √k)².
 - **Robustness:** p-stwo przerwania uczciwego przebiegu liczone jest dokładnie z ogona rozkładu dwumianowego.
-- **Zakres:** tylko źródło jednofotonowe. Skończony klucz dla WCP z decoy (Lim et al. 2014) to F7 (ROADMAP, K3 i K17).
+- **Zakres Tomamichela et al.:** źródło jednofotonowe.
+- **WCP z decoy (F7):** `postprocessing/finite_key_decoy.py` implementuje wzory (1)–(5) Lima et al. 2014: asymetryczny wybór baz (q dla bazy klucza), trzy intensywności μ₁ > μ₂ + μ₃, μ₂ > μ₃ ≥ 0, granice s₀, s₁ i v₁ z poprawką Hoeffdinga √(n/2 · ln(21/ε_sec)) oraz granica błędu fazowego z funkcją γ. Każdy krok zgadza się z `qkd` 0.2.0 do 10⁻¹². `analysis/finite_key_decoy.py` liczy oczekiwane liczniki dla modelu z artykułu (z afterpulsami) albo dla detektorów symulatora i optymalizuje (q, p₁, p₂, μ₁, μ₂) ewolucją różnicową. Na danych Monte Carlo rachunek działa przez `counts_from_simulation`; bazy wybiera `BiasedSource` z rng.py, więc przebieg jest jednoprocesowy.
+- **Rozbieżności z tekstem arXiv v1:** η_sys zamiast η_ch w modelu błędu, leak_EC jako liczba bitów i ε_sec = 10⁻¹⁰ zamiast κℓ (ROADMAP, K20 i K21). Dokumentacja `qkd` powołuje się na Tupkary et al. (arXiv:2502.10340), według których granica (5) nie jest ścisła; nie weryfikowaliśmy tego.
 
 ## 10. Atak indywidualny (F4)
 

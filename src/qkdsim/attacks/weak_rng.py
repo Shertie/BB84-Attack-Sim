@@ -3,7 +3,7 @@
 Generator Alice to wstrzykiwany `RandomSource` (ADR 0003), więc podmiana go zmienia tylko jej
 wybory. Warianty:
 - `known_seed_source`: MT19937 o ziarnie znanym Ewie; statystycznie dobry, ale przewidywalny;
-- `BiasedSource`: obciążone bity i bazy (np. 0,55/0,45);
+- `BiasedSource` (z rng.py): obciążone bity i bazy (np. 0,55/0,45);
 - `MarkovSource`: kolejne bity (bazy) powtarzają poprzedni z p-stwem `stay`.
 
 Ewa korzysta z tego na dwa sposoby:
@@ -20,30 +20,21 @@ import numpy as np
 
 from qkdsim.eve import NO_BASIS, EveLog
 from qkdsim.pulses import Pulses
-from qkdsim.rng import Bits, GeneratorSource, RandomSource
+from qkdsim.rng import BiasedSource, Bits, GeneratorSource, RandomSource
+
+__all__ = [
+    "BiasedSource",
+    "MajorityPredictor",
+    "MarkovSource",
+    "PassivePrediction",
+    "ReplayPredictor",
+    "known_seed_source",
+]
 
 
 def known_seed_source(seed: int) -> GeneratorSource:
     """Generator Alice z ziarnem, które zna Ewa (MT19937, jak `random` w Pythonie)."""
     return GeneratorSource(np.random.Generator(np.random.MT19937(seed)))
-
-
-class BiasedSource:
-    """Bity równe 1 z p-stwem `p_one`, baza X z p-stwem `p_x`."""
-
-    def __init__(self, generator: np.random.Generator, p_one: float = 0.5, p_x: float = 0.5):
-        if not (0.0 <= p_one <= 1.0 and 0.0 <= p_x <= 1.0):
-            raise ValueError("p_one i p_x muszą być w [0, 1]")
-        self._generator, self.p_one, self.p_x = generator, p_one, p_x
-
-    def bits(self, n: int) -> Bits:
-        return (self._generator.random(n) < self.p_one).astype(np.uint8)
-
-    def bases(self, n: int) -> Bits:
-        return (self._generator.random(n) < self.p_x).astype(np.uint8)
-
-    def choice(self, n: int, p: Sequence[float]) -> Bits:
-        return self._generator.choice(len(p), size=n, p=p).astype(np.uint8)
 
 
 class MarkovSource:

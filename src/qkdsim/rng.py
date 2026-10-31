@@ -47,6 +47,28 @@ class GeneratorSource:
         return self._generator.choice(len(p), size=n, p=p).astype(np.uint8)
 
 
+class BiasedSource:
+    """Bity równe 1 z p-stwem `p_one`, baza X z p-stwem `p_x`.
+
+    Uczciwy protokół asymetryczny (Lim et al. 2014) wybiera bazy z p-stwem różnym od ½;
+    atak 8 używa tej samej klasy jako obciążonego generatora.
+    """
+
+    def __init__(self, generator: np.random.Generator, p_one: float = 0.5, p_x: float = 0.5):
+        if not (0.0 <= p_one <= 1.0 and 0.0 <= p_x <= 1.0):
+            raise ValueError("p_one i p_x muszą być w [0, 1]")
+        self._generator, self.p_one, self.p_x = generator, p_one, p_x
+
+    def bits(self, n: int) -> Bits:
+        return (self._generator.random(n) < self.p_one).astype(np.uint8)
+
+    def bases(self, n: int) -> Bits:
+        return (self._generator.random(n) < self.p_x).astype(np.uint8)
+
+    def choice(self, n: int, p: Sequence[float]) -> Bits:
+        return self._generator.choice(len(p), size=n, p=p).astype(np.uint8)
+
+
 @dataclass(frozen=True)
 class RandomStreams:
     """Niezależne strumienie losowości jednego przebiegu, wyprowadzone z jednego ziarna."""

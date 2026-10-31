@@ -2,6 +2,16 @@
 
 Format na wzór [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersje według [SemVer](https://semver.org/lang/pl/).
 
+## [Unreleased]
+
+### Dodane
+
+- Skończony klucz dla WCP ze stanami decoy (Lim et al. 2014, F7): wzory (1)–(5) z liczników (`postprocessing/finite_key_decoy.py`), oczekiwane liczniki dla modelu z artykułu i dla detektorów symulatora, optymalizacja parametrów protokołu, test krzyżowy z `qkd` (zgodność do 10⁻¹²), eksperyment e14. Odtworzone 135 km przy n_X = 10⁴ i stosunek ≈ 1,75 stóp przy 100 km.
+
+### Zmienione
+
+- `BiasedSource` przeniesiony do `rng.py` (uczciwy protokół asymetryczny); `attacks.weak_rng` nadal go udostępnia.
+
 ## [1.1.0] – 2026-10-31
 
 Komplet ośmiu ataków z planu (faza F6).

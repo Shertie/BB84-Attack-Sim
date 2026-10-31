@@ -1,0 +1,9 @@
+# E14: skończony klucz dla WCP ze stanami decoy (Lim et al. 2014), F7.
+seed: 20261107
+lim_lengths_km: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170, 180, 190, 200]
+lim_blocks: [1.0e+4, 1.0e+5, 1.0e+6, 1.0e+7, 1.0e+8, 1.0e+9]
+gys_lengths_km: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140, 150]
+gys_blocks: [1.0e+5, 1.0e+7, 1.0e+9]
+gys_f_ec: 1.22
+mc_lengths_km: [10, 25, 50]
+mc_block: 1.0e+5
