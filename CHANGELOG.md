@@ -10,6 +10,8 @@ Format na wzór [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersje
 
 - MDI-QKD (Lo, Curty, Qi 2012, F7): przekaźnik z pomiarem Bella i dokładną fizyką stanów koherentnych z losową fazą (`mdi.py`), model analityczny zysków, QBER i pary pojedynczych fotonów (`analysis/mdi.py`, zgodny ze wzorami Ma i Razaviego w `qkd`), stopa z wzoru (1), Ewa jako przekaźnik (`MeasureAndAnnounce`), eksperyment e15. Zasięg 207,5 km przy parametrach z artykułu.
 
+- QKD ze splątanymi parami (F7): BBM92 ze źródłem SPDC (dokładny model wielu par, `entangled.py`, `analysis/entangled.py`, zgodny z Ma, Fungiem i Lo w `qkd`), test CHSH bez fair sampling, stopa device-independent (Acín i in. 2007) i progi sprawności 82,8% oraz 92,3%, fałszywe naruszenie CHSH przez sterowanie detektorami (Gerhardt i in. 2011), eksperyment e16.
+
 ### Zmienione
 
 - `BiasedSource` przeniesiony do `rng.py` (uczciwy protokół asymetryczny); `attacks.weak_rng` nadal go udostępnia.

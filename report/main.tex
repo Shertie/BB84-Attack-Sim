@@ -56,7 +56,7 @@ Po siftingu Alice i Bob ujawniają losową próbkę (10\%) i estymują z niej QB
 
 \subsection{Implementacja i testy}
 
-Kod to Python i numpy, sprawdzany \texttt{mypy --strict}. Testy: 460 szybkich (jednostkowe, regresji ze ,,złotymi wartościami'', własności przez \texttt{hypothesis}, krzyżowe z \texttt{qkd} i QuTiP) i 56 wolnych, statystycznych, które porównują Monte Carlo ze wzorem przez $z$-score przy stałych ziarnach ($|z| < 4$). Pokrycie gałęzi rdzenia szybkimi testami: 95\%. Fragmenty kwantowe ataków 5 i 6 weryfikuje niezależnie QuTiP. Każdy z piętnastu eksperymentów kończy się błędem, jeśli wynik wyjdzie poza tolerancję, a całość odtwarza \texttt{make figures}.
+Kod to Python i numpy, sprawdzany \texttt{mypy --strict}. Testy: 474 szybkich (jednostkowe, regresji ze ,,złotymi wartościami'', własności przez \texttt{hypothesis}, krzyżowe z \texttt{qkd} i QuTiP) i 56 wolnych, statystycznych, które porównują Monte Carlo ze wzorem przez $z$-score przy stałych ziarnach ($|z| < 4$). Pokrycie gałęzi rdzenia szybkimi testami: 95\%. Fragmenty kwantowe ataków 5 i 6 weryfikuje niezależnie QuTiP. Każdy z szesnastu eksperymentów kończy się błędem, jeśli wynik wyjdzie poza tolerancję, a całość odtwarza \texttt{make figures}.
 
 \section{Walidacja}
 
@@ -92,6 +92,7 @@ Bez ataku zysk i QBER z Monte Carlo zgadzają się ze wzorami na całym zakresie
     Decoy, skończony klucz: zasięg przy $n_X = 10^4$ & 135~km & 135,2~km & wzory zgodne \\
     Decoy: $R(n_X{=}10^9)/R(n_X{=}10^7)$ przy 100~km & $\approx 1{,}75$ & 1,780 & --- \\
     MDI-QKD: zasięg z przekaźnikiem pośrodku & $> 200$~km & 207,5~km & wzory zgodne \\
+    Próg sprawności dla klucza DI (CHSH) & 92,4\% & 92,31\% & --- \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -220,6 +221,19 @@ W MDI-QKD \cite{lo2012mdi} Alice i Bob wysyłają stany BB84 do niezaufanego prz
   \label{fig:e15}
 \end{figure}
 
+\subsection{Splątane pary, CHSH i device-independent}
+
+W BBM92 \cite{bennett1992without} źródło par SPDC stoi pośrodku. Symulujemy je dokładnie: dwie pary trybów o termicznej liczbie par, które dzięki niezmienniczości singletu mają ten sam rozkład w każdej wspólnej bazie. Zysk zgadza się ze wzorem Ma, Funga i Lo \cite{ma2007entangled} do $10^{-10}$, a ich QBER, liczony z uproszczeniem dla koincydencji bez wspólnej pary, różni się od dokładnego o mniej niż 0,1\%. Z detektorami GYS BBM92 sięga 286~km, dwa razy dalej niż decoy BB84, bo przypadkowa koincydencja wymaga ciemnych zliczeń po obu stronach, ale stopa jest około stu razy niższa.
+
+Test CHSH bez założenia fair sampling, z brakiem kliknięcia czytanym jako wynik, daje $S = 2\sqrt{2}V\eta^2 + 2(1-\eta)^2$: naruszenie wymaga $\eta > 2/(1+\sqrt{2}) = 82{,}8\%$, a dodatni klucz device-independent z granicy Acína i in.\ \cite{acin2007device} $\eta > 92{,}3\%$ (Pironio i in.\ \cite{pironio2009device} podają 92,4\%). Ewa sterująca detektorami \cite{gerhardt2011faking}, czyli lokalny model, daje na samych koincydencjach $S = 2\sqrt{2}$ jak prawdziwe splątanie, a na wszystkich rundach $S < 2$ (rys.~\ref{fig:e16}).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{e16_entangled}
+  \caption{Splątane pary: BBM92 z SPDC na tle decoy BB84, CHSH i stopa device-independent w funkcji sprawności detekcji oraz fałszywe naruszenie przez sterowanie detektorami.}
+  \label{fig:e16}
+\end{figure}
+
 \section{Skończony klucz}
 
 Rachunek asymptotyczny zakłada nieskończony blok. Dla bloku $n$ bitów klucza i $k$ bitów testu używamy twierdzenia Tomamichela i in.\ \cite{tomamichel2012tight}: protokół przerywa się, gdy QBER z próbki przekroczy próg $Q_{\mathrm{tol}}$ ustalony z góry, a długość klucza zależy od $Q_{\mathrm{tol}}$ i poprawki statystycznej, a nie od zmierzonego QBER. Stopa rośnie z $n$ w stronę granicy $1 - 2h(Q)$ (rys.~\ref{fig:e07}). Uproszczenie z planu projektu (nierówność Hoeffdinga na samej próbce) pomija przeniesienie błędu z próbki na klucz przy losowaniu bez zwracania i zawyża długość klucza o 95\% przy $n = 3000$ i o 15\% przy $n = 10^5$.
@@ -315,7 +329,7 @@ Wniosek: QKD i ML-KEM chronią przed różnymi rzeczami. QKD daje bezpieczeństw
 
 Model pomija dyspersję i dryf polaryzacji, a $e_d$ i $Y_0$ nie zależą od długości ani od czasu. Skończony klucz dla WCP z decoy liczymy wzorami Lima i in., których granica błędu fazowego według dokumentacji \texttt{qkd} nie jest ścisła (nie weryfikowaliśmy tego); przebieg Monte Carlo z asymetrycznym wyborem baz jest jednoprocesowy. Atak 6 działa na pojedynczych fotonach i idealnych detektorach, bo jest granicą teoretyczną. Krzywe sprawności w ataku time-shift to Gaussy, a nie zmierzony profil bramki. W ataku Trojan horse nie modelujemy filtrów ani czasu otwarcia modulatora i nie porównujemy wyników z ograniczeniami Lucamariniego i in.\ \cite{lucamarini2015practical}. Scenariusze złamania ML-DSA są wyidealizowane (Ewa ma po prostu klucz prywatny), a kanałów bocznych implementacji PQC nie modelujemy. Czas CPU Wegmana--Cartera mierzymy na implementacji w Pythonie i nie jest on reprezentatywny dla metody.
 
-Wnioski: (1) zwalidowany tor Monte Carlo odtwarza wartości kontrolne z literatury i z niezależnej implementacji; (2) wszystkie ataki, które nie podnoszą QBER (oślepianie, PNS, time-shift, Trojan horse, MITM, słaby generator), łamią założenie dowodu, a nie wzór na długość klucza, i każdy ma obronę z mierzalną metryką; (3) generator ze znanym ziarnem przechodzi testy statystyczne, a mimo to oddaje Ewie cały klucz; MDI-QKD usuwa ataki na detektory, bo Ewa kontrolująca przekaźnik zdradza się w bazie testowej; (4) uwierzytelnianie podpisem postkwantowym zachowuje zaletę QKD wobec ,,harvest now, decrypt later'', o ile podpis wytrzymuje czas sesji, a hybryda z Wegmanem--Carterem usuwa nawet to założenie.
+Wnioski: (1) zwalidowany tor Monte Carlo odtwarza wartości kontrolne z literatury i z niezależnej implementacji; (2) wszystkie ataki, które nie podnoszą QBER (oślepianie, PNS, time-shift, Trojan horse, MITM, słaby generator), łamią założenie dowodu, a nie wzór na długość klucza, i każdy ma obronę z mierzalną metryką; (3) generator ze znanym ziarnem przechodzi testy statystyczne, a mimo to oddaje Ewie cały klucz; MDI-QKD usuwa ataki na detektory, bo Ewa kontrolująca przekaźnik zdradza się w bazie testowej; test CHSH na samych koincydencjach niczego nie dowodzi, a device-independent wymaga sprawności detekcji ponad 92\%; (4) uwierzytelnianie podpisem postkwantowym zachowuje zaletę QKD wobec ,,harvest now, decrypt later'', o ile podpis wytrzymuje czas sesji, a hybryda z Wegmanem--Carterem usuwa nawet to założenie.
 
 Kod, dane i wykresy: repozytorium projektu (\texttt{make figures}, \texttt{make report}).
 

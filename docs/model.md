@@ -153,3 +153,11 @@ Przy Z5a widać różnicę między QKD a ML-KEM (ROADMAP, rozdz. 2.2a). QKD potr
 - **Stopa:** wzór (1) artykułu z nieskończenie wieloma stanami decoy (Y₁₁ i e₁₁ z modelu), μ_A = μ_B optymalizowane, przekaźnik pośrodku. Tło 6,02·10⁻⁶ liczymy na parę detektorów (ROADMAP, K22).
 - **Ewa jako przekaźnik:** `MeasureAndAnnounce` mierzy oba impulsy w bazie Z i ogłasza |ψ⁻⟩, gdy wyniki się różnią. Ataki na detektory (2, 4) tracą sens, bo detektory i tak należą do Ewy; jedyne, co może zrobić, to mierzyć stany Alice i Boba, a to widać w bazie X.
 - **Ograniczenia:** brak skończonego klucza dla MDI (Curty et al. 2014; `qkd` go ma) i estymacji decoy z danych; jeden przebieg Monte Carlo to jedna intensywność na stronę.
+
+## 13. Splątane pary: BBM92, CHSH i device-independent (F7)
+
+- **Źródło SPDC:** dwie niezależne pary trybów, (A_H, B_V) i (A_V, B_H), każda o termicznej liczbie par z średnią λ. Wykładnik stanu jest singletem SU(2), więc w każdej wspólnej bazie Alice ma n₁ fotonów w jednym trybie i n₂ w drugim, a Bob odwrotnie. Każdy foton dociera z p-stwem η swojego ramienia, u Boba trafia do złego detektora z p-stwem e_d; detektory progowe z ciemnymi zliczeniami, podwójne kliknięcie daje losowy bit. `analysis/entangled.pair_statistics` sumuje to dokładnie po (n₁, n₂), `entangled.simulate_pairs` losuje.
+- **Zgodność z Ma, Fungiem i Lo 2007:** zysk (ich wzór (9)) zgadza się do 10⁻¹⁰. Ich QBER (wzór (10)) zakłada, że koincydencje bez wspólnej pary mylą się z p-stwem ½; różnica względem modelu dokładnego jest poniżej 0,1%.
+- **CHSH:** urządzenia jak czarne skrzynki, korelacja V cos 2(a − b), sprawność η, brak kliknięcia czytany jako +1. S = 2√2Vη² + 2(1 − η)², QBER ustawień klucza η²(1 − V)/2 + η(1 − η), stopa device-independent przeciw atakom kolektywnym z granicy Acína i in. 2007. Próg S > 2 to 2/(1 + √2); próg dodatniej stopy wychodzi 92,31% wobec 92,4% podanych przez Pironio i in. 2009 (za dokumentacją `qkd`).
+- **Fałszywe naruszenie:** `DetectorControl` (Gerhardt i in. 2011) to lokalny model, w którym Ewa wybiera ustawienia i wyniki, a detektory klikają tylko przy jej ustawieniu. Na samych koincydencjach daje S = 4p (2√2 przy p = 1/√2), na wszystkich rundach S = p + ½ < 2.
+- **Ograniczenia:** test CHSH zakłada idealne źródło par (bez wielu par i ciemnych zliczeń) z białym szumem; brak skończonego klucza dla DI i ataków ogólnych.

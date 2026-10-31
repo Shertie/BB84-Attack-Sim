@@ -84,6 +84,10 @@ Skończony klucz dla WCP ze stanami decoy (Lim et al. 2014, [tabele](figures/e14
 
 MDI-QKD (Lo, Curty, Qi 2012, [tabele](figures/e15_mdi_qkd.md)): Alice i Bob wysyłają stany do niezaufanego przekaźnika z pomiarem Bella, więc ataki na detektory przestają działać. Przekaźnik ma dokładną fizykę stanów koherentnych; zyski i QBER zgadzają się ze wzorami Ma i Razaviego w `qkd`, a Monte Carlo z modelem. Przy parametrach z artykułu zasięg wynosi 207,5 km (artykuł: ponad 200 km), wobec 159,6 km dla decoy BB84 z tymi samymi detektorami. Ewa jako przekaźnik może znać cały klucz bez błędów w bazie klucza, ale baza testowa pokazuje wtedy 50% błędów.
 
+![Splątane pary](figures/e16_entangled.png)
+
+Splątane pary ([tabele](figures/e16_entangled.md)): BBM92 ze źródłem SPDC pośrodku (dokładny model wielu par, zgodny z Ma, Fungiem i Lo) sięga z detektorami GYS 286 km, dwa razy dalej niż decoy BB84, ale przy stopie ok. 100 razy niższej. Test CHSH bez założenia fair sampling wymaga sprawności detekcji ponad 82,8% dla S > 2 i ponad 92,3% dla klucza device-independent (Pironio i in.: 92,4%). Ewa sterująca detektorami daje na samych koincydencjach S = 2√2 jak prawdziwe splątanie, a na wszystkich rundach S < 2.
+
 ## Szybki start
 
 ```bash

@@ -72,3 +72,9 @@ LIM_RATIO_TOLERANCE = 0.05  # „about” w tekście
 # Lo, Curty, Qi 2012: przekaźnik pośrodku toleruje „more than 40dB (i.e., 200km)” strat
 # (parametry z podpisu rys. 2).
 LCQ12_MIN_RANGE_KM = 200.0
+
+# Device-independent QKD: próg sprawności detekcji dla stanu maksymalnie splątanego przy Q = 0
+# i S = 2√2, brak kliknięcia czytany jako wynik (Pironio i in., New J. Phys. 11, 045021 (2009),
+# podpis rys. 3, za dokumentacją qkd 0.2.0: DI_ETA_SINGLET). Podany do 0,1 punktu procentowego.
+PIRONIO_DI_EFFICIENCY = 0.924
+PIRONIO_ROUNDING = 2e-3
