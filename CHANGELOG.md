@@ -2,13 +2,22 @@
 
 Format na wzór [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersje według [SemVer](https://semver.org/lang/pl/).
 
-## [Unreleased]
+## [1.1.0] – 2026-10-31
+
+Komplet ośmiu ataków z planu (faza F6).
 
 ### Dodane
 
 - Atak 4, time-shift (Qi et al. 2007, Zhao et al. 2008): krzywe sprawności detektorów w czasie (`EfficiencyMismatch`) dopasowane do Tabeli I(a) artykułu, atak `TimeShift`, model analityczny z granicami K_U i K_L (odtworzone 1131 i 1297 bitów z danych artykułu), obrona losowym przypisaniem bit ↔ detektor (`Link.random_assignment`), eksperyment e11.
 - Atak 5, Trojan horse (Gisin et al. 2006): model wycieku sondy przez izolację i odbicie, wiedza Ewy o bicie (Helstrom, licznik fotonów przy losowej fazie) i o bazie (Helstrom dla stanów mieszanych, weryfikacja w QuTiP), atak `TrojanHorse` w torze impulsów, wymagana izolacja w funkcji wycieku, eksperyment e12.
 - Atak 8, słaby generator Alice: MT19937 o znanym ziarnie, obciążenie i korelacje Markowa jako `RandomSource`; Ewa odtwarza generator (atak pasywny lub intercept-resend w odtworzonej bazie) albo mierzy w częstszej bazie; deficyt entropii i rozrzedzanie korelacji przez sifting; testy losowości (monobit, runs, autokorelacja) z analizą mocy, eksperyment e13.
+
+### Zmienione
+
+- Raport (12 stron): podrozdziały o atakach 4, 5 i 8, pełna mapa ataków, wartości kontrolne z Zhao et al. 2008, Gisina et al. 2006 i NIST SP 800-22.
+- README: mapa ataków ze wszystkimi ośmioma atakami.
+- `make figures` z czystego klonu: 13 eksperymentów w 464 s na 12 rdzeniach; poza czasami CPU w e10 wykresy identyczne z repozytorium.
+- `InterceptResend` przyjmuje opcjonalny predyktor baz, `intercept_resend_model` p-stwo trafienia bazy; detektory mają opcjonalne krzywe sprawności w czasie, a Bob losowe przypisanie bit ↔ detektor. Bez tych opcji wyniki są identyczne jak w 1.0.0.
 
 ## [1.0.0] – 2026-10-30
 

@@ -4,15 +4,16 @@ title: "bb84-attacks: symulator Monte Carlo BB84 z atakami i uwierzytelnianiem p
 type: software
 authors:
   - alias: Shertie
-version: 1.0.0
-date-released: "2026-10-30"
+version: 1.1.0
+date-released: "2026-10-31"
 license: MIT
 abstract: >-
   Symulator Monte Carlo protokołu BB84 na poziomie impulsów (źródło WCP z decoy,
   światłowód, detektory SPAD, Cascade, wzmacnianie prywatności, skończony klucz),
   zwalidowany względem wzorów Ma et al. 2005 i niezależnej implementacji qkd.
-  Wykonuje ataki intercept-resend, oślepianie detektorów, PNS, optymalny atak
-  indywidualny i man-in-the-middle z obronami oraz porównuje uwierzytelnianie
+  Wykonuje osiem ataków (intercept-resend, oślepianie detektorów, PNS, time-shift,
+  Trojan horse, optymalny atak indywidualny, man-in-the-middle, słaby generator)
+  z obronami oraz porównuje uwierzytelnianie
   Wegmana–Cartera, ML-DSA i hybrydowe w kontekście QKD i ML-KEM.
 keywords:
   - quantum key distribution

@@ -6,7 +6,7 @@ Model: polaryzacyjny BB84, światłowód 1550 nm, źródło słabych impulsów k
 
 Pomost do kryptografii postkwantowej (wariant E): kanał klasyczny uwierzytelniany Wegmanem–Carterem, podpisem ML-DSA (FIPS 204) albo hybrydowo, z tabelą modeli zagrożeń QKD wobec ML-KEM.
 
-> **Status: v1.0, w drodze do v1.1.** Ataki 1 (intercept-resend), 2 (oślepianie detektorów), 3 (PNS), 6 (optymalny atak indywidualny) i 7 (MITM) z obronami, skończony klucz i uwierzytelnianie postkwantowe; po v1.0 doszły ataki 4 (time-shift), 5 (Trojan horse) i 8 (słaby generator). Do v1.1 zostało domknięcie mapy, raportu i release: [ROADMAP.md](ROADMAP.md). Raport: [report/main.tex](report/main.tex) (`make report`).
+> **Status: v1.1.** Komplet ośmiu ataków z planu z obronami: intercept-resend, oślepianie detektorów, PNS, time-shift, Trojan horse, optymalny atak indywidualny, MITM i słaby generator. Do tego skończony klucz i uwierzytelnianie postkwantowe. Dalsze rozszerzenia (F7): [ROADMAP.md](ROADMAP.md). Raport: [report/main.tex](report/main.tex) (`make report`).
 
 ## Wyniki kontrolne
 
@@ -26,7 +26,7 @@ Stopa klucza R(L) jak u Ma et al. 2005: GLLP bez decoy kończy się przy ~40 km,
 
 I_AB = I_AE przy D\* = 14,64% dla optymalnego ataku indywidualnego (Fuchs et al. 1997, zweryfikowany w QuTiP), a próg Shora–Preskilla dla ataków ogólnych to 11,00%.
 
-Wszystkie wykresy odtwarza `make figures` (około 5 min na 12 rdzeniach). Każdy skrypt w `experiments/` kończy się błędem, jeśli jego wynik wyjdzie poza tolerancję.
+Wszystkie wykresy odtwarza `make figures` (13 eksperymentów, około 8 min na 12 rdzeniach). Każdy skrypt w `experiments/` kończy się błędem, jeśli jego wynik wyjdzie poza tolerancję.
 
 ## Mapa ataków
 

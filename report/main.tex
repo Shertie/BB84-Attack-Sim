@@ -1,4 +1,4 @@
-% Raport v1.0 (F5.3 w ROADMAP.md). Liczby pochodzą z results/*.json i figures/*.md,
+% Raport v1.1 (F5.3 i F6.11 w ROADMAP.md). Liczby pochodzą z results/*.json i figures/*.md,
 % które odtwarza `make figures`.
 \documentclass[11pt,a4paper]{article}
 \usepackage[T1]{fontenc}
@@ -19,13 +19,13 @@
 
 \title{Symulator BB84 z atakami:\\walidacja modelu, katalog ataków i~uwierzytelnianie postkwantowe}
 \author{Shertie}
-\date{wersja 1.0, \today}
+\date{wersja 1.1, \today}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-Opisujemy symulator Monte Carlo protokołu BB84 na poziomie pojedynczych impulsów: od źródła słabych impulsów koherentnych przez światłowód i detektory SPAD do klucza końcowego po korekcji błędów i wzmacnianiu prywatności. Model z parametrami eksperymentu GYS odtwarza wzory Ma i in.\ (2005) dla zysku, QBER i stopy klucza, a wyniki krzyżowo zgadzają się z niezależną implementacją \texttt{qkd}. Na tym torze wykonujemy pięć ataków (intercept-resend, oślepianie detektorów, PNS, optymalny atak indywidualny, man-in-the-middle) i porządkujemy je w mapę ,,atak $\to$ złamane założenie dowodu $\to$ obrona $\to$ metryka''. Ostatnia część porównuje uwierzytelnianie kanału klasycznego kluczem współdzielonym (Wegman--Carter) i podpisem ML-DSA (FIPS~204) oraz zestawia QKD z ML-KEM w kilku modelach zagrożeń.
+Opisujemy symulator Monte Carlo protokołu BB84 na poziomie pojedynczych impulsów: od źródła słabych impulsów koherentnych przez światłowód i detektory SPAD do klucza końcowego po korekcji błędów i wzmacnianiu prywatności. Model z parametrami eksperymentu GYS odtwarza wzory Ma i in.\ (2005) dla zysku, QBER i stopy klucza, a wyniki krzyżowo zgadzają się z niezależną implementacją \texttt{qkd}. Na tym torze wykonujemy osiem ataków (intercept-resend, oślepianie detektorów, PNS, time-shift, Trojan horse, optymalny atak indywidualny, man-in-the-middle, słaby generator losowy) i porządkujemy je w mapę ,,atak $\to$ złamane założenie dowodu $\to$ obrona $\to$ metryka''. Ostatnia część porównuje uwierzytelnianie kanału klasycznego kluczem współdzielonym (Wegman--Carter) i podpisem ML-DSA (FIPS~204) oraz zestawia QKD z ML-KEM w kilku modelach zagrożeń.
 \end{abstract}
 
 \section{Wstęp}
@@ -36,7 +36,7 @@ Istnieją narzędzia o podobnym zakresie. Najbliższe jest \texttt{qkd} (PyPI), 
 
 Wkład projektu:
 (i) tor Monte Carlo BB84 z WCP, decoy, Cascade, haszem Toeplitza i skończonym kluczem, zgodny ze wzorami na 0--150~km;
-(ii) ataki 1, 2, 3, 6 i 7 z obronami i krzywymi ROC;
+(ii) osiem ataków z obronami, krzywymi ROC i odtworzonymi liczbami z publikacji;
 (iii) mapa ataków na założenia dowodu;
 (iv) porównanie Wegmana--Cartera, ML-DSA i hybrydy oraz tabela modeli zagrożeń QKD wobec ML-KEM.
 
@@ -56,7 +56,7 @@ Po siftingu Alice i Bob ujawniają losową próbkę (10\%) i estymują z niej QB
 
 \subsection{Implementacja i testy}
 
-Kod to Python i numpy, sprawdzany \texttt{mypy --strict}. Testy: 375 szybkich (jednostkowe, regresji ze ,,złotymi wartościami'', własności przez \texttt{hypothesis}, krzyżowe z \texttt{qkd}) i 55 wolnych: statystyczne, które porównują Monte Carlo ze wzorem przez $z$-score przy stałych ziarnach ($|z| < 4$), oraz krzyżowe z QuTiP. Pokrycie gałęzi rdzenia szybkimi testami: 95\%. Fragmenty kwantowe ataku 6 weryfikuje niezależnie QuTiP. Każdy z dziesięciu eksperymentów kończy się błędem, jeśli wynik wyjdzie poza tolerancję, a całość odtwarza \texttt{make figures}.
+Kod to Python i numpy, sprawdzany \texttt{mypy --strict}. Testy: 435 szybkich (jednostkowe, regresji ze ,,złotymi wartościami'', własności przez \texttt{hypothesis}, krzyżowe z \texttt{qkd} i QuTiP) i 55 wolnych, statystycznych, które porównują Monte Carlo ze wzorem przez $z$-score przy stałych ziarnach ($|z| < 4$). Pokrycie gałęzi rdzenia szybkimi testami: 95\%. Fragmenty kwantowe ataków 5 i 6 weryfikuje niezależnie QuTiP. Każdy z trzynastu eksperymentów kończy się błędem, jeśli wynik wyjdzie poza tolerancję, a całość odtwarza \texttt{make figures}.
 
 \section{Walidacja}
 
@@ -86,17 +86,20 @@ Bez ataku zysk i QBER z Monte Carlo zgadzają się ze wzorami na całym zakresie
     Odchylenie $Y_1^L$ / $e_1^U$ przy 40~km & 3,5\% / 16,8\% & zgodne & 3,51\% / 16,78\% \\
     $L_{\max}$, GLLP bez decoy & --- & $\approx 40$~km & 40,21~km \\
     Sprawność Cascade, $Q = 0{,}5$--$8\%$ & 1,1--1,2 & 1,106--1,191 & --- \\
+    Time-shift: $K_U$ / $K_L$ z danych Zhao i in.\ & 1131 / 1297 bitów & 1130,9 / 1296,8 & --- \\
+    Trojan horse: informacja Ewy, $\mu_{\mathrm{out}} = 0{,}1$ & 0,135 / 0,095 bitu & 0,1350 / 0,0952 & --- \\
+    Testy NIST: monobit / runs, $n = 10$ & 0,527089 / 0,147232 & zgodne & --- \\
     \bottomrule
   \end{tabularx}
 \end{table}
 
 \section{Ataki i obrony}
 
-Tabela~\ref{tab:map} to centralny wynik projektu. Każdy atak, który nie podnosi QBER, łamie jedno z założeń dowodu, a obrona przywraca to założenie albo wykrywa jego złamanie. Plan projektu przewidywał to dla ataków 2, 4, 5, 7 i 8; wyniki dodają do listy PNS, który przy niezmienionym QBER i zysku łamie założenie o znanym rozkładzie liczby fotonów.
+Tabela~\ref{tab:map} to centralny wynik projektu. Każdy atak, który nie podnosi QBER, łamie jedno z założeń dowodu, a obrona przywraca to założenie albo wykrywa jego złamanie. Plan projektu przewidywał to dla ataków 2, 4, 5, 7 i 8, a wyniki to potwierdzają. Dochodzi do nich PNS, który przy niezmienionym QBER i zysku łamie założenie o znanym rozkładzie liczby fotonów.
 
 \begin{table}[t]
   \centering
-  \caption{Mapa ataków v1.0. Z1: rozkład liczby fotonów uwzględniony w długości klucza; Z3: detektor jednofotonowy o sprawności niezależnej od bitu i czasu; Z5a: kanał klasyczny uwierzytelniony w trakcie sesji; Z5b: klucze publiczne autentyczne; Z7: Ewa ograniczona tylko fizyką; Z8: estymacja ze skończonej próbki z jawnym $\varepsilon$.}
+  \caption{Mapa ataków. Z1: rozkład liczby fotonów uwzględniony w długości klucza; Z2: brak kanałów bocznych u Alice; Z3: detektor jednofotonowy o sprawności niezależnej od bitu i czasu; Z5a: kanał klasyczny uwierzytelniony w trakcie sesji; Z5b: klucze publiczne autentyczne; Z6: losowe i prywatne wybory stron; Z7: Ewa ograniczona tylko fizyką; Z8: estymacja ze skończonej próbki z jawnym $\varepsilon$.}
   \label{tab:map}
   \small
   \begin{tabularx}{\linewidth}{>{\raggedright\arraybackslash}p{2.6cm} >{\raggedright\arraybackslash}p{2.6cm} >{\raggedright\arraybackslash}p{3.2cm} L}
@@ -106,9 +109,12 @@ Tabela~\ref{tab:map} to centralny wynik projektu. Każdy atak, który nie podnos
     1. Intercept-resend & żadne; przy małej próbce Z8 & próg QBER 11\%, skończony klucz & QBER 26,5\% przy pełnym ataku; przechwycenie 4\% impulsów wykryte w 23\% sesji przy próbce 1000 bitów \\
     2. Oślepianie detektorów & Z3 & losowe tłumienie 3~dB w 10\% bramek; monitor mocy & QBER i zysk bez zmian, Ewa zna 100\% klucza; test tłumienia $z \approx -35$, AUC $= 1$ od $3\cdot 10^4$ bramek \\
     3. PNS & Z1 & stany decoy & od 32,8~km Ewa zna 98--100\% klucza; spójność decoy $z$ od $-69$ do $-10$, AUC $= 1$ \\
+    4. Time-shift & Z3 (sprawność w czasie) & losowe przypisanie bit $\leftrightarrow$ detektor & QBER i zysk bez zmian, Ewa zna 0,31 bitu na wykryty bit; z obroną 0 \\
+    5. Trojan horse & Z2 & izolacja, losowa faza, monitor mocy & 0,135 bitu przy 0,1 fotonu w sondzie; wyciek $\le 10^{-3}$ wymaga np.\ 102~dB izolacji \\
     6. Optymalny atak indywidualny & Z7 (granica indywidualna to nie granica ogólna) & próg Shora--Preskilla 11,00\% & $I_{AB} = I_{AE}$ przy $D^* = 14{,}64\%$; numpy i QuTiP zgodne do $10^{-12}$ \\
     7. Man-in-the-middle & Z5a & Wegman--Carter & przerwanie przy pierwszym tagu Ewy; fałszerstwo $1/p \approx 2^{-61}$ \\
     7$'$. MITM przy ML-DSA & Z5a w trakcie sesji, Z5b & hybryda WC + ML-DSA, odcisk klucza & podpis złamany na żywo lub podmieniony klucz: MITM udany; hybryda wykrywa \\
+    8. Słaby generator & Z6 & QRNG; testy losowości tylko na obciążenie i korelacje & znane ziarno: Ewa zna 100\% klucza, testy odrzucają generator w 1\% ($= \alpha$) \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -146,6 +152,32 @@ Ewa mierzy liczbę fotonów bez niszczenia polaryzacji, blokuje część impuls�
   \label{fig:e06}
 \end{figure}
 
+\subsection{Time-shift}
+
+Detektory Boba mają różne krzywe sprawności w czasie przyjścia impulsu. Ewa nie mierzy impulsów, tylko przesuwa każdy do chwili A, w której sprawniejszy jest detektor 0, albo B, w której przeważa detektor 1 \cite{qi2007timeshift}. Po siftingu zgaduje bit Boba z własnego przesunięcia. Krzywe modelujemy Gaussami dopasowanymi do Tabeli I(a) Zhao i in.\ \cite{zhao2008quantum}: rozsunięcie $\Delta = 100$~ps z artykułu, równe szczyty, a środki i szerokości (150 i 140~ps) wynikają wprost z czterech liczb detekcji. Z danych artykułu odtwarzamy jego wynik: $p_A = 23{,}0\%$, $E = 5{,}68\%$, $K_U = 1130{,}9 < K_L = 1296{,}8$ bitu, czyli Alice i Bob zostawiają więcej klucza, niż jest tajne.
+
+Błąd optyki daje przy każdym przesunięciu ten sam QBER, bo błędne i poprawne detekcje skalują się tą samą sprawnością, więc atak widać tylko w zysku. Ewa wyrównuje go linią bezstratną od około 66~km. Przy 75~km zna 0,31 bitu na wykryty bit przy niezmienionym QBER i zysku (rys.~\ref{fig:e11}). Kryterium $K_L > K_U$ zależy od $\mu$: przy $\mu = 0{,}1$, jak w artykule, zachodzi od $\Delta \approx 89$~ps, a przy $\mu = 0{,}48$ dopiero od 140~ps, bo GLLP i tak odrzuca część wielofotonową. Obrona to losowe przypisanie bit $\leftrightarrow$ detektor: Bob w każdej bramce losuje, czy obrócić polaryzację o 90°, i odwraca odczyt. Przesunięcie faworyzuje wtedy detektor, a nie bit, i wiedza Ewy spada do zera (test $\chi^2$ niezależności).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.82\linewidth]{e11_time_shift}
+  \caption{Time-shift: krzywe dopasowane do Zhao i in., wiedza Ewy w funkcji $\Delta$ (z obroną i bez), QBER pod atakiem oraz granice $K_U$, $K_L$.}
+  \label{fig:e11}
+\end{figure}
+
+\subsection{Trojan horse}
+
+Ewa wpuszcza do Alice jasną sondę; odbita od modulatora wraca z polaryzacją stanu Alice, osłabiona do $\mu_{\mathrm{out}} = \mu_{\mathrm{in}} 10^{-A/10}$, gdzie $A$ obejmuje izolator, odbicie i dwukrotnie tłumik Alice \cite{gisin2006trojan}. Sygnału Ewa nie dotyka: Monte Carlo nie pokazuje zmiany QBER ani zysku. Sondę trzyma do ujawnienia baz i mierzy optymalnie. Przy stałej fazie (pomiar Helstroma) informacja wynosi $1 - h(p)$, $p = \tfrac12(1 + \sqrt{1 - e^{-2\mu}})$, a gdy Alice losuje fazę, $1 - e^{-\mu}$; przy $\mu_{\mathrm{out}} = 0{,}1$ to 0,135 i 0,095 bitu, jak w artykule.
+
+Bazę w czasie rzeczywistym, która pozwalałaby na intercept-resend bez śladu w QBER, liczymy jako Helstroma dla stanów mieszanych w przestrzeni Focka dwóch modów polaryzacji (zgodność z QuTiP do $10^{-9}$). Przewaga Ewy rośnie jak $0{,}27\sqrt{\mu}$ przy stałej fazie i tylko jak $\mu^2/8$ przy losowej: bez odniesienia fazowego pojedynczy foton nic o bazie nie mówi. Wymagana izolacja rośnie o 10~dB na rząd wielkości mocy sondy; np.\ sonda $10^9$ fotonów, odbicie od modulatora ($-20$~dB) i wyciek $\le 10^{-3}$ bitu wymagają 102~dB (rys.~\ref{fig:e12}).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{e12_trojan_horse}
+  \caption{Trojan horse: informacja Ewy o bicie (wzory, Monte Carlo, punkty Gisina i in.), przewaga w odgadywaniu bazy i wymagana izolacja dla odbić z Gisina i in.}
+  \label{fig:e12}
+\end{figure}
+
 \subsection{Optymalny atak indywidualny}
 
 Optymalny atak indywidualny na BB84 \cite{fuchs1997optimal} realizujemy jako kloner fazowo-kowariantny: częściowa zamiana stanów $|01\rangle$ i $|10\rangle$ kubitu i ancilli o kąt $\eta$, w układzie obróconym tak, by bazy Z i X leżały na równiku. Daje on błąd Boba $D = \sin^2(\eta/2)$ i błąd Ewy $1/2 - \sqrt{D(1-D)}$, czyli granicę Fuchsa, dla wszystkich czterech stanów. QuTiP buduje tę operację niezależnie z generatora; unitarność, wierności i prawdopodobieństwa wyników zgadzają się do $10^{-12}$. Monte Carlo daje $I_{AB} = I_{AE}$ przy $D^* = 14{,}64\%$ (rys.~\ref{fig:e08}). Próg Shora--Preskilla 11,00\% jest niższy, bo obejmuje ataki koherentne; klucz z QBER między tymi progami byłby bezpieczny tylko wobec ataków indywidualnych.
@@ -160,6 +192,19 @@ Optymalny atak indywidualny na BB84 \cite{fuchs1997optimal} realizujemy jako klo
 \subsection{Man-in-the-middle}
 
 Ewa przecina światłowód i prowadzi dwa niezależne BB84: z Alice, udając Boba, i z Bobem, udając Alice. Fizyka nie ma czego wykryć: oba odcinki to uczciwe łącza z QBER jak bez ataku, a Ewa zna oba klucze. Obroną jest uwierzytelnianie Wegmana--Cartera \cite{wegman1981new}: tag $(h_k(m) + r) \bmod p$ z haszem wielomianowym nad GF($p$), $p = 2^{61} - 1$, kluczem $k$ na sesję i świeżym kluczem jednorazowym $r$ na tag. Monte Carlo potwierdza p-stwo fałszerstwa $1/p$ dla krótkich tagów, a w symulacji protokół przerywa się przy pierwszym sprawdzanym tagu Ewy: przy jej pierwszej wiadomości albo, przy tagu na transkrypt, na końcu rundy, przed użyciem klucza. Tag na każdą wiadomość zużywa więcej klucza, niż QKD wytwarza (Cascade wysyła wiadomość na każdy poprawiany błąd), więc tagujemy transkrypt rundy: 122~bity klucza na rundę. Bilans jest dodatni do 60,5~km przy $10^6$ impulsów na rundę, 104,5~km przy $10^7$ i 132~km przy $10^8$: QKD rozszerza klucz, a nie tworzy go z niczego.
+
+\subsection{Słaby generator losowy}
+
+Generator Alice jest w symulatorze wstrzykiwany, więc można go podmienić bez zmiany reszty toru. Gdy Alice używa MT19937 o ziarnie znanym Ewie, Ewa odtwarza bity i bazy i zna cały klucz bez dotykania światłowodu; QBER i zysk się nie zmieniają. Ten sam generator przechodzi testy monobit i runs z NIST SP 800-22 \cite{nist2010sp80022} oraz test autokorelacji: w 100 ciągach po $10^6$ bitów każdy odrzucił go w 1\% przypadków, czyli tyle, ile prawdziwy generator przy $\alpha = 0{,}01$. Testy wykrywają obciążenie i korelacje, ale nie przewidywalność, więc obroną jest QRNG, a nie testy.
+
+Przy obciążonych bazach Ewa mierzy zawsze w częstszej i trafia z p-stwem $p$: QBER spada z 26,6\% do 8\% przy $p = 0{,}9$, a pod progiem 11\% atak schodzi od $p \approx 0{,}84$. Obciążone bity zmniejszają entropię klucza: przy $p = 0{,}55$ brakuje asymptotycznie $1 - h(p) = 0{,}0072$ bitu na bit (3,3\% klucza przy 25~km), ale w rachunku min-entropii, istotnym dla skończonego bloku, 0,1375 bitu, czyli ponad połowa klucza. Korelacje Markowa w bitach Alice sifting prawie wymazuje: zostaje co kilkusetny impuls, w odstępach geometrycznych, więc korelacja $\lambda$ spada do $r\lambda/(1 - (1-r)\lambda)$ (rys.~\ref{fig:e13}).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=0.82\linewidth]{e13_weak_rng}
+  \caption{Słaby generator: intercept-resend w przewidzianej bazie, deficyt entropii przy obciążonych bitach, korelacje Markowa przed i po siftingu oraz moc testów losowości.}
+  \label{fig:e13}
+\end{figure}
 
 \section{Skończony klucz}
 
@@ -241,13 +286,13 @@ Tabela~\ref{tab:threats} porównuje trzy konstrukcje: QKD uwierzytelnione ML-DSA
   \end{tabularx}
 \end{table}
 
-Wniosek: QKD i ML-KEM chronią przed różnymi rzeczami. QKD daje bezpieczeństwo odporne na przyszłe złamanie, ale wymaga uwierzytelnienia w chwili sesji, osobnej infrastruktury i ma ograniczony zasięg; jego słabym punktem są urządzenia (sekcja~4). ML-KEM działa wszędzie, ale nagrany ruch jest bezpieczny tylko tak długo, jak założenia kratowe. Hybryda dziedziczy mocniejszą stronę każdej z nich w modelu HNDL i przy atakach na implementację, a słabości infrastrukturalne QKD.
+Wniosek: QKD i ML-KEM chronią przed różnymi rzeczami. QKD daje bezpieczeństwo odporne na przyszłe złamanie, ale wymaga uwierzytelnienia w chwili sesji, osobnej infrastruktury i ma ograniczony zasięg; jego słabym punktem są urządzenia i generator losowy (sekcja~4). ML-KEM działa wszędzie, ale nagrany ruch jest bezpieczny tylko tak długo, jak założenia kratowe. Hybryda dziedziczy mocniejszą stronę każdej z nich w modelu HNDL i przy atakach na implementację, a słabości infrastrukturalne QKD.
 
 \section{Ograniczenia i wnioski}
 
-Model pomija dyspersję i dryf polaryzacji, a $e_d$ i $Y_0$ nie zależą od długości ani od czasu. Skończony klucz liczymy dla źródła jednofotonowego; wersja dla WCP z decoy \cite{lim2014concise} jest planowana w kolejnej wersji, podobnie jak ataki time-shift \cite{qi2007timeshift,zhao2008quantum}, Trojan horse \cite{gisin2006trojan,lucamarini2015practical} i słaby generator liczb losowych. Atak 6 działa na pojedynczych fotonach i idealnych detektorach, bo jest granicą teoretyczną. Scenariusze złamania ML-DSA są wyidealizowane (Ewa ma po prostu klucz prywatny), a kanałów bocznych implementacji PQC nie modelujemy. Czas CPU Wegmana--Cartera mierzymy na implementacji w Pythonie i nie jest on reprezentatywny dla metody.
+Model pomija dyspersję i dryf polaryzacji, a $e_d$ i $Y_0$ nie zależą od długości ani od czasu. Skończony klucz liczymy dla źródła jednofotonowego; wersja dla WCP z decoy \cite{lim2014concise} to rozszerzenie na później. Atak 6 działa na pojedynczych fotonach i idealnych detektorach, bo jest granicą teoretyczną. Krzywe sprawności w ataku time-shift to Gaussy, a nie zmierzony profil bramki. W ataku Trojan horse nie modelujemy filtrów ani czasu otwarcia modulatora i nie porównujemy wyników z ograniczeniami Lucamariniego i in.\ \cite{lucamarini2015practical}. Scenariusze złamania ML-DSA są wyidealizowane (Ewa ma po prostu klucz prywatny), a kanałów bocznych implementacji PQC nie modelujemy. Czas CPU Wegmana--Cartera mierzymy na implementacji w Pythonie i nie jest on reprezentatywny dla metody.
 
-Wnioski: (1) zwalidowany tor Monte Carlo odtwarza wartości kontrolne z literatury i z niezależnej implementacji; (2) wszystkie ataki, które nie podnoszą QBER (oślepianie, PNS, MITM), łamią założenie dowodu, a nie wzór na długość klucza, i każdy ma obronę z mierzalną metryką; (3) uwierzytelnianie podpisem postkwantowym zachowuje zaletę QKD wobec ,,harvest now, decrypt later'', o ile podpis wytrzymuje czas sesji, a hybryda z Wegmanem--Carterem usuwa nawet to założenie.
+Wnioski: (1) zwalidowany tor Monte Carlo odtwarza wartości kontrolne z literatury i z niezależnej implementacji; (2) wszystkie ataki, które nie podnoszą QBER (oślepianie, PNS, time-shift, Trojan horse, MITM, słaby generator), łamią założenie dowodu, a nie wzór na długość klucza, i każdy ma obronę z mierzalną metryką; (3) generator ze znanym ziarnem przechodzi testy statystyczne, a mimo to oddaje Ewie cały klucz; (4) uwierzytelnianie podpisem postkwantowym zachowuje zaletę QKD wobec ,,harvest now, decrypt later'', o ile podpis wytrzymuje czas sesji, a hybryda z Wegmanem--Carterem usuwa nawet to założenie.
 
 Kod, dane i wykresy: repozytorium projektu (\texttt{make figures}, \texttt{make report}).
 
