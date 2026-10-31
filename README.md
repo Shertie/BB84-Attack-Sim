@@ -1,5 +1,7 @@
 # bb84-attacks
 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.23840266.svg)](https://doi.org/10.5281/zenodo.23840266)
+
 Symulator Monte Carlo BB84 na poziomie impulsów, w którym ataki są wykonywane, a nie wyceniane wzorem. Każdy wynik jest porównany ze wzorem lub publikacją, od fotonu do klucza końcowego, a obrony są oceniane krzywymi ROC.
 
 Model: polaryzacyjny BB84, światłowód 1550 nm, źródło słabych impulsów koherentnych (WCP), dwa detektory SPAD po stronie Boba (opcjonalnie z czasem martwym i afterpulsami), Cascade albo LDPC, hasz Toeplitza i skończony klucz. Parametry z eksperymentu GYS (Ma, Qi, Zhao, Lo 2005). Wzory sprawdzamy też niezależną implementacją [`qkd`](https://pypi.org/project/qkd/), która wycenia część tych samych ataków w formie zamkniętej ([porównanie](docs/architecture.md#powiązane-narzędzia)).
@@ -141,4 +143,4 @@ make figures
 
 ## Cytowanie i licencja
 
-Metadane do cytowania: [CITATION.cff](CITATION.cff). Licencja MIT, patrz [LICENSE](LICENSE). Artykuły w `assets/` mają własne licencje i nie są częścią repozytorium.
+Metadane do cytowania: [CITATION.cff](CITATION.cff); archiwum w Zenodo: [doi:10.5281/zenodo.23840266](https://doi.org/10.5281/zenodo.23840266) (wszystkie wersje). Licencja MIT, patrz [LICENSE](LICENSE). Artykuły w `assets/` mają własne licencje i nie są częścią repozytorium.

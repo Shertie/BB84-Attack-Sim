@@ -4,6 +4,10 @@ Format na wzór [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersje
 
 ## [Unreleased]
 
+### Dodane
+
+- DOI z Zenodo: 10.5281/zenodo.23840266 (wszystkie wersje), 10.5281/zenodo.23840267 (wersja 1.2.0), w `CITATION.cff` i README.
+
 ## [1.2.0] – 2026-10-31
 
 Rozszerzenia modelu i protokołu, obrony z krzywymi ROC dla wszystkich ataków z progiem.
