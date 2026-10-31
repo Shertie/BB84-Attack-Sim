@@ -13,7 +13,7 @@
 
 Największe |z| w tabeli: 2,14 (σ z liczby kliknięć). Czas martwy τ bramek obcina p-stwo kliknięcia do f/(1 + τf); przy f·τ ≥ 1 detektor jest martwy przez większość czasu. Afterpulsy dokładają p·f(1 − f) kliknięć, czyli w pierwszym rzędzie D·p_ap, jak w modelu Lima et al.
 
-## Model Lima et al. 2014 a Monte Carlo (μ = 0,5, 4·10^7 impulsów na punkt)
+## Afterpulsy na parametrach Lima et al. 2014 (μ = 0,5, 4·10^7 impulsów na punkt)
 
 Detektor ma p = 4% na lawinę, czyli łącznie p_ap = p/(1 − p) = 4,17% afterpulsów na kliknięcie. „Dokładny”: afterpuls jako niezależne ciemne zliczenie z p-stwem p·c; „Lim”: ich wzory z tym p_ap.
 

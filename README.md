@@ -26,7 +26,7 @@ Stopa klucza R(L) jak u Ma et al. 2005: GLLP bez decoy kończy się przy ~40 km,
 
 I_AB = I_AE przy D\* = 14,64% dla optymalnego ataku indywidualnego (Fuchs et al. 1997, zweryfikowany w QuTiP), a próg Shora–Preskilla dla ataków ogólnych to 11,00%.
 
-Wszystkie wykresy odtwarza `make figures` (13 eksperymentów, około 8 min na 12 rdzeniach). Każdy skrypt w `experiments/` kończy się błędem, jeśli jego wynik wyjdzie poza tolerancję.
+Wszystkie wykresy odtwarza `make figures` (20 eksperymentów, około 13 min na 12 rdzeniach). Każdy skrypt w `experiments/` kończy się błędem, jeśli jego wynik wyjdzie poza tolerancję.
 
 ## Mapa ataków
 

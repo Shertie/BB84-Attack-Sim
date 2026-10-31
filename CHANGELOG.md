@@ -31,6 +31,7 @@ Wszystkie rozszerzenia z fazy F7 i audyt definicji ukończenia dla ośmiu atakó
 - e07 korzysta z progu z `defenses/qber_test.py`; wyniki identyczne co do bajtu.
 - ROADMAP: audyt definicji ukończenia (rozdz. 7.1) dla ataków 1–8 zamiast szablonu; README i raport (mapa ataków, podrozdziały F7); `docs/model.md` rozdz. 14–17.
 - Bez nowych opcji (czas martwy, afterpulsy, QRNG, LDPC) wyniki są identyczne jak w 1.1.0.
+- 527 szybkich i 57 wolnych testów, pokrycie gałęzi rdzenia 96%. `make figures` z czystego klonu: 20 eksperymentów w 780 s na 12 rdzeniach; poza czasami CPU w e10 wyniki identyczne z repozytorium.
 
 ## [1.1.0] – 2026-10-31
 
