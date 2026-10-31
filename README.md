@@ -107,6 +107,14 @@ Uzgadnianie LDPC z syndromem ([tabele](figures/e20_ldpc.md)): ewolucja gęstośc
 ## Szybki start
 
 ```bash
+git clone https://github.com/Shertie/BB84-Attack-Sim.git
+```
+
+```bash
+cd BB84-Attack-Sim
+```
+
+```bash
 python3 -m venv .venv
 ```
 

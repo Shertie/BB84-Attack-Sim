@@ -20,8 +20,11 @@ from qkdsim.analysis.trojan_horse import (
     lidt_probe_photons,
     probe_density,
     required_isolation_db,
+    resend_qber,
     returned_photons,
     round_trip_attenuation_db,
+    state_guess,
+    state_guess_certificate,
     tolerable_photons,
 )
 from qkdsim.attacks.trojan_horse import TrojanHorse, modulator_bit
@@ -110,3 +113,21 @@ def test_lidt_bound_reproduces_lucamarini_table_i() -> None:
     for clock, gamma in ((1e9, 170.0), (1e6, 200.0), (1e3, 230.0)):
         assert returned_photons(lidt_probe_photons(clock), gamma) == pytest.approx(1e-6)
     assert round_trip_attenuation_db(60.0, 40.0, 35.0) == 170.0  # pierwszy wiersz tabeli
+
+
+@pytest.mark.parametrize("mu", [0.01, 0.3, 1.0, 4.0])
+def test_four_state_measurement_is_certified_optimal(mu: float) -> None:
+    """Warunki Holevo–Yuena–Kennedy’ego–Laxa: Γ − ¼|ψ_j⟩⟨ψ_j| ⪰ 0; nie gorzej niż pierwiastkowy."""
+    guess = state_guess(mu)
+    assert state_guess_certificate(guess) > -1e-7
+    assert np.allclose(guess.confusion.sum(axis=1), 1.0)
+    assert guess.probability >= float(np.mean(np.diag(guess.states) ** 2)) - 1e-12
+    assert guess.probability <= basis_guess_probability(mu) + 1e-9  # stan wyznacza bazę
+
+
+def test_four_state_limits_and_resend_qber() -> None:
+    weak, strong = state_guess(1e-4), state_guess(30.0)
+    assert weak.probability == pytest.approx(0.25, abs=0.01)
+    assert strong.probability == pytest.approx(1.0, abs=1e-6)
+    assert resend_qber(weak) == pytest.approx(0.5, abs=0.01)  # zgadywanie: ¼·1 + ½·½
+    assert resend_qber(strong, misalignment=0.033) == pytest.approx(0.033, abs=1e-3)

@@ -7,6 +7,7 @@ authors:
 version: 1.2.0
 date-released: "2026-10-31"
 license: MIT
+repository-code: "https://github.com/Shertie/BB84-Attack-Sim"
 abstract: >-
   Symulator Monte Carlo protokołu BB84 na poziomie impulsów (źródło WCP z decoy,
   światłowód, detektory SPAD, Cascade, wzmacnianie prywatności, skończony klucz),

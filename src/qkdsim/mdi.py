@@ -65,7 +65,10 @@ def detector_means(
     out2_h, out2_v = (a_h - b_h) / math.sqrt(2.0), (a_v - b_v) / math.sqrt(2.0)
     c, s = math.cos(relay.rotation_out), math.sin(relay.rotation_out)
     out1_h, out1_v = c * out1_h - s * out1_v, s * out1_h + c * out1_v
-    return relay.efficiency * np.abs(np.stack([out1_h, out1_v, out2_h, out2_v])) ** 2
+    power: npt.NDArray[np.float64] = (
+        relay.efficiency * np.abs(np.stack([out1_h, out1_v, out2_h, out2_v])) ** 2
+    )
+    return power
 
 
 def bell_outcome(clicks: npt.NDArray[np.bool_]) -> npt.NDArray[np.int8]:

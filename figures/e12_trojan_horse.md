@@ -24,6 +24,18 @@ Sygnału Ewa nie dotyka, więc QBER i zysk są takie jak bez ataku (kolumny z).
 
 Intercept-resend z bazą odgadniętą z sondy mieści się pod progiem QBER 11%, gdy Ewa trafia bazę z p-stwem ≥ 0,835. Potrzebuje do tego μ_out ≥ 1,65 ze stałą fazą i ≥ 3,15 z losową. Przy małym μ_out przewaga w odgadywaniu bazy rośnie jak 0,27·√μ ze stałą fazą, ale tylko jak μ²/8 z losową: bez odniesienia fazowego pojedynczy foton nic nie mówi o bazie.
 
+## Cały stan z sondy (stała faza)
+
+| μ_out | P(baza) | P(stan): optymalny pomiar | P(stan): pomiar pierwiastkowy | Certyfikat optymalności | QBER przy odesłaniu stanu |
+| --- | --- | --- | --- | --- | --- |
+| 0,01 | 0,5269 | 0,3041 | 0,3008 | -2·10^-9 | 45,98% |
+| 0,10 | 0,5811 | 0,4231 | 0,4177 | -1·10^-9 | 37,16% |
+| 0,50 | 0,6715 | 0,6192 | 0,6169 | -4·10^-9 | 23,31% |
+| 1,00 | 0,7536 | 0,7403 | 0,7397 | -7·10^-9 | 16,01% |
+| 3,00 | 0,9299 | 0,9299 | 0,9299 | -9·10^-9 | 6,57% |
+
+Cztery stany sondy są liniowo niezależne, więc optymalny pomiar jest rzutowy w ich rozpięciu; certyfikat to najmniejsza wartość własna Γ − ¼|ψ_j⟩⟨ψ_j| z warunków Holevo–Yuena–Kennedy’ego–Laxa (≥ 0 dla pomiaru optymalnego, tu do precyzji optymalizatora). Ewa, która nie mierzy sygnału, tylko odsyła rozpoznany stan, schodzi pod próg QBER 11% od μ_out = 1,68 (z błędem optyki 3,3%), wobec 1,65 dla intercept-resend z bazą z sondy.
+
 ## Wymagana izolacja (μ_in fotonów sondy, tłumik Alice 0 dB)
 
 | Odbicie (Gisin et al. 2006) | μ_in | Wyciek ≤ 1,0·10^-3 bitu | Wyciek ≤ 1,0·10^-6 bitu |

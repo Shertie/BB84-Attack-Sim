@@ -16,8 +16,8 @@ jobs:
       matrix:
         python-version: ["3.11", "3.12", "3.13"]
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
@@ -28,8 +28,8 @@ jobs:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
           cache: pip
@@ -37,14 +37,14 @@ jobs:
       - run: make test-slow PY=python
 
   # Czysty klon odtwarza wszystkie wykresy; każdy eksperyment kończy się błędem,
-  # gdy jego wynik wyjdzie poza tolerancję. Lokalnie (12 rdzeni) ok. 5 min.
+  # gdy jego wynik wyjdzie poza tolerancję. Lokalnie (12 rdzeni) ok. 13 min.
   figures:
     if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.13"
           cache: pip
@@ -54,7 +54,7 @@ jobs:
           start=$(date +%s)
           make figures PY=python
           echo "make figures: $(( $(date +%s) - start )) s" | tee -a "$GITHUB_STEP_SUMMARY"
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v7
         with:
           name: figures
           path: figures/

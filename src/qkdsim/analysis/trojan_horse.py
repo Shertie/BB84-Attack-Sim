@@ -14,7 +14,12 @@ Wiedza Ewy (Helstrom dotyczy dwóch hipotez, więc bit i bazę liczymy osobno):
   Focka i zna bit, gdy wróci choć jeden foton: I = 1 − e^(−μ) (wzór (7));
 - baza w czasie rzeczywistym (pozwala na intercept-resend bez błędów): Helstrom dla stanów
   mieszanych ρ_Z = ½(ρ_H + ρ_V) i ρ_X = ½(ρ_D + ρ_A) w obciętej przestrzeni Focka dwóch modów
-  polaryzacji. Weryfikacja w QuTiP: tests/crosscheck/test_trojan_qutip.py.
+  polaryzacji. Weryfikacja w QuTiP: tests/crosscheck/test_trojan_qutip.py;
+- cały stan (bit i baza naraz, stała faza): cztery stany czyste |α_θ⟩, θ = 0, π/4, π/2, 3π/4,
+  o macierzy Grama G_jk = exp(−μ(1 − cos(θ_j − θ_k))). Stany są liniowo niezależne, więc
+  optymalny pomiar jest rzutowy w ich rozpięciu (Kennedy 1973); szukamy go numerycznie po
+  bazach ortonormalnych, startując z pomiaru pierwiastkowego, a optymalność potwierdzają
+  warunki Holevo–Yuena–Kennedy’ego–Laxa (`state_guess_certificate`).
 
 Granica sondy (Lucamarini i in. 2015): Ewa nie wpuści więcej niż N fotonów na sekundę bez
 uszkodzenia światłowodu (próg LIDT, N = 10²⁰), więc na jedno ustawienie modulatora o częstości
@@ -22,10 +27,12 @@ f_A przypada najwyżej μ_in = N/f_A fotonów (ich wzór (4): μ_out = Nγ/f_A).
 """
 
 import math
+from dataclasses import dataclass
 
 import numpy as np
 import numpy.typing as npt
-from scipy.optimize import brentq
+from scipy.linalg import expm
+from scipy.optimize import brentq, minimize
 
 from qkdsim.analysis.entropy import h2
 
@@ -119,6 +126,82 @@ def basis_guess_probability(mu: float, phase_randomized: bool = False) -> float:
         for name, angles in BASIS_ANGLES.items()
     }
     return helstrom_probability(rho["Z"], rho["X"])
+
+
+@dataclass(frozen=True)
+class StateGuess:
+    """Optymalny pomiar czterech stanów sondy: trafność i p-stwa wyników."""
+
+    probability: float  # P(wynik = stan), stany równie prawdopodobne
+    confusion: Floats  # confusion[j, k] = P(wynik k | stan j), kolejność H, D, V, A
+    states: Floats  # kolumny: stany we współrzędnych ortonormalnych rozpięcia
+    basis: Floats  # kolumny: wektory pomiaru w tych samych współrzędnych
+
+
+PROBE_ANGLES = (0.0, math.pi / 4, math.pi / 2, 3 * math.pi / 4)  # H, D, V, A
+
+
+def _rotation(params: Floats, size: int) -> Floats:
+    skew = np.zeros((size, size))
+    skew[np.triu_indices(size, 1)] = params
+    result: Floats = expm(skew - skew.T)
+    return result
+
+
+def state_guess(mu: float) -> StateGuess:
+    """Najlepsze rozpoznanie jednego z czterech stanów BB84 sondy (stała faza)."""
+    angles = np.asarray(PROBE_ANGLES)
+    gram = np.exp(-mu * (1.0 - np.cos(angles[:, None] - angles[None, :])))
+    values, vectors = np.linalg.eigh(gram)
+    states: Floats = vectors @ np.diag(np.sqrt(np.clip(values, 0.0, None))) @ vectors.T
+    size = len(angles)
+
+    def failure(params: Floats) -> float:
+        amplitudes = _rotation(params, size).T @ states
+        return 1.0 - float(np.mean(np.diag(amplitudes) ** 2))
+
+    start = np.zeros(size * (size - 1) // 2)  # pomiar pierwiastkowy
+    best = minimize(failure, start, method="BFGS", options={"gtol": 1e-12})
+    basis = _rotation(best.x, size)
+    amplitudes = basis.T @ states
+    return StateGuess(1.0 - float(best.fun), (amplitudes**2).T, states, basis)
+
+
+def state_guess_certificate(guess: StateGuess) -> float:
+    """Najmniejsza wartość własna Γ − ¼|ψ_j⟩⟨ψ_j| (≥ 0 dla pomiaru optymalnego).
+
+    Γ = ¼ Σ_j |ψ_j⟩⟨ψ_j|Π_j; pomiar jest optymalny wtedy i tylko wtedy, gdy Γ jest hermitowska
+    i Γ − ¼|ψ_j⟩⟨ψ_j| ⪰ 0 dla każdego j. Zwraca też −‖Γ − Γᵀ‖, jeśli to mniejsze.
+    """
+    psi, w = guess.states, guess.basis
+    size = psi.shape[1]
+    gamma = sum(np.outer(psi[:, j], psi[:, j]) @ np.outer(w[:, j], w[:, j]) for j in range(size))
+    gamma = gamma / size
+    asymmetry = float(np.abs(gamma - gamma.T).max())
+    symmetric = 0.5 * (gamma + gamma.T)
+    smallest = min(
+        float(np.linalg.eigvalsh(symmetric - np.outer(psi[:, j], psi[:, j]) / size)[0])
+        for j in range(size)
+    )
+    return min(smallest, -asymmetry)
+
+
+def resend_qber(guess: StateGuess, misalignment: float = 0.0) -> float:
+    """QBER, gdy Ewa w każdym impulsie wysyła Bobowi rozpoznany stan (zgodne bazy).
+
+    Stan trafiony: błąd optyki e_d; ta sama baza, inny bit: 1 − e_d; druga baza: ½.
+    """
+    errors = 0.0
+    for j in range(4):
+        for k in range(4):
+            if j == k:
+                error = misalignment
+            elif j % 2 == k % 2:
+                error = 1.0 - misalignment
+            else:
+                error = 0.5
+            errors += guess.confusion[j, k] * error
+    return errors / 4.0
 
 
 def tolerable_photons(max_information: float, phase_randomized: bool = False) -> float:

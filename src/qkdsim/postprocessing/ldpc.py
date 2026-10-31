@@ -212,8 +212,8 @@ def _check_table(grid: Floats) -> Positions:
 
 
 def _box(p: Floats, q: Floats, table: Positions) -> Floats:
-    out: Floats = np.bincount(table, weights=np.outer(p, q).ravel(), minlength=len(p))
-    return out
+    counts = np.bincount(table, weights=np.outer(p, q).ravel(), minlength=len(p))
+    return np.asarray(counts, dtype=np.float64)
 
 
 def _box_power(p: Floats, k: int, table: Positions) -> Floats:

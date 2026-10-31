@@ -19,6 +19,10 @@ dependencies = [
     "cryptography>=47",  # ML-DSA (uwierzytelnianie postkwantowe)
 ]
 
+[project.urls]
+Repository = "https://github.com/Shertie/BB84-Attack-Sim"
+Changelog = "https://github.com/Shertie/BB84-Attack-Sim/blob/main/CHANGELOG.md"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0",

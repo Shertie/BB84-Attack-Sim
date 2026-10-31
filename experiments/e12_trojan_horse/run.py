@@ -6,7 +6,8 @@ Wynik: figures/e12_trojan_horse.png, figures/e12_trojan_horse.md i results/e12_t
 (b) przewaga Ewy w odgadywaniu bazy (Helstrom dla stanów mieszanych) i próg, od którego
     intercept-resend z tą wiedzą mieści się pod progiem QBER;
 (c) wymagana izolacja w funkcji dopuszczalnego wycieku dla odbić z Gisina et al. 2006;
-(d) budżet izolacji z Tabeli I Lucamariniego et al. 2015 (sonda ograniczona progiem LIDT).
+(d) budżet izolacji z Tabeli I Lucamariniego et al. 2015 (sonda ograniczona progiem LIDT);
+(e) cały stan z sondy: optymalny pomiar czterech stanów i odesłanie rozpoznanego stanu Bobowi.
 """
 
 import json
@@ -31,7 +32,10 @@ from qkdsim.analysis.trojan_horse import (
     bit_information,
     lidt_probe_photons,
     required_isolation_db,
+    resend_qber,
     round_trip_attenuation_db,
+    state_guess,
+    state_guess_certificate,
     tolerable_photons,
 )
 from qkdsim.analysis.wcp import gain, matched_basis_clicks
@@ -54,6 +58,7 @@ LUCAMARINI_TABLE_I = (
     (1e3, 230, 50, 0, 60, 3),
 )
 LUCAMARINI_TARGET = 1e-6  # μ_out z artykułu
+STATE_GUESS_POINTS = (0.01, 0.1, 0.5, 1.0, 3.0)  # μ_out dla pomiaru czterech stanów
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parents[1]
 NAME = HERE.name
@@ -135,6 +140,15 @@ def hidden_ir_photons(misalignment: float, threshold: float, random_phase: bool)
     return math.exp(brentq(gap, math.log(1e-6), math.log(30.0)))
 
 
+def resend_photons(misalignment: float, threshold: float) -> float:
+    """μ_out, od którego odesłanie stanu rozpoznanego z sondy daje QBER ≤ progu."""
+
+    def gap(log_mu: float) -> float:
+        return resend_qber(state_guess(math.exp(log_mu)), misalignment) - threshold
+
+    return math.exp(brentq(gap, math.log(1e-2), math.log(30.0)))
+
+
 def comma(value: float, digits: int) -> str:
     return f"{value:.{digits}f}".replace(".", ",")
 
@@ -197,6 +211,35 @@ def main() -> int:
         "z losową. Przy małym μ_out przewaga w odgadywaniu bazy rośnie jak 0,27·√μ ze stałą fazą, "
         "ale tylko jak μ²/8 z losową: bez odniesienia fazowego pojedynczy foton nic nie mówi "
         "o bazie.",
+        "",
+        "## Cały stan z sondy (stała faza)",
+        "",
+        "| μ_out | P(baza) | P(stan): optymalny pomiar | P(stan): pomiar pierwiastkowy | "
+        "Certyfikat optymalności | QBER przy odesłaniu stanu |",
+        "| --- | --- | --- | --- | --- | --- |",
+    ]
+    four_states = []
+    for mu_out in STATE_GUESS_POINTS:
+        guess = state_guess(mu_out)
+        srm = float(np.mean(np.diag(guess.states) ** 2))
+        certificate = state_guess_certificate(guess)
+        qber = resend_qber(guess, GYS.misalignment)
+        basis = basis_guess_probability(mu_out)
+        four_states.append((mu_out, basis, guess.probability, srm, certificate, qber))
+        cells = [comma(mu_out, 2), comma(basis, 4), comma(guess.probability, 4), comma(srm, 4)]
+        cells += [f"{certificate:.0e}".replace("e-0", "·10^-"), f"{comma(100 * qber, 2)}%"]
+        lines.append("| " + " | ".join(cells) + " |")
+    resend_threshold = resend_photons(GYS.misalignment, cfg.qber_threshold)
+    lines += [
+        "",
+        "Cztery stany sondy są liniowo niezależne, więc optymalny pomiar jest rzutowy w ich "
+        "rozpięciu; certyfikat to najmniejsza wartość własna Γ − ¼|ψ_j⟩⟨ψ_j| z warunków "
+        "Holevo–Yuena–Kennedy’ego–Laxa (≥ 0 dla pomiaru optymalnego, tu do precyzji "
+        "optymalizatora). "
+        "Ewa, która nie mierzy sygnału, tylko odsyła rozpoznany stan, schodzi pod próg QBER "
+        f"{comma(100 * cfg.qber_threshold, 0)}% od μ_out = {comma(resend_threshold, 2)} "
+        f"(z błędem optyki {comma(100 * GYS.misalignment, 1)}%), wobec "
+        f"{comma(thresholds[False], 2)} dla intercept-resend z bazą z sondy.",
         "",
         f"## Wymagana izolacja (μ_in fotonów sondy, tłumik Alice {comma(cfg.attenuator_db, 0)} dB)",
         "",
@@ -365,6 +408,8 @@ def main() -> int:
                 "isolation_db": isolation,
                 "key_per_sifted_bit": key_per_sifted,
                 "lucamarini": lucamarini,
+                "four_states": four_states,
+                "resend_threshold": resend_threshold,
             },
             indent=2,
         ),
@@ -379,6 +424,10 @@ def main() -> int:
         all(
             abs(ours - gamma) < 0.05 and components == gamma
             for _, ours, gamma, components in lucamarini
+        ),
+        all(
+            cert > -1e-6 and srm - 1e-12 <= p4 <= basis + 1e-9
+            for _, basis, p4, srm, cert, _ in four_states
         ),
     ]
     print("sprawdzenia:", checks)

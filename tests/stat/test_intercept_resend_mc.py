@@ -42,6 +42,15 @@ def test_full_attack_matches_model(position: float) -> None:
     assert abs(eve_guess_accuracy(counts).z_score(0.75)) < Z_MAX
 
 
+def test_random_basis_attack_hits_both_bases_equally() -> None:
+    """Ewa losuje bazę, więc QBER jest taki sam w Z i w X (stała baza dałaby e_d i ½)."""
+    counts = run_counts(attacked_link(25.0, 1.0, 1.0), 4_000_000, RandomStreams.from_seed(SEED))
+    z_basis, x_basis = matched_qber(counts, basis=0), matched_qber(counts, basis=1)
+    model = intercept_resend_model(GYS, 25.0, MU, 1.0, 1.0, P_D).clicks.qber
+    assert abs(z_basis.z_score(model)) < Z_MAX
+    assert abs(x_basis.z_score(model)) < Z_MAX
+
+
 def test_qber_rises_to_about_a_quarter() -> None:
     counts = run_counts(attacked_link(25.0, 1.0, 1.0), 4_000_000, RandomStreams.from_seed(SEED))
     assert 0.25 < matched_qber(counts).value < 0.28

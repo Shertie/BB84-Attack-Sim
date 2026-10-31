@@ -195,4 +195,5 @@ class QrngSource:
         words = self._take(32 * n).reshape(n, 32).astype(np.uint64)
         uniform = (words << np.arange(32, dtype=np.uint64)).sum(axis=1) / 2.0**32
         edges = np.cumsum(p)[:-1]
-        return np.searchsorted(edges, uniform, side="right").astype(np.uint8)
+        picks: Bits = np.searchsorted(edges, uniform, side="right").astype(np.uint8)
+        return picks
