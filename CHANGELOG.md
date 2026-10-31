@@ -2,6 +2,12 @@
 
 Format na wzór [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersje według [SemVer](https://semver.org/lang/pl/).
 
+## [Unreleased]
+
+### Dodane
+
+- Atak 4, time-shift (Qi et al. 2007, Zhao et al. 2008): krzywe sprawności detektorów w czasie (`EfficiencyMismatch`) dopasowane do Tabeli I(a) artykułu, atak `TimeShift`, model analityczny z granicami K_U i K_L (odtworzone 1131 i 1297 bitów z danych artykułu), obrona losowym przypisaniem bit ↔ detektor (`Link.random_assignment`), eksperyment e11.
+
 ## [1.0.0] – 2026-10-30
 
 Pierwsza wersja publiczna (MVP z ROADMAP.md, fazy F0–F5).

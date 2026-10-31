@@ -24,6 +24,7 @@ class EveLog:
     `measured`: Ewa zmierzyła impuls (miał co najmniej jeden foton w jej punkcie);
     `basis`, `bit`: baza i wynik jej pomiaru (NO_BASIS i 0, gdy nie mierzyła).
     Po siftingu Ewa zna bazę Alice, więc wie, które swoje bity może uznać za pewne.
+    W ataku time-shift Ewa nie mierzy: `bit` to indeks jej przesunięcia, czyli zgadywany bit.
     """
 
     measured: npt.NDArray[np.bool_]

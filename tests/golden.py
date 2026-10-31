@@ -44,3 +44,10 @@ LYDERSEN_P_ALWAYS_W = (808e-6, 932e-6)
 SHOR_PRESKILL_QBER = 0.110028  # pierwiastek 1 - 2h(Q) = 0
 FUCHS_CROSSING_D = 0.146447  # (1 - 1/sqrt(2)) / 2
 ANALYTIC_TOLERANCE = 1e-6
+
+# Zhao et al. 2008, Tabela I(c): wyniki z danych Tabeli I(a)–(b) (system ID-500, μ = 0,1).
+ZHAO_BALANCING_P_A = 0.230  # p_A równoważące zera i jedynki Boba
+ZHAO_QBER = 0.0568
+ZHAO_K_UPPER_BITS = 1131
+ZHAO_K_LOWER_BITS = 1297
+ZHAO_ROUNDING = 1.0  # artykuł podaje K w pełnych bitach

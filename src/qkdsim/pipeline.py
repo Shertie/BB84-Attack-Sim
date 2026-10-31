@@ -39,6 +39,7 @@ class Link:
     detectors: DetectorPair
     eve: ChannelAttack | None = None
     attenuator: RandomAttenuator | None = None  # obrona Boba przed oślepianiem (F3.9)
+    random_assignment: bool = False  # obrona Boba przed time-shift (F6.4)
 
 
 def simulate(
@@ -54,11 +55,12 @@ def simulate(
         pulses = before.transmit(pulses, streams.nature)
         pulses, eve = link.eve.intercept(pulses, streams.eve)
         pulses = after.transmit(pulses, streams.nature)
+    swap = link.random_assignment
     if link.attenuator is None:
-        bob = bob_measure(pulses, link.detectors, streams.bob, streams.nature)
+        bob = bob_measure(pulses, link.detectors, streams.bob, streams.nature, swap)
     else:
         pulses, attenuated = link.attenuator.apply(pulses, streams.bob, streams.nature)
-        bob = bob_measure(pulses, link.detectors, streams.bob, streams.nature)
+        bob = bob_measure(pulses, link.detectors, streams.bob, streams.nature, swap)
         bob = dataclasses.replace(bob, attenuated=attenuated)
     return alice, bob, eve
 

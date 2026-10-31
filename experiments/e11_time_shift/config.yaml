@@ -1,0 +1,7 @@
+# E11: atak 4, time-shift (Zhao et al. 2008), F6.1–F6.4. GYS, Ewa tuż za Alice z linią bezstratną.
+seed: 20261104
+length_km: 75.0
+mu: 0.48
+deltas_ps: [0, 25, 50, 75, 100, 150, 200]
+mc_pulses: 100_000_000
+criterion_mus: [0.1, 0.48]
