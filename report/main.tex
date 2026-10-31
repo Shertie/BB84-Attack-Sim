@@ -56,7 +56,7 @@ Po siftingu Alice i Bob ujawniają losową próbkę (10\%) i estymują z niej QB
 
 \subsection{Implementacja i testy}
 
-Kod to Python i numpy, sprawdzany \texttt{mypy --strict}. Testy: 445 szybkich (jednostkowe, regresji ze ,,złotymi wartościami'', własności przez \texttt{hypothesis}, krzyżowe z \texttt{qkd} i QuTiP) i 56 wolnych, statystycznych, które porównują Monte Carlo ze wzorem przez $z$-score przy stałych ziarnach ($|z| < 4$). Pokrycie gałęzi rdzenia szybkimi testami: 95\%. Fragmenty kwantowe ataków 5 i 6 weryfikuje niezależnie QuTiP. Każdy z czternastu eksperymentów kończy się błędem, jeśli wynik wyjdzie poza tolerancję, a całość odtwarza \texttt{make figures}.
+Kod to Python i numpy, sprawdzany \texttt{mypy --strict}. Testy: 460 szybkich (jednostkowe, regresji ze ,,złotymi wartościami'', własności przez \texttt{hypothesis}, krzyżowe z \texttt{qkd} i QuTiP) i 56 wolnych, statystycznych, które porównują Monte Carlo ze wzorem przez $z$-score przy stałych ziarnach ($|z| < 4$). Pokrycie gałęzi rdzenia szybkimi testami: 95\%. Fragmenty kwantowe ataków 5 i 6 weryfikuje niezależnie QuTiP. Każdy z piętnastu eksperymentów kończy się błędem, jeśli wynik wyjdzie poza tolerancję, a całość odtwarza \texttt{make figures}.
 
 \section{Walidacja}
 
@@ -91,6 +91,7 @@ Bez ataku zysk i QBER z Monte Carlo zgadzają się ze wzorami na całym zakresie
     Testy NIST: monobit / runs, $n = 10$ & 0,527089 / 0,147232 & zgodne & --- \\
     Decoy, skończony klucz: zasięg przy $n_X = 10^4$ & 135~km & 135,2~km & wzory zgodne \\
     Decoy: $R(n_X{=}10^9)/R(n_X{=}10^7)$ przy 100~km & $\approx 1{,}75$ & 1,780 & --- \\
+    MDI-QKD: zasięg z przekaźnikiem pośrodku & $> 200$~km & 207,5~km & wzory zgodne \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -109,9 +110,9 @@ Tabela~\ref{tab:map} to centralny wynik projektu. Każdy atak, który nie podnos
     Atak & Złamane założenie & Obrona & Metryka (wynik) \\
     \midrule
     1. Intercept-resend & żadne; przy małej próbce Z8 & próg QBER 11\%, skończony klucz & QBER 26,5\% przy pełnym ataku; przechwycenie 4\% impulsów wykryte w 23\% sesji przy próbce 1000 bitów \\
-    2. Oślepianie detektorów & Z3 & losowe tłumienie 3~dB w 10\% bramek; monitor mocy & QBER i zysk bez zmian, Ewa zna 100\% klucza; test tłumienia $z \approx -35$, AUC $= 1$ od $3\cdot 10^4$ bramek \\
+    2. Oślepianie detektorów & Z3 & losowe tłumienie 3~dB w 10\% bramek; monitor mocy; MDI-QKD & QBER i zysk bez zmian, Ewa zna 100\% klucza; test tłumienia $z \approx -35$, AUC $= 1$ od $3\cdot 10^4$ bramek \\
     3. PNS & Z1 & stany decoy & od 32,8~km Ewa zna 98--100\% klucza; spójność decoy $z$ od $-69$ do $-10$, AUC $= 1$ \\
-    4. Time-shift & Z3 (sprawność w czasie) & losowe przypisanie bit $\leftrightarrow$ detektor & QBER i zysk bez zmian, Ewa zna 0,31 bitu na wykryty bit; z obroną 0 \\
+    4. Time-shift & Z3 (sprawność w czasie) & losowe przypisanie bit $\leftrightarrow$ detektor; MDI-QKD & QBER i zysk bez zmian, Ewa zna 0,31 bitu na wykryty bit; z obroną 0 \\
     5. Trojan horse & Z2 & izolacja, losowa faza, monitor mocy & 0,135 bitu przy 0,1 fotonu w sondzie; wyciek $\le 10^{-3}$ wymaga np.\ 102~dB izolacji \\
     6. Optymalny atak indywidualny & Z7 (granica indywidualna to nie granica ogólna) & próg Shora--Preskilla 11,00\% & $I_{AB} = I_{AE}$ przy $D^* = 14{,}64\%$; numpy i QuTiP zgodne do $10^{-12}$ \\
     7. Man-in-the-middle & Z5a & Wegman--Carter & przerwanie przy pierwszym tagu Ewy; fałszerstwo $1/p \approx 2^{-61}$ \\
@@ -206,6 +207,17 @@ Przy obciążonych bazach Ewa mierzy zawsze w częstszej i trafia z p-stwem $p$:
   \includegraphics[width=0.82\linewidth]{e13_weak_rng}
   \caption{Słaby generator: intercept-resend w przewidzianej bazie, deficyt entropii przy obciążonych bitach, korelacje Markowa przed i po siftingu oraz moc testów losowości.}
   \label{fig:e13}
+\end{figure}
+
+\subsection{MDI-QKD: obrona przed wszystkimi atakami na detektory}
+
+W MDI-QKD \cite{lo2012mdi} Alice i Bob wysyłają stany BB84 do niezaufanego przekaźnika, który wykonuje pomiar Bella na dzielniku 50:50 z dwoma PBS i czterema detektorami. Detektory nie należą do żadnej ze stron, więc ataki 2 i 4 przestają mieć sens. Przekaźnik symulujemy dokładnie: przy ustalonych fazach źródeł każdy detektor dostaje stan koherentny, więc liczby fotonów są niezależne (Poisson), a fazy losujemy. Zyski i QBER w obu bazach zgadzają się ze wzorami Ma i Razaviego zaimplementowanymi w \texttt{qkd} (do $10^{-9}$), a parę pojedynczych fotonów liczymy z interferencji dwufotonowej. Przy parametrach z artykułu (sprawność przekaźnika 14,5\%, tło $6{,}02\cdot 10^{-6}$ na parę detektorów, błąd optyki 1,5\%) zasięg wynosi 207,5~km, zgodnie z ,,ponad 200~km''. Decoy BB84 z tymi samymi detektorami sięga 159,6~km, więc w tym modelu MDI wydłuża zasięg 1,3 raza, a nie dwukrotnie. Ewa jako przekaźnik, mierząca oba impulsy w bazie Z, zna cały klucz bez błędów w bazie klucza, ale w bazie testowej daje 50\% błędów wobec około 25\% uczciwego przekaźnika przy WCP (rys.~\ref{fig:e15}).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{e15_mdi_qkd}
+  \caption{MDI-QKD: stopa klucza na tle decoy BB84 z tymi samymi detektorami, QBER przekaźnika (model i Monte Carlo) oraz Ewa jako przekaźnik.}
+  \label{fig:e15}
 \end{figure}
 
 \section{Skończony klucz}
@@ -303,7 +315,7 @@ Wniosek: QKD i ML-KEM chronią przed różnymi rzeczami. QKD daje bezpieczeństw
 
 Model pomija dyspersję i dryf polaryzacji, a $e_d$ i $Y_0$ nie zależą od długości ani od czasu. Skończony klucz dla WCP z decoy liczymy wzorami Lima i in., których granica błędu fazowego według dokumentacji \texttt{qkd} nie jest ścisła (nie weryfikowaliśmy tego); przebieg Monte Carlo z asymetrycznym wyborem baz jest jednoprocesowy. Atak 6 działa na pojedynczych fotonach i idealnych detektorach, bo jest granicą teoretyczną. Krzywe sprawności w ataku time-shift to Gaussy, a nie zmierzony profil bramki. W ataku Trojan horse nie modelujemy filtrów ani czasu otwarcia modulatora i nie porównujemy wyników z ograniczeniami Lucamariniego i in.\ \cite{lucamarini2015practical}. Scenariusze złamania ML-DSA są wyidealizowane (Ewa ma po prostu klucz prywatny), a kanałów bocznych implementacji PQC nie modelujemy. Czas CPU Wegmana--Cartera mierzymy na implementacji w Pythonie i nie jest on reprezentatywny dla metody.
 
-Wnioski: (1) zwalidowany tor Monte Carlo odtwarza wartości kontrolne z literatury i z niezależnej implementacji; (2) wszystkie ataki, które nie podnoszą QBER (oślepianie, PNS, time-shift, Trojan horse, MITM, słaby generator), łamią założenie dowodu, a nie wzór na długość klucza, i każdy ma obronę z mierzalną metryką; (3) generator ze znanym ziarnem przechodzi testy statystyczne, a mimo to oddaje Ewie cały klucz; (4) uwierzytelnianie podpisem postkwantowym zachowuje zaletę QKD wobec ,,harvest now, decrypt later'', o ile podpis wytrzymuje czas sesji, a hybryda z Wegmanem--Carterem usuwa nawet to założenie.
+Wnioski: (1) zwalidowany tor Monte Carlo odtwarza wartości kontrolne z literatury i z niezależnej implementacji; (2) wszystkie ataki, które nie podnoszą QBER (oślepianie, PNS, time-shift, Trojan horse, MITM, słaby generator), łamią założenie dowodu, a nie wzór na długość klucza, i każdy ma obronę z mierzalną metryką; (3) generator ze znanym ziarnem przechodzi testy statystyczne, a mimo to oddaje Ewie cały klucz; MDI-QKD usuwa ataki na detektory, bo Ewa kontrolująca przekaźnik zdradza się w bazie testowej; (4) uwierzytelnianie podpisem postkwantowym zachowuje zaletę QKD wobec ,,harvest now, decrypt later'', o ile podpis wytrzymuje czas sesji, a hybryda z Wegmanem--Carterem usuwa nawet to założenie.
 
 Kod, dane i wykresy: repozytorium projektu (\texttt{make figures}, \texttt{make report}).
 

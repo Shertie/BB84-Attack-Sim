@@ -68,3 +68,7 @@ NIST_PVALUE_DIGITS = 5e-7
 LIM_MAX_DISTANCE_KM_1E4 = 135.0
 LIM_RATIO_100KM = 1.75
 LIM_RATIO_TOLERANCE = 0.05  # „about” w tekście
+
+# Lo, Curty, Qi 2012: przekaźnik pośrodku toleruje „more than 40dB (i.e., 200km)” strat
+# (parametry z podpisu rys. 2).
+LCQ12_MIN_RANGE_KM = 200.0

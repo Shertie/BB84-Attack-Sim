@@ -35,12 +35,12 @@ Każdy atak, który nie podnosi QBER, łamie któreś założenie dowodu bezpiec
 | Atak | Status | Złamane założenie | Obrona | Metryka (wynik) |
 | --- | --- | --- | --- | --- |
 | 1. Intercept-resend | v1.0, [e04](figures/e04_intercept_resend.png) | żadne: atak mieści się w modelu dowodu; przy małej próbce Z8 | estymacja QBER z progiem 11%; skończony klucz (Tomamichel et al. 2012) | QBER 26,5% przy pełnym ataku; przechwycenie 4% impulsów przy próbce 1000 bitów wykryte w 23% przypadków ([e07](figures/e07_finite_key.png)) |
-| 2. Oślepianie detektorów | v1.0, [e05](figures/e05_blinding.png) | Z3: detektor w trybie jednofotonowym | losowe tłumienie 3 dB w 10% bramek; monitor mocy | QBER i zysk bez zmian, Ewa zna 100% klucza; test tłumienia z ≈ −35; [ROC](figures/e05_blinding_roc.png) |
+| 2. Oślepianie detektorów | v1.0, [e05](figures/e05_blinding.png) | Z3: detektor w trybie jednofotonowym | losowe tłumienie 3 dB w 10% bramek; monitor mocy; MDI-QKD ([e15](figures/e15_mdi_qkd.md)) | QBER i zysk bez zmian, Ewa zna 100% klucza; test tłumienia z ≈ −35; [ROC](figures/e05_blinding_roc.png) |
 | 3. Photon-number splitting | v1.0, [e06](figures/e06_decoy_pns.png) | Z1: rozkład liczby fotonów uwzględniony w długości klucza | stany decoy (vacuum+weak) | od 32,8 km Ewa zna 98–100% klucza przy niezmienionym QBER i zysku; decoy przerywa protokół |
 | 6. Optymalny atak indywidualny | v1.0, [e08](figures/e08_individual_attack.png) | Z7: granica dla ataków indywidualnych nie jest granicą ogólną | próg Shora–Preskilla 11,00% zamiast 14,64% | I_AB = I_AE przy D\* = 14,64%; numpy i QuTiP zgodne do 10⁻¹² |
 | 7. Man-in-the-middle | v1.0, [e09](figures/e09_mitm.md) | Z5a: kanał klasyczny uwierzytelniony | Wegman–Carter z kluczem współdzielonym | przerwanie przy pierwszym tagu Ewy; fałszerstwo z p-stwem 1/p ≈ 2⁻⁶¹; 122 bity klucza na rundę |
 | 7′. MITM przy podpisie ML-DSA | v1.0, [e10](figures/e10_pqc_auth.md) | Z5a w trakcie sesji; Z5b: autentyczne klucze publiczne | hybryda Wegman–Carter + ML-DSA; weryfikacja odcisku klucza | ML-DSA złamane na żywo lub podmieniony klucz: MITM udany; hybryda: wykryty; złamanie po sesji: 0 bitów klucza dla Ewy |
-| 4. Time-shift | v1.1, [e11](figures/e11_time_shift.md) | Z3: sprawność niezależna od czasu przyjścia | losowe przypisanie bit ↔ detektor | QBER i zysk bez zmian; Ewa zna 0,31 bitu na wykryty bit przy krzywych Zhao et al. 2008; obrona: 0,000 ± 0,000 |
+| 4. Time-shift | v1.1, [e11](figures/e11_time_shift.md) | Z3: sprawność niezależna od czasu przyjścia | losowe przypisanie bit ↔ detektor; MDI-QKD ([e15](figures/e15_mdi_qkd.md)) | QBER i zysk bez zmian; Ewa zna 0,31 bitu na wykryty bit przy krzywych Zhao et al. 2008; obrona: 0,000 ± 0,000 |
 | 5. Trojan horse | v1.1, [e12](figures/e12_trojan_horse.md) | Z2: brak kanałów bocznych u Alice | izolacja, losowa faza odbitego światła, monitor mocy | QBER i zysk bez zmian; przy 0,1 fotonu w odbitej sondzie Ewa zna 0,135 bitu (0,095 z losową fazą); wyciek ≤ 10⁻³ przy sondzie 10⁹ fotonów i modulatorze (−20 dB) wymaga 102 dB izolacji |
 | 8. Słaby generator | v1.1, [e13](figures/e13_weak_rng.md) | Z6: losowe i prywatne wybory | QRNG; testy losowości łapią obciążenie i korelacje, nie przewidywalność | znane ziarno: Ewa zna 100% klucza bez dotykania światłowodu, a testy odrzucają generator w 1% przypadków (= α); bazy obciążone 0,9: QBER 8%, Ewa zna 90% bitów |
 
@@ -79,6 +79,10 @@ Słaby generator Alice ([tabele](figures/e13_weak_rng.md)): MT19937 o znanym zia
 ![Skończony klucz z decoy](figures/e14_finite_key_decoy.png)
 
 Skończony klucz dla WCP ze stanami decoy (Lim et al. 2014, [tabele](figures/e14_finite_key_decoy.md)): odtwarzamy liczby z artykułu (135 km przy bloku 10⁴ bitów, stopa dla 10⁹ ok. 1,78 razy wyższa niż dla 10⁷ przy 100 km), a każdy krok wzorów zgadza się z `qkd`. W łączu GYS blok 10⁵ bitów skraca zasięg ze 148 do 121 km. Rachunek na licznikach z Monte Carlo daje długość klucza w granicach kilku procent od modelu.
+
+![MDI-QKD](figures/e15_mdi_qkd.png)
+
+MDI-QKD (Lo, Curty, Qi 2012, [tabele](figures/e15_mdi_qkd.md)): Alice i Bob wysyłają stany do niezaufanego przekaźnika z pomiarem Bella, więc ataki na detektory przestają działać. Przekaźnik ma dokładną fizykę stanów koherentnych; zyski i QBER zgadzają się ze wzorami Ma i Razaviego w `qkd`, a Monte Carlo z modelem. Przy parametrach z artykułu zasięg wynosi 207,5 km (artykuł: ponad 200 km), wobec 159,6 km dla decoy BB84 z tymi samymi detektorami. Ewa jako przekaźnik może znać cały klucz bez błędów w bazie klucza, ale baza testowa pokazuje wtedy 50% błędów.
 
 ## Szybki start
 

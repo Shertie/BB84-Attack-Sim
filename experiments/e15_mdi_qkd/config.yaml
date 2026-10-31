@@ -1,0 +1,13 @@
+# E15: MDI-QKD (Lo, Curty, Qi 2012), F7. Parametry z podpisu rys. 2 artykułu.
+seed: 20261108
+relay_efficiency: 0.145
+dark_count: 3.01e-6  # na detektor: tło 6,02·10⁻⁶ z artykułu liczymy na parę detektorów
+misalignment: 0.015  # dwa obroty po 0,75%
+f_ec: 1.16
+alpha_db_per_km: 0.2
+lengths_km: [0, 20, 40, 60, 80, 100, 120, 140, 160, 180, 200, 205]
+mc_lengths_km: [0, 25, 50, 75]
+mc_pairs: 20_000_000
+mc_mu: 0.3
+attack_length_km: 25.0
+attack_pairs: 20_000_000
