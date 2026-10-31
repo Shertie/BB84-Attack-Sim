@@ -1,4 +1,4 @@
-cff-version: 1.2.0
+cff-version: 1.2.1
 message: "Jeśli korzystasz z tego oprogramowania, zacytuj je według tych metadanych."
 title: "bb84-attacks: symulator Monte Carlo BB84 z atakami i uwierzytelnianiem postkwantowym"
 type: software

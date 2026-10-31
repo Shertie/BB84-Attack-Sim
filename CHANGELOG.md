@@ -4,6 +4,10 @@ Format na wzór [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersje
 
 ## [Unreleased]
 
+## [1.2.1] – 2026-10-31
+
+Poprawki metadanych po pierwszym archiwum w Zenodo; kod i wyniki bez zmian.
+
 ### Dodane
 
 - DOI z Zenodo: 10.5281/zenodo.23840266 (wszystkie wersje), 10.5281/zenodo.23840267 (wersja 1.2.0), w `CITATION.cff` i README.
@@ -11,7 +15,7 @@ Format na wzór [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersje
 ### Zmienione
 
 - Autor: Jakub Kosidowski (`pyproject.toml`, `CITATION.cff`, `.zenodo.json`, `LICENSE`, raport).
-- Raport: w nagłówku wersja 1.2 zamiast 1.1.
+- Raport: w nagłówku właściwa wersja (było 1.1).
 
 ## [1.2.0] – 2026-10-31
 
