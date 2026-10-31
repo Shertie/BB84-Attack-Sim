@@ -10,6 +10,8 @@ Dwa modele, bo pełnią różne role:
 
 Oba modele różnią się tylko traktowaniem podwójnych kliknięć; różnica jest rzędu (ημ)²·e_d
 (test w tests/unit/test_analysis.py).
+
+`afterpulse_dark_count` przenosi dokładny model na detektory z afterpulsami (bez czasu martwego).
 """
 
 import math
@@ -95,3 +97,24 @@ def mismatched_basis_clicks(
 def qber_squashed(mu: float, eta: float, dark_count: float, misalignment: float) -> float:
     """QBER modelu Monte Carlo (podwójne kliknięcie = losowy bit)."""
     return matched_basis_clicks(mu, eta, dark_count, misalignment).qber
+
+
+def afterpulse_dark_count(
+    mu: float, eta: float, dark_count: float, misalignment: float, afterpulse: float
+) -> float:
+    """Ciemne zliczenia detektora bez pamięci, które dają te same kliknięcia co afterpulsy.
+
+    Afterpuls w bramce t + 1 zależy tylko od kliknięcia w bramce t, a nie od fotonów w t + 1,
+    więc działa jak niezależne ciemne zliczenie z p-stwem a = p·c. Tu c = f/(1 − p(1 − f)) to
+    stacjonarne p-stwo kliknięcia detektora (detector.stationary_click_rate), a f to średnie
+    p-stwo świeżego kliknięcia jednego detektora po bazach i bitach. Dla jednej intensywności μ.
+    """
+    fresh = sum(
+        (clicks.detected + clicks.double) / 4.0
+        for clicks in (
+            matched_basis_clicks(mu, eta, dark_count, misalignment),
+            mismatched_basis_clicks(mu, eta, dark_count, misalignment),
+        )
+    )
+    rate = fresh / (1.0 - afterpulse * (1.0 - fresh))
+    return 1.0 - (1.0 - dark_count) * (1.0 - afterpulse * rate)

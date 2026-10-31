@@ -13,6 +13,12 @@ podaje tylko oba progi).
 
 Krzywe sprawności w czasie (atak 4, F6.1): opcjonalne `timing` zmienia sprawność każdego
 detektora zależnie od czasu przyjścia impulsu `Pulses.t`. Bez `timing` czas jest ignorowany.
+
+Pamięć detektora (F7): po kliknięciu detektor jest martwy przez `dead_time_gates` kolejnych bramek
+(model nieparaliżowalny), a z p-stwem `afterpulse` klika sam w pierwszej żywej bramce
+(afterpuls; może wywołać następny). Kliknięcia z fotonów i ciemnych zliczeń w martwych bramkach
+przepadają. Pamięć działa w obrębie paczki impulsów; stan nie przechodzi między paczkami
+(2²⁰ bramek, efekt brzegowy pomijalny). Bez pamięci wyniki są identyczne jak wcześniej.
 """
 
 from dataclasses import dataclass
@@ -100,12 +106,16 @@ class DetectorPair:
     linear: LinearMode | None = None
     gate_s: float = 2.5e-9  # długość bramki i impulsu wyzwalającego [s]
     timing: EfficiencyMismatch | None = None  # krzywe sprawności w czasie (atak 4)
+    dead_time_gates: int = 0  # bramki martwe po kliknięciu (każdy detektor osobno)
+    afterpulse: float = 0.0  # p-stwo afterpulsu po kliknięciu
 
     def __post_init__(self) -> None:
         if not 0.0 < self.efficiency <= 1.0:
             raise ValueError(f"efficiency musi być w (0, 1], jest {self.efficiency}")
         if not 0.0 <= self.dark_count < 1.0:
             raise ValueError(f"dark_count musi być w [0, 1), jest {self.dark_count}")
+        if self.dead_time_gates < 0 or not 0.0 <= self.afterpulse < 1.0:
+            raise ValueError("wymagane dead_time_gates ≥ 0 i afterpulse w [0, 1)")
 
     def blinded(self, cw_power: Floats, detector: int) -> npt.NDArray[np.bool_]:
         if self.linear is None:
@@ -170,7 +180,57 @@ class DetectorPair:
         )
         # Porównanie z p-stwem ciszy (u ≥ cisza), jak w F1: te same ziarna dają te same wyniki.
         u = nature.random((2, len(pulses)))
-        return u[0] >= silent0, u[1] >= silent1
+        click0, click1 = u[0] >= silent0, u[1] >= silent1
+        if self.dead_time_gates == 0 and self.afterpulse == 0.0:
+            return click0, click1
+        return (
+            with_memory(click0, self.dead_time_gates, self.afterpulse, nature),
+            with_memory(click1, self.dead_time_gates, self.afterpulse, nature),
+        )
+
+
+def with_memory(
+    fresh: Clicks, dead_time_gates: int, afterpulse: float, rng: np.random.Generator
+) -> Clicks:
+    """Kliknięcia jednego detektora po uwzględnieniu czasu martwego i afterpulsów.
+
+    `fresh`: kliknięcia z fotonów i ciemnych zliczeń, gdyby detektor nie miał pamięci.
+    Pętla idzie tylko po zdarzeniach (kliknięciach i zaplanowanych afterpulsach).
+    """
+    size = len(fresh)
+    out = np.zeros(size, dtype=np.bool_)
+    events = np.flatnonzero(fresh).tolist()
+    draws = rng.random(len(events) + 64).tolist()
+    alive_from, pending, i, k = 0, -1, 0, 0
+    while True:
+        gate_fresh = events[i] if i < len(events) else size
+        gate = min(gate_fresh, pending) if pending >= 0 else gate_fresh
+        if gate >= size:
+            break
+        if gate == gate_fresh:
+            i += 1
+        if gate == pending:
+            pending = -1
+        if gate < alive_from:
+            continue  # martwy: kliknięcie przepada
+        out[gate] = True
+        alive_from = gate + dead_time_gates + 1
+        if k >= len(draws):
+            draws.extend(rng.random(64).tolist())
+        if draws[k] < afterpulse:
+            pending = alive_from
+        k += 1
+    return out
+
+
+def stationary_click_rate(fresh_rate: float, dead_time_gates: int, afterpulse: float) -> float:
+    """P-stwo kliknięcia na bramkę w stanie ustalonym przy niezależnych świeżych kliknięciach f.
+
+    Odnowienie po kliknięciu: τ martwych bramek, potem afterpuls z p-stwem p albo czekanie
+    na świeże kliknięcie (średnio 1/f bramek): c = 1/(τ + 1 + (1 − p)(1/f − 1)).
+    Dla p = 0: c = f/(1 + τf); dla τ = 0: c = f/(1 − p(1 − f)).
+    """
+    return 1.0 / (dead_time_gates + 1.0 + (1.0 - afterpulse) * (1.0 / fresh_rate - 1.0))
 
 
 def dark_count_per_detector(background_per_pulse: float) -> float:

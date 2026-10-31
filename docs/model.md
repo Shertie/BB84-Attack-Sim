@@ -49,7 +49,7 @@ Wartości kontrolne wynikające z tych parametrów: ROADMAP.md, rozdz. 3.2.
 2. **Kanał:** liczba ocalałych fotonów ~ Binomial(n, 10^(−αL/10)). Błąd optyki to obrót polaryzacji o kąt θ_e z sin²θ_e = e_d.
 3. **Bob:** wybór bazy, PBS (φ = 0 dla Z, π/4 dla X), rozkład fotonów na detektory ~ Binomial(n, cos²(θ − φ)). Prawdopodobieństwo liczy się jako (1 + cos 2(θ − φ))/2, co daje dokładnie 0 i 1 dla stanów z bazy analizatora; wprost liczone cos² zostawiłoby resztę rzędu 10⁻³³. Dalej: każdy foton wykryty z prawdopodobieństwem η, a do tego niezależne ciemne zliczenia p_d na detektor i bramkę.
 4. **Klasyfikacja zdarzeń:** brak kliknięcia, pojedyncze, podwójne. Podwójne kliknięcie dostaje losowy bit i nie jest odrzucane (squashing, Beaudry, Moroder, Lütkenhaus 2008).
-5. **Później (F3, F6):** tryb liniowy detektora (oślepianie), krzywe sprawności w czasie η_i(t) (time-shift), czas martwy i afterpulsing (F7).
+5. **Rozszerzenia detektora:** tryb liniowy (oślepianie, F3), krzywe sprawności w czasie η_i(t) (time-shift, F6), czas martwy i afterpulsing (F7, rozdz. 14).
 
 Własność do testów: dla stanu koherentnego liczby fotonów w dwóch wyjściach PBS są niezależnymi rozkładami Poissona o średnich μηcos² i μηsin². Próbkowanie przez n i rozkład dwumianowy musi dawać ten sam rozkład (F1.13).
 
@@ -88,7 +88,7 @@ Przy Z5a widać różnicę między QKD a ML-KEM (ROADMAP, rozdz. 2.2a). QKD potr
 
 - e_d i Y₀ nie zależą od L ani od czasu.
 - Brak dyspersji i dryfu polaryzacji w kanale.
-- Brak czasu martwego i afterpulsingu (do F3/F7).
+- Brak czasu martwego i afterpulsingu (do F7; od F7 opcjonalne, rozdz. 14).
 - Skończony klucz tylko dla modelu jednofotonowego. WCP + decoy (Lim et al. 2014) dopiero w F7.
 
 ## 7. Postprocessing (F2)
@@ -161,3 +161,11 @@ Przy Z5a widać różnicę między QKD a ML-KEM (ROADMAP, rozdz. 2.2a). QKD potr
 - **CHSH:** urządzenia jak czarne skrzynki, korelacja V cos 2(a − b), sprawność η, brak kliknięcia czytany jako +1. S = 2√2Vη² + 2(1 − η)², QBER ustawień klucza η²(1 − V)/2 + η(1 − η), stopa device-independent przeciw atakom kolektywnym z granicy Acína i in. 2007. Próg S > 2 to 2/(1 + √2); próg dodatniej stopy wychodzi 92,31% wobec 92,4% podanych przez Pironio i in. 2009 (za dokumentacją `qkd`).
 - **Fałszywe naruszenie:** `DetectorControl` (Gerhardt i in. 2011) to lokalny model, w którym Ewa wybiera ustawienia i wyniki, a detektory klikają tylko przy jej ustawieniu. Na samych koincydencjach daje S = 4p (2√2 przy p = 1/√2), na wszystkich rundach S = p + ½ < 2.
 - **Ograniczenia:** test CHSH zakłada idealne źródło par (bez wielu par i ciemnych zliczeń) z białym szumem; brak skończonego klucza dla DI i ataków ogólnych.
+
+## 14. Pamięć detektora: czas martwy i afterpulsing (F7)
+
+- **Model:** `DetectorPair(dead_time_gates=τ, afterpulse=p)`. Po kliknięciu detektor jest martwy przez τ kolejnych bramek (model nieparaliżowalny: kliknięcia w martwych bramkach przepadają i nie przedłużają martwoty). Z p-stwem p klika sam w pierwszej żywej bramce; taki afterpuls może wywołać następny. Każdy detektor ma własną pamięć; stan nie przechodzi między paczkami 2²⁰ impulsów. Przy τ = 0 i p = 0 wyniki są identyczne co do bitu jak bez pamięci.
+- **Wzór odnowienia:** przy niezależnych świeżych kliknięciach z p-stwem f na bramkę stacjonarne p-stwo kliknięcia to c = 1/(τ + 1 + (1 − p)(1/f − 1)); dla p = 0 daje to f/(1 + τf), dla τ = 0 f/(1 − p(1 − f)). e18 sprawdza go Monte Carlo dla f od 10⁻⁴ do 0,3.
+- **Tor BB84 z afterpulsami (τ = 0):** afterpuls w bramce t + 1 zależy tylko od kliknięcia w bramce t, a nie od fotonów w t + 1. Działa więc jak niezależne ciemne zliczenie z p-stwem p·c, a dokładny model z rozdz. 4 wystarczy uzupełnić o to zliczenie (`analysis/wcp.afterpulse_dark_count`). Monte Carlo zgadza się z nim w granicach 2σ przy 4·10⁷ impulsach.
+- **Wzory Lima et al. 2014:** R = D(1 + p_ap), e = p_dc + e_mis(1 − e^(−ημ)) + p_ap D/2. To pierwszy rząd modelu dokładnego, gdy p_ap = p/(1 − p) (łączna liczba afterpulsów na kliknięcie, z kaskadami). Przy D ≈ 5% zawyżają QBER o 0,04 pp, bo pomijają afterpulsy pochłonięte przez świeże kliknięcie i podwójne kliknięcia. Afterpulsy 4% podnoszą QBER o ok. 2 pp, cztery razy więcej niż cały błąd optyki 0,5%.
+- **Ograniczenia:** p-stwo afterpulsu nie zależy od odstępu od lawiny (realne rozkłady są wykładnicze w czasie); czas martwy w bramkach, a nie w nanosekundach; brak zależności sprawności od czasu po martwocie (podstawa ataków typu „dead-time”, Weier i in. 2011).
