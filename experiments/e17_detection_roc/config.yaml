@@ -1,0 +1,23 @@
+# E17: obrony z progiem i krzywe ROC dla ataków 1, 4, 5 i 6 (definicja ukończenia, rozdz. 7.1).
+seed: 20261110
+false_alarm: 0.01
+# Test progu QBER (ataki 1 i 6): próbka k bitów, tło jak w e07 (błąd optyki 2%).
+qber_sample: 1000
+noise_misalignment: 0.02
+ir_fractions: [0.04, 0.08]
+fuchs_errors: [0.05, 0.08]
+# Monitor czasu (atak 4): krzywe Zhao, GYS 75 km jak w e11.
+timing_length_km: 75.0
+timing_pulses: 20_000_000
+timing_jitters_ns: [0.05, 0.15]
+timing_window_ns: 0.2
+timing_clicks: 30
+timing_sessions: 2000
+# Monitor światła wchodzącego do Alice (atak 5): fotodioda jak w e05, częstość GYS.
+monitor_tap: 0.01
+monitor_noise_w: 1.0e-8
+monitor_windows: 1000
+repetition_hz: 2.0e+6
+missed: 0.01
+max_information: 1.0e-3
+reflection_db: 20.0

@@ -19,7 +19,6 @@ import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy.stats import binom
 
 from qkdsim.analysis.entropy import h2
 from qkdsim.analysis.intercept_resend import intercept_resend_model
@@ -27,6 +26,7 @@ from qkdsim.analysis.key_rate import GYS
 from qkdsim.attacks.intercept_resend import InterceptResend
 from qkdsim.channel import FiberChannel
 from qkdsim.config import load_yaml
+from qkdsim.defenses.qber_test import tolerance
 from qkdsim.detector import DetectorPair, dark_count_per_detector
 from qkdsim.pipeline import Link, run_bits
 from qkdsim.postprocessing.finite_key import (
@@ -65,11 +65,6 @@ class Config:
 def noise_qber(cfg: Config, fraction: float) -> float:
     params = dataclasses.replace(GYS, misalignment=cfg.noise_misalignment)
     return intercept_resend_model(params, 0.0, 0.48, fraction, 1.0, P_D).clicks.qber
-
-
-def tolerance(k: int, honest_qber: float) -> float:
-    """Najmniejszy próg Q_tol z p-stwem fałszywego przerwania ≤ 1%."""
-    return float(binom.ppf(0.99, k, honest_qber)) / k
 
 
 def mc_detection(cfg: Config) -> dict[float, float]:
