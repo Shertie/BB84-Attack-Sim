@@ -36,7 +36,7 @@ Rozszerzenia modelu i protokołu, obrony z krzywymi ROC dla wszystkich ataków z
 - `docs/architecture.md`: zasady konstrukcji, tabela ataków (moduł, eksperyment, porównanie, testy, obrona) i powiązane narzędzia. README i raport: mapa ataków z nowymi obronami, nowe podrozdziały; `docs/model.md` rozdz. 14–17.
 - Dokumenty z etapu planowania (roadmapa, decyzje architektoniczne, przegląd narzędzi, plan projektu) nie są już częścią repozytorium; ich treść opisująca projekt przeszła do `docs/`.
 - Testy: symetria QBER w bazach Z i X przy intercept-resend (próba mutacyjna wykazała, że Ewa ze stałą bazą przechodziła wcześniejsze testy), test zgodności wersji z `pyproject.toml`. CI: akcje GitHuba na Node 24, typy zgodne z numpy 2.4 i 2.5 (Python 3.11 w CI ma numpy 2.4).
-- Adres repozytorium w `pyproject.toml`, `CITATION.cff`, README i raporcie.
+- Adres repozytorium w `pyproject.toml`, `CITATION.cff`, README i raporcie; metadane archiwum Zenodo w `.zenodo.json`.
 - `finite_key.key_length_plan_hoeffding` nazywa się teraz `key_length_sample_hoeffding`; testy walidacyjne `tests/stat/test_gate_g*.py` nazywają się `test_validation_*.py`.
 - Bez nowych opcji (czas martwy, afterpulsy, QRNG, LDPC) wyniki są identyczne jak w 1.1.0.
 - 528 szybkich i 57 wolnych testów, pokrycie gałęzi rdzenia 96%. `make figures` z czystego klonu: 20 eksperymentów w 780 s na 12 rdzeniach; poza czasami CPU w e10 wyniki identyczne z repozytorium.

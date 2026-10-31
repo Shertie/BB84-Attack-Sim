@@ -1,0 +1,26 @@
+{
+  "title": "bb84-attacks: symulator Monte Carlo BB84 z atakami i uwierzytelnianiem postkwantowym",
+  "upload_type": "software",
+  "description": "Symulator Monte Carlo protokołu BB84 na poziomie impulsów (źródło WCP z decoy, światłowód, detektory SPAD, Cascade, wzmacnianie prywatności, skończony klucz), zwalidowany względem wzorów Ma et al. 2005 i niezależnej implementacji qkd. Wykonuje osiem ataków (intercept-resend, oślepianie detektorów, PNS, time-shift, Trojan horse, optymalny atak indywidualny, man-in-the-middle, słaby generator) z obronami i krzywymi ROC oraz porównuje uwierzytelnianie Wegmana–Cartera, ML-DSA i hybrydowe w kontekście QKD i ML-KEM. Rozszerzenia: skończony klucz z decoy, MDI-QKD, BBM92 z testem CHSH, czas martwy i afterpulsy detektorów, symulator QRNG i uzgadnianie LDPC.",
+  "creators": [
+    {
+      "name": "Shertie"
+    }
+  ],
+  "license": "MIT",
+  "language": "pol",
+  "keywords": [
+    "quantum key distribution",
+    "BB84",
+    "Monte Carlo",
+    "quantum hacking",
+    "decoy states",
+    "post-quantum cryptography",
+    "ML-DSA",
+    "MDI-QKD",
+    "CHSH",
+    "QRNG",
+    "LDPC",
+    "finite-key analysis"
+  ]
+}
