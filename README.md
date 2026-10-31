@@ -6,7 +6,7 @@ Model: polaryzacyjny BB84, światłowód 1550 nm, źródło słabych impulsów k
 
 Pomost do kryptografii postkwantowej (wariant E): kanał klasyczny uwierzytelniany Wegmanem–Carterem, podpisem ML-DSA (FIPS 204) albo hybrydowo, z tabelą modeli zagrożeń QKD wobec ML-KEM.
 
-> **Status: v1.0, w drodze do v1.1.** Ataki 1 (intercept-resend), 2 (oślepianie detektorów), 3 (PNS), 6 (optymalny atak indywidualny) i 7 (MITM) z obronami, skończony klucz i uwierzytelnianie postkwantowe; po v1.0 doszedł atak 4 (time-shift). Ataki 5 (Trojan horse) i 8 (słaby generator) są zaplanowane na v1.1: [ROADMAP.md](ROADMAP.md). Raport: [report/main.tex](report/main.tex) (`make report`).
+> **Status: v1.0, w drodze do v1.1.** Ataki 1 (intercept-resend), 2 (oślepianie detektorów), 3 (PNS), 6 (optymalny atak indywidualny) i 7 (MITM) z obronami, skończony klucz i uwierzytelnianie postkwantowe; po v1.0 doszły ataki 4 (time-shift) i 5 (Trojan horse). Atak 8 (słaby generator) jest zaplanowany na v1.1: [ROADMAP.md](ROADMAP.md). Raport: [report/main.tex](report/main.tex) (`make report`).
 
 ## Wyniki kontrolne
 
@@ -41,7 +41,7 @@ Każdy atak, który nie podnosi QBER, łamie któreś założenie dowodu bezpiec
 | 7. Man-in-the-middle | v1.0, [e09](figures/e09_mitm.md) | Z5a: kanał klasyczny uwierzytelniony | Wegman–Carter z kluczem współdzielonym | przerwanie przy pierwszym tagu Ewy; fałszerstwo z p-stwem 1/p ≈ 2⁻⁶¹; 122 bity klucza na rundę |
 | 7′. MITM przy podpisie ML-DSA | v1.0, [e10](figures/e10_pqc_auth.md) | Z5a w trakcie sesji; Z5b: autentyczne klucze publiczne | hybryda Wegman–Carter + ML-DSA; weryfikacja odcisku klucza | ML-DSA złamane na żywo lub podmieniony klucz: MITM udany; hybryda: wykryty; złamanie po sesji: 0 bitów klucza dla Ewy |
 | 4. Time-shift | v1.1, [e11](figures/e11_time_shift.md) | Z3: sprawność niezależna od czasu przyjścia | losowe przypisanie bit ↔ detektor | QBER i zysk bez zmian; Ewa zna 0,31 bitu na wykryty bit przy krzywych Zhao et al. 2008; obrona: 0,000 ± 0,000 |
-| 5. Trojan horse | v1.1 | Z2: brak kanałów bocznych u Alice | izolatory, monitor mocy, filtr | — |
+| 5. Trojan horse | v1.1, [e12](figures/e12_trojan_horse.md) | Z2: brak kanałów bocznych u Alice | izolacja, losowa faza odbitego światła, monitor mocy | QBER i zysk bez zmian; przy 0,1 fotonu w odbitej sondzie Ewa zna 0,135 bitu (0,095 z losową fazą); wyciek ≤ 10⁻³ przy sondzie 10⁹ fotonów i modulatorze (−20 dB) wymaga 102 dB izolacji |
 | 8. Słaby generator | v1.1 | Z6: losowe i prywatne wybory | QRNG; testy losowości | — |
 
 ## Pozostałe wyniki
@@ -67,6 +67,10 @@ Wariant E ([scenariusze i tabela modeli zagrożeń](figures/e10_pqc_auth.md)): M
 ![Atak time-shift](figures/e11_time_shift.png)
 
 Atak time-shift ([tabele](figures/e11_time_shift.md)): z krzywymi sprawności dopasowanymi do Zhao et al. 2008 odtwarzamy ich Tabelę I(c) (K_U = 1130,9 i K_L = 1296,8 bitu wobec 1131 i 1297). W łączu GYS przy 75 km Ewa zna 0,31 bitu na wykryty bit przy niezmienionym QBER i zysku. Atak łamie bezpieczeństwo (K_L > K_U) od rozsunięcia krzywych 89 ps przy μ = 0,1, ale dopiero od 140 ps przy μ = 0,48, bo GLLP i tak usuwa część wielofotonową. Losowe przypisanie bit ↔ detektor zeruje wiedzę Ewy.
+
+![Atak Trojan horse](figures/e12_trojan_horse.png)
+
+Atak Trojan horse ([tabele](figures/e12_trojan_horse.md)): odtwarzamy liczby Gisina et al. 2006 (0,135 i 0,095 bitu przy 0,1 fotonu wracającym do Ewy), a Monte Carlo w łączu GYS potwierdza, że QBER i zysk się nie zmieniają. Bazę w czasie rzeczywistym (do intercept-resend bez śladu w QBER) Ewa zgaduje dużo gorzej, gdy Alice losuje fazę: bez odniesienia fazowego pojedynczy foton nic o bazie nie mówi. Każdy rząd wielkości mocy sondy to 10 dB izolacji więcej, a losowa faza oszczędza 1,6 dB.
 
 ## Szybki start
 

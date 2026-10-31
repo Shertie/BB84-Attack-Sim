@@ -1,0 +1,133 @@
+"""Model analityczny ataku Trojan horse (Gisin et al. 2006), F6.5–F6.7.
+
+Ewa wpuszcza do modułu Alice jasny impuls sondujący. Odbija się on od modulatora polaryzacji
+i wraca do Ewy z polaryzacją ustawioną tak jak stan Alice (najgorszy przypadek: modulator
+nakłada swoje ustawienie na sondę tak samo jak na sygnał). Po drodze tłumią go izolator
+(raz, w kierunku zaporowym), tłumik Alice (dwa razy) i samo odbicie, więc wraca słaby stan
+koherentny o średniej μ_out = μ_in·10^(−A/10) (F6.5). Sygnału Ewa nie dotyka, więc QBER
+i zysk się nie zmieniają.
+
+Wiedza Ewy (ROADMAP, K6):
+- bit przy znanej bazie (Ewa trzyma sondę do ujawnienia baz): dwa stany czyste |α_θ⟩
+  i |α_{θ+π/2}⟩, Helstrom P = ½(1 + √(1 − e^(−2μ))), informacja 1 − h(P) (wzór (1) artykułu);
+- z losową fazą (Alice losuje fazę światła, które może się odbić): Ewa ma mieszaninę stanów
+  Focka i zna bit, gdy wróci choć jeden foton: I = 1 − e^(−μ) (wzór (7));
+- baza w czasie rzeczywistym (pozwala na intercept-resend bez błędów): Helstrom dla stanów
+  mieszanych ρ_Z = ½(ρ_H + ρ_V) i ρ_X = ½(ρ_D + ρ_A) w obciętej przestrzeni Focka dwóch modów
+  polaryzacji. Weryfikacja w QuTiP: tests/crosscheck/test_trojan_qutip.py.
+"""
+
+import math
+
+import numpy as np
+import numpy.typing as npt
+from scipy.optimize import brentq
+
+from qkdsim.analysis.entropy import h2
+
+Floats = npt.NDArray[np.float64]
+
+# Gisin et al. 2006, rozdz. II: odbicie wsteczne typowych elementów [dB tłumienia].
+GISIN_REFLECTION_DB = {"łącznik ze skośnym szlifem": 40.0, "modulator fazy": 20.0, "lustro": 1.0}
+BASIS_ANGLES = {"Z": (0.0, math.pi / 2), "X": (math.pi / 4, 3 * math.pi / 4)}
+
+
+def round_trip_attenuation_db(
+    isolation_db: float, reflection_db: float, attenuator_db: float = 0.0
+) -> float:
+    """A: izolator raz (w kierunku zaporowym), odbicie raz, tłumik Alice tam i z powrotem."""
+    return isolation_db + reflection_db + 2.0 * attenuator_db
+
+
+def returned_photons(probe_photons: float, attenuation_db: float) -> float:
+    """μ_out = μ_in·10^(−A/10) (F6.5)."""
+    return float(probe_photons * 10.0 ** (-attenuation_db / 10.0))
+
+
+def bit_guess_probability(mu: float, phase_randomized: bool = False) -> float:
+    """P-stwo, że Ewa trafi bit przy znanej bazie (pomiar Helstroma albo licznik fotonów)."""
+    if phase_randomized:
+        return 1.0 - 0.5 * math.exp(-mu)  # bez fotonu zgaduje, z fotonem wie na pewno
+    return 0.5 * (1.0 + math.sqrt(-math.expm1(-2.0 * mu)))
+
+
+def bit_information(mu: float, phase_randomized: bool = False) -> float:
+    """Informacja Ewy o bicie na impuls: wzór (1) albo (7) Gisina et al. 2006."""
+    if phase_randomized:
+        return -math.expm1(-mu)
+    return 1.0 - h2(bit_guess_probability(mu))
+
+
+def _photon_cutoff(mu: float) -> int:
+    """Liczba fotonów, powyżej której ogon rozkładu Poissona jest pomijalny (< 10⁻¹²)."""
+    return max(12, math.ceil(mu + 12.0 * math.sqrt(mu) + 12.0))
+
+
+def fock_states(theta: float, n_max: int) -> Floats:
+    """Wiersz n: |n_θ⟩ = (cos θ a_H† + sin θ a_V†)ⁿ/√n! |0⟩ w bazie |k, n − k⟩, k = 0..n.
+
+    Stany o różnym n leżą w osobnych blokach; indeks bloku n zaczyna się od n(n + 1)/2.
+    """
+    dim = (n_max + 1) * (n_max + 2) // 2
+    states = np.zeros((n_max + 1, dim))
+    c, s = math.cos(theta), math.sin(theta)
+    for n in range(n_max + 1):
+        start = n * (n + 1) // 2
+        for k in range(n + 1):
+            states[n, start + k] = math.sqrt(math.comb(n, k)) * c**k * s ** (n - k)
+    return states
+
+
+def probe_density(mu: float, theta: float, phase_randomized: bool, n_max: int) -> Floats:
+    """Sonda o polaryzacji θ: stan koherentny albo (losowa faza) mieszanina Poissona |n_θ⟩."""
+    n = np.arange(n_max + 1)
+    log_weights = -mu + n * math.log(mu) - np.array([math.lgamma(k + 1) for k in n])
+    states = fock_states(theta, n_max)
+    if phase_randomized:
+        return np.asarray((states.T * np.exp(log_weights)) @ states)
+    vector = np.exp(0.5 * log_weights) @ states
+    return np.outer(vector, vector)
+
+
+def helstrom_probability(rho: Floats, sigma: Floats) -> float:
+    """½ + ¼‖ρ − σ‖₁: najlepsze p-stwo rozróżnienia dwóch stanów o równych p-stwach a priori."""
+    return 0.5 + 0.25 * float(np.abs(np.linalg.eigvalsh(rho - sigma)).sum())
+
+
+def basis_guess_probability(mu: float, phase_randomized: bool = False) -> float:
+    """Helstrom dla baz Z i X: ρ_Z = ½(ρ_H + ρ_V), ρ_X = ½(ρ_D + ρ_A)."""
+    if mu <= 0.0:
+        return 0.5
+    n_max = _photon_cutoff(mu)
+    rho = {
+        name: 0.5
+        * (
+            probe_density(mu, angles[0], phase_randomized, n_max)
+            + probe_density(mu, angles[1], phase_randomized, n_max)
+        )
+        for name, angles in BASIS_ANGLES.items()
+    }
+    return helstrom_probability(rho["Z"], rho["X"])
+
+
+def tolerable_photons(max_information: float, phase_randomized: bool = False) -> float:
+    """Największe μ_out, przy którym Ewa wie o bicie nie więcej niż `max_information`."""
+    if not 0.0 < max_information < 1.0:
+        raise ValueError("dopuszczalna informacja musi być w (0, 1)")
+
+    def gap(log_mu: float) -> float:
+        return bit_information(math.exp(log_mu), phase_randomized) - max_information
+
+    return math.exp(brentq(gap, math.log(1e-30), math.log(50.0)))
+
+
+def required_isolation_db(
+    probe_photons: float,
+    max_information: float,
+    reflection_db: float,
+    attenuator_db: float = 0.0,
+    phase_randomized: bool = False,
+) -> float:
+    """Izolacja, przy której sonda o μ_in fotonach daje Ewie najwyżej `max_information` bitu."""
+    total = 10.0 * math.log10(probe_photons / tolerable_photons(max_information, phase_randomized))
+    return total - reflection_db - 2.0 * attenuator_db

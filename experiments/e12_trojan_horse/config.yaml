@@ -1,0 +1,11 @@
+# E12: atak 5, Trojan horse (Gisin et al. 2006), F6.5–F6.7. GYS, Ewa sonduje modulator Alice.
+seed: 20261105
+length_km: 25.0
+mu: 0.48
+nu: 0.05
+mc_pulses: 20_000_000
+mc_returned: [0.001, 0.01, 0.1, 1.0]  # μ_out w punktach Monte Carlo
+probe_photons: [1.0e+6, 1.0e+9, 1.0e+12]  # μ_in: fotony sondy na wejściu Alice
+max_information: [1.0e-3, 1.0e-6]  # dopuszczalna informacja Ewy na impuls
+attenuator_db: 0.0  # tłumik Alice; 0 = rachunek zachowawczy
+qber_threshold: 0.11

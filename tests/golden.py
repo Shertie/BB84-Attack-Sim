@@ -51,3 +51,9 @@ ZHAO_QBER = 0.0568
 ZHAO_K_UPPER_BITS = 1131
 ZHAO_K_LOWER_BITS = 1297
 ZHAO_ROUNDING = 1.0  # artykuł podaje K w pełnych bitach
+
+# Gisin et al. 2006, podpis rys. 7: informacja Ewy przy 0,1 fotonu w odbitej sondzie [bit].
+GISIN_MU = 0.1
+GISIN_INFORMATION_COHERENT = 0.135
+GISIN_INFORMATION_RANDOM_PHASE = 0.095
+GISIN_ROUNDING = 5e-4

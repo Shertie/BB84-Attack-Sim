@@ -7,6 +7,7 @@ Format na wzór [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersje
 ### Dodane
 
 - Atak 4, time-shift (Qi et al. 2007, Zhao et al. 2008): krzywe sprawności detektorów w czasie (`EfficiencyMismatch`) dopasowane do Tabeli I(a) artykułu, atak `TimeShift`, model analityczny z granicami K_U i K_L (odtworzone 1131 i 1297 bitów z danych artykułu), obrona losowym przypisaniem bit ↔ detektor (`Link.random_assignment`), eksperyment e11.
+- Atak 5, Trojan horse (Gisin et al. 2006): model wycieku sondy przez izolację i odbicie, wiedza Ewy o bicie (Helstrom, licznik fotonów przy losowej fazie) i o bazie (Helstrom dla stanów mieszanych, weryfikacja w QuTiP), atak `TrojanHorse` w torze impulsów, wymagana izolacja w funkcji wycieku, eksperyment e12.
 
 ## [1.0.0] – 2026-10-30
 
