@@ -4,7 +4,19 @@ Format na wzór [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersje
 
 ## [Unreleased]
 
+## [1.2.0] – 2026-10-31
+
+Wszystkie rozszerzenia z fazy F7 i audyt definicji ukończenia dla ośmiu ataków.
+
 ### Dodane
+
+- Obrony z progiem i krzywe ROC dla ataków 1, 4, 5 i 6 (eksperyment e17): test progu QBER z dokładną ROC dwumianową (`defenses/qber_test.py`), monitor czasu przyjścia kliknięć (`defenses/timing_monitor.py`), fotodioda na wejściu Alice z największą niezauważoną sondą i wymaganą izolacją (`defenses/input_monitor.py`).
+
+- Czas martwy i afterpulsy detektorów (F1.8, F7): `DetectorPair(dead_time_gates, afterpulse)`, wzór odnowienia na stacjonarne p-stwo kliknięcia, model dokładny toru z afterpulsami (`analysis/wcp.afterpulse_dark_count`), porównanie ze wzorami Lima et al. 2014, eksperyment e18.
+
+- Symulator QRNG na dzielniku wiązki (F7, przedłużenie ataku 8): `qrng.BeamSplitterQrng` z niedopasowaniem i pamięcią detektorów, dokładne obciążenie bitów, min-entropia metodą najczęstszej wartości z NIST SP 800-90B z kontekstem, ekstrakcja Toeplitzem, `QrngSource` jako generator Alice; testy zdrowia RCT i APT z progami zgodnymi z Tabelą 2 normy (`defenses/health_tests.py`), eksperyment e19.
+
+- Uzgadnianie LDPC z syndromem (F7): kody o stałym stopniu zmiennych, dekoder BP, ramki równej długości ze skracaniem i odrzucaniem niezdekodowanych ramek, `PostprocessingConfig(reconciliation="ldpc")`, wiersze syndromu w analizie liniowej Ewy, ewolucja gęstości z progiem BP kodu (3,6) 0,0841 (literatura: 0,084), eksperyment e20.
 
 - Skończony klucz dla WCP ze stanami decoy (Lim et al. 2014, F7): wzory (1)–(5) z liczników (`postprocessing/finite_key_decoy.py`), oczekiwane liczniki dla modelu z artykułu i dla detektorów symulatora, optymalizacja parametrów protokołu, test krzyżowy z `qkd` (zgodność do 10⁻¹²), eksperyment e14. Odtworzone 135 km przy n_X = 10⁴ i stosunek ≈ 1,75 stóp przy 100 km.
 
@@ -15,6 +27,10 @@ Format na wzór [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersje
 ### Zmienione
 
 - `BiasedSource` przeniesiony do `rng.py` (uczciwy protokół asymetryczny); `attacks.weak_rng` nadal go udostępnia.
+- `KeyBalance` ma pole `discarded` (bity z niezdekodowanych ramek LDPC); przy Cascade zawsze 0.
+- e07 korzysta z progu z `defenses/qber_test.py`; wyniki identyczne co do bajtu.
+- ROADMAP: audyt definicji ukończenia (rozdz. 7.1) dla ataków 1–8 zamiast szablonu; README i raport (mapa ataków, podrozdziały F7); `docs/model.md` rozdz. 14–17.
+- Bez nowych opcji (czas martwy, afterpulsy, QRNG, LDPC) wyniki są identyczne jak w 1.1.0.
 
 ## [1.1.0] – 2026-10-31
 

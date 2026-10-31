@@ -2,11 +2,11 @@
 
 Symulator Monte Carlo BB84 na poziomie impulsów, w którym ataki są wykonywane, a nie wyceniane wzorem. Każdy wynik jest porównany ze wzorem lub publikacją, od fotonu do klucza końcowego, a obrony są oceniane krzywymi ROC.
 
-Model: polaryzacyjny BB84, światłowód 1550 nm, źródło słabych impulsów koherentnych (WCP), dwa detektory SPAD po stronie Boba, Cascade, hasz Toeplitza i skończony klucz. Parametry z eksperymentu GYS (Ma, Qi, Zhao, Lo 2005). Wzory sprawdzamy też niezależną implementacją [`qkd`](https://pypi.org/project/qkd/), która wycenia część tych samych ataków w formie zamkniętej ([porównanie](docs/related.md)).
+Model: polaryzacyjny BB84, światłowód 1550 nm, źródło słabych impulsów koherentnych (WCP), dwa detektory SPAD po stronie Boba (opcjonalnie z czasem martwym i afterpulsami), Cascade albo LDPC, hasz Toeplitza i skończony klucz. Parametry z eksperymentu GYS (Ma, Qi, Zhao, Lo 2005). Wzory sprawdzamy też niezależną implementacją [`qkd`](https://pypi.org/project/qkd/), która wycenia część tych samych ataków w formie zamkniętej ([porównanie](docs/related.md)).
 
 Pomost do kryptografii postkwantowej (wariant E): kanał klasyczny uwierzytelniany Wegmanem–Carterem, podpisem ML-DSA (FIPS 204) albo hybrydowo, z tabelą modeli zagrożeń QKD wobec ML-KEM.
 
-> **Status: v1.1.** Komplet ośmiu ataków z planu z obronami: intercept-resend, oślepianie detektorów, PNS, time-shift, Trojan horse, optymalny atak indywidualny, MITM i słaby generator. Do tego skończony klucz i uwierzytelnianie postkwantowe. Dalsze rozszerzenia (F7): [ROADMAP.md](ROADMAP.md). Raport: [report/main.tex](report/main.tex) (`make report`).
+> **Status: v1.2.** Komplet ośmiu ataków z planu z obronami: intercept-resend, oślepianie detektorów, PNS, time-shift, Trojan horse, optymalny atak indywidualny, MITM i słaby generator; każdy spełnia definicję ukończenia z [ROADMAP.md](ROADMAP.md) (rozdz. 7.1). Do tego skończony klucz i uwierzytelnianie postkwantowe oraz wszystkie rozszerzenia F7: skończony klucz z decoy, MDI-QKD, splątane pary z CHSH, pamięć detektorów, symulator QRNG i uzgadnianie LDPC. Raport: [report/main.tex](report/main.tex) (`make report`).
 
 ## Wyniki kontrolne
 
@@ -34,15 +34,15 @@ Każdy atak, który nie podnosi QBER, łamie któreś założenie dowodu bezpiec
 
 | Atak | Status | Złamane założenie | Obrona | Metryka (wynik) |
 | --- | --- | --- | --- | --- |
-| 1. Intercept-resend | v1.0, [e04](figures/e04_intercept_resend.png) | żadne: atak mieści się w modelu dowodu; przy małej próbce Z8 | estymacja QBER z progiem 11%; skończony klucz (Tomamichel et al. 2012) | QBER 26,5% przy pełnym ataku; przechwycenie 4% impulsów przy próbce 1000 bitów wykryte w 23% przypadków ([e07](figures/e07_finite_key.png)) |
+| 1. Intercept-resend | v1.0, [e04](figures/e04_intercept_resend.png) | żadne: atak mieści się w modelu dowodu; przy małej próbce Z8 | test progu QBER na próbce; skończony klucz (Tomamichel et al. 2012) | QBER 26,5% przy pełnym ataku; przechwycenie 4% impulsów przy próbce 1000 bitów wykryte w 23% sesji, AUC 0,872 ([e07](figures/e07_finite_key.png), [ROC](figures/e17_detection_roc.png)) |
 | 2. Oślepianie detektorów | v1.0, [e05](figures/e05_blinding.png) | Z3: detektor w trybie jednofotonowym | losowe tłumienie 3 dB w 10% bramek; monitor mocy; MDI-QKD ([e15](figures/e15_mdi_qkd.md)) | QBER i zysk bez zmian, Ewa zna 100% klucza; test tłumienia z ≈ −35; [ROC](figures/e05_blinding_roc.png) |
 | 3. Photon-number splitting | v1.0, [e06](figures/e06_decoy_pns.png) | Z1: rozkład liczby fotonów uwzględniony w długości klucza | stany decoy (vacuum+weak) | od 32,8 km Ewa zna 98–100% klucza przy niezmienionym QBER i zysku; decoy przerywa protokół |
-| 6. Optymalny atak indywidualny | v1.0, [e08](figures/e08_individual_attack.png) | Z7: granica dla ataków indywidualnych nie jest granicą ogólną | próg Shora–Preskilla 11,00% zamiast 14,64% | I_AB = I_AE przy D\* = 14,64%; numpy i QuTiP zgodne do 10⁻¹² |
+| 6. Optymalny atak indywidualny | v1.0, [e08](figures/e08_individual_attack.png) | Z7: granica dla ataków indywidualnych nie jest granicą ogólną | próg Shora–Preskilla 11,00% zamiast 14,64%; test progu QBER | I_AB = I_AE przy D\* = 14,64%; numpy i QuTiP zgodne do 10⁻¹²; D = 5% wykryte w 99,8% sesji ([ROC](figures/e17_detection_roc.png)) |
 | 7. Man-in-the-middle | v1.0, [e09](figures/e09_mitm.md) | Z5a: kanał klasyczny uwierzytelniony | Wegman–Carter z kluczem współdzielonym | przerwanie przy pierwszym tagu Ewy; fałszerstwo z p-stwem 1/p ≈ 2⁻⁶¹; 122 bity klucza na rundę |
 | 7′. MITM przy podpisie ML-DSA | v1.0, [e10](figures/e10_pqc_auth.md) | Z5a w trakcie sesji; Z5b: autentyczne klucze publiczne | hybryda Wegman–Carter + ML-DSA; weryfikacja odcisku klucza | ML-DSA złamane na żywo lub podmieniony klucz: MITM udany; hybryda: wykryty; złamanie po sesji: 0 bitów klucza dla Ewy |
-| 4. Time-shift | v1.1, [e11](figures/e11_time_shift.md) | Z3: sprawność niezależna od czasu przyjścia | losowe przypisanie bit ↔ detektor; MDI-QKD ([e15](figures/e15_mdi_qkd.md)) | QBER i zysk bez zmian; Ewa zna 0,31 bitu na wykryty bit przy krzywych Zhao et al. 2008; obrona: 0,000 ± 0,000 |
-| 5. Trojan horse | v1.1, [e12](figures/e12_trojan_horse.md) | Z2: brak kanałów bocznych u Alice | izolacja, losowa faza odbitego światła, monitor mocy | QBER i zysk bez zmian; przy 0,1 fotonu w odbitej sondzie Ewa zna 0,135 bitu (0,095 z losową fazą); wyciek ≤ 10⁻³ przy sondzie 10⁹ fotonów i modulatorze (−20 dB) wymaga 102 dB izolacji |
-| 8. Słaby generator | v1.1, [e13](figures/e13_weak_rng.md) | Z6: losowe i prywatne wybory | QRNG; testy losowości łapią obciążenie i korelacje, nie przewidywalność | znane ziarno: Ewa zna 100% klucza bez dotykania światłowodu, a testy odrzucają generator w 1% przypadków (= α); bazy obciążone 0,9: QBER 8%, Ewa zna 90% bitów |
+| 4. Time-shift | v1.1, [e11](figures/e11_time_shift.md) | Z3: sprawność niezależna od czasu przyjścia | losowe przypisanie bit ↔ detektor; monitor czasu przyjścia; MDI-QKD ([e15](figures/e15_mdi_qkd.md)) | QBER i zysk bez zmian; Ewa zna 0,31 bitu na wykryty bit przy krzywych Zhao et al. 2008; obrona: 0,000 ± 0,000; monitor czasu wykrywa atak w 100% testów po 30 kliknięć ([ROC](figures/e17_detection_roc.png)) |
+| 5. Trojan horse | v1.1, [e12](figures/e12_trojan_horse.md) | Z2: brak kanałów bocznych u Alice | izolacja, losowa faza odbitego światła, monitor mocy na wejściu Alice | QBER i zysk bez zmian; przy 0,1 fotonu w odbitej sondzie Ewa zna 0,135 bitu (0,095 z losową fazą); wyciek ≤ 10⁻³ przy sondzie 10⁹ fotonów i modulatorze (−20 dB) wymaga 102 dB izolacji, a z monitorem ([e17](figures/e17_detection_roc.md)) 69,2 dB |
+| 8. Słaby generator | v1.1, [e13](figures/e13_weak_rng.md) | Z6: losowe i prywatne wybory | QRNG z ekstrakcją i testami zdrowia NIST SP 800-90B ([e19](figures/e19_qrng.md)); testy losowości łapią obciążenie i korelacje, nie przewidywalność | znane ziarno: Ewa zna 100% klucza bez dotykania światłowodu, a testy odrzucają generator w 1% przypadków (= α); bazy obciążone 0,9: QBER 8%, Ewa zna 90% bitów; surowy QRNG z niedopasowanymi detektorami daje Ewie trafienie bazy 0,59, po ekstrakcji 0,5 |
 
 ## Pozostałe wyniki
 
@@ -87,6 +87,22 @@ MDI-QKD (Lo, Curty, Qi 2012, [tabele](figures/e15_mdi_qkd.md)): Alice i Bob wysy
 ![Splątane pary](figures/e16_entangled.png)
 
 Splątane pary ([tabele](figures/e16_entangled.md)): BBM92 ze źródłem SPDC pośrodku (dokładny model wielu par, zgodny z Ma, Fungiem i Lo) sięga z detektorami GYS 286 km, dwa razy dalej niż decoy BB84, ale przy stopie ok. 100 razy niższej. Test CHSH bez założenia fair sampling wymaga sprawności detekcji ponad 82,8% dla S > 2 i ponad 92,3% dla klucza device-independent (Pironio i in.: 92,4%). Ewa sterująca detektorami daje na samych koincydencjach S = 2√2 jak prawdziwe splątanie, a na wszystkich rundach S < 2.
+
+![Obrony z progiem i ROC](figures/e17_detection_roc.png)
+
+Obrony z progiem dla ataków 1, 4, 5 i 6 ([tabele](figures/e17_detection_roc.md)): test progu QBER na próbce 1000 bitów ma dokładną krzywą ROC (liczba błędów to rozkład dwumianowy) i wykrywa przechwycenie 4% impulsów w 23,4% sesji przy 1% fałszywych alarmów, a atak Fuchsa z D = 5% w 99,8%. Monitor czasu przyjścia kliknięć wykrywa time-shift po 30 kliknięciach nawet przy rozmyciu 150 ps. Fotodioda na wejściu Alice przepuszcza tylko sondy do 5,7·10⁵ fotonów, więc wymagana izolacja spada ze 102 do 69,2 dB.
+
+![Pamięć detektora](figures/e18_detector_memory.png)
+
+Czas martwy i afterpulsy ([tabele](figures/e18_detector_memory.md)): Monte Carlo zgadza się ze wzorem odnowienia c = 1/(τ + 1 + (1 − p)(1/f − 1)) na czterech rzędach wielkości f. Afterpuls działa jak niezależne ciemne zliczenie, więc tor BB84 z afterpulsami ma model dokładny; wzory Lima et al. 2014 to jego pierwszy rząd, gdy p_ap liczy także kaskady (p/(1 − p)). Afterpulsy 4% podnoszą QBER o 2 pp, cztery razy więcej niż błąd optyki.
+
+![Symulator QRNG](figures/e19_qrng.png)
+
+QRNG na dzielniku wiązki ([tabele](figures/e19_qrng.md)): obciążenie surowych bitów zgadza się z dokładnym wzorem także przy czasie martwym i afterpulsach. Czas martwy odwraca kolejne bity (P(bit = poprzedni) = 0,34), czego nie widać w min-entropii bez kontekstu (0,95), a z kontekstem 4 bitów spada ona do 0,49. Ekstrakcja Toeplitzem z tą min-entropią daje bity, które przechodzą testy. Testy zdrowia NIST SP 800-90B (progi zgodne z Tabelą 2 normy) nie alarmują na zdrowym generatorze, wykrywają oślepiony detektor po 41 bitach, a dryf sprawności z p-stwem na okno zgodnym ze wzorem dwumianowym.
+
+![Uzgadnianie LDPC](figures/e20_ldpc.png)
+
+Uzgadnianie LDPC z syndromem ([tabele](figures/e20_ldpc.md)): ewolucja gęstości daje próg BP kodu (3,6) 0,0841 wobec 0,084 u Richardsona i Urbankego (2001). LDPC wysyła jedną wiadomość na ramkę zamiast 170–850 wiadomości Cascade na 16 384 bity, ale kody regularne potrzebują f ≈ 1,3–1,7 wobec ≈ 1,15 dla Cascade. Na torze GYS 25 km klucz końcowy z LDPC jest o 18% krótszy, za to uzgadnianie zajmuje 5 wiadomości zamiast 1916.
 
 ## Szybki start
 

@@ -25,7 +25,7 @@
 \maketitle
 
 \begin{abstract}
-Opisujemy symulator Monte Carlo protokołu BB84 na poziomie pojedynczych impulsów: od źródła słabych impulsów koherentnych przez światłowód i detektory SPAD do klucza końcowego po korekcji błędów i wzmacnianiu prywatności. Model z parametrami eksperymentu GYS odtwarza wzory Ma i in.\ (2005) dla zysku, QBER i stopy klucza, a wyniki krzyżowo zgadzają się z niezależną implementacją \texttt{qkd}. Na tym torze wykonujemy osiem ataków (intercept-resend, oślepianie detektorów, PNS, time-shift, Trojan horse, optymalny atak indywidualny, man-in-the-middle, słaby generator losowy) i porządkujemy je w mapę ,,atak $\to$ złamane założenie dowodu $\to$ obrona $\to$ metryka''. Ostatnia część porównuje uwierzytelnianie kanału klasycznego kluczem współdzielonym (Wegman--Carter) i podpisem ML-DSA (FIPS~204) oraz zestawia QKD z ML-KEM w kilku modelach zagrożeń.
+Opisujemy symulator Monte Carlo protokołu BB84 na poziomie pojedynczych impulsów: od źródła słabych impulsów koherentnych przez światłowód i detektory SPAD do klucza końcowego po korekcji błędów i wzmacnianiu prywatności. Model z parametrami eksperymentu GYS odtwarza wzory Ma i in.\ (2005) dla zysku, QBER i stopy klucza, a wyniki krzyżowo zgadzają się z niezależną implementacją \texttt{qkd}. Na tym torze wykonujemy osiem ataków (intercept-resend, oślepianie detektorów, PNS, time-shift, Trojan horse, optymalny atak indywidualny, man-in-the-middle, słaby generator losowy) i porządkujemy je w mapę ,,atak $\to$ złamane założenie dowodu $\to$ obrona $\to$ metryka'', z krzywymi ROC dla obron z progiem. Rozszerzenia obejmują MDI-QKD, splątane pary z testem CHSH, czas martwy i afterpulsy detektorów, symulator kwantowego generatora losowego oraz uzgadnianie kodami LDPC. Ostatnia część porównuje uwierzytelnianie kanału klasycznego kluczem współdzielonym (Wegman--Carter) i podpisem ML-DSA (FIPS~204) oraz zestawia QKD z ML-KEM w kilku modelach zagrożeń.
 \end{abstract}
 
 \section{Wstęp}
@@ -44,7 +44,7 @@ Wkład projektu:
 
 \subsection{Źródło, kanał, detektory}
 
-Alice wysyła impulsy koherentne o średniej liczbie fotonów $\mu$ (rozkład Poissona), kodując bit w jednej z dwóch baz polaryzacji. Kanał to światłowód o tłumieniu $\alpha = 0{,}21$~dB/km z błędem optyki $e_d = 3{,}3\%$, a Bob ma dwa detektory SPAD o łącznej sprawności $\eta_{\mathrm{Bob}} = 4{,}5\%$ i tle $Y_0 = 1{,}7\cdot 10^{-6}$ na bramkę. To parametry eksperymentu GYS \cite{gobby2004qkd} w opracowaniu Ma i in.\ \cite{ma2005practical}, z $f_{\mathrm{EC}} = 1{,}22$ i $\mu = 0{,}48$, $\nu = 0{,}05$ dla decoy vacuum+weak \cite{lo2005decoy}. Podwójne kliknięcia dostają losowy bit, zgodnie z modelem squashing \cite{beaudry2008squashing}.
+Alice wysyła impulsy koherentne o średniej liczbie fotonów $\mu$ (rozkład Poissona), kodując bit w jednej z dwóch baz polaryzacji. Kanał to światłowód o tłumieniu $\alpha = 0{,}21$~dB/km z błędem optyki $e_d = 3{,}3\%$, a Bob ma dwa detektory SPAD o łącznej sprawności $\eta_{\mathrm{Bob}} = 4{,}5\%$ i tle $Y_0 = 1{,}7\cdot 10^{-6}$ na bramkę. To parametry eksperymentu GYS \cite{gobby2004qkd} w opracowaniu Ma i in.\ \cite{ma2005practical}, z $f_{\mathrm{EC}} = 1{,}22$ i $\mu = 0{,}48$, $\nu = 0{,}05$ dla decoy vacuum+weak \cite{lo2005decoy}. Podwójne kliknięcia dostają losowy bit, zgodnie z modelem squashing \cite{beaudry2008squashing}. Detektory mogą mieć czas martwy i afterpulsy (podrozdz.~\ref{sec:memory}).
 
 Symulacja ma dwie warstwy. Warstwa bitów zapisuje każdy impuls (bit, bazę, intensywność, liczbę fotonów, kąt polaryzacji, moc) i kończy się kluczem po siftingu. Warstwa liczników przetwarza te same modele w paczkach i zwraca tylko zliczenia, co pozwala na $10^9$ impulsów na punkt. Losowość pochodzi z osobnych strumieni (Alice, Bob, natura, Ewa, kanał publiczny) wyprowadzonych z jednego ziarna, więc każdy wykres jest deterministyczny i można go liczyć równolegle.
 
@@ -52,11 +52,11 @@ Atak to jeden z trzech typów zaczepów: na impulsach w punkcie światłowodu, n
 
 \subsection{Postprocessing}
 
-Po siftingu Alice i Bob ujawniają losową próbkę (10\%) i estymują z niej QBER. Korekcję błędów robi Cascade z czterema przebiegami \cite{brassard1994cascade,martinezmateo2015cascade}, a każda ujawniona parzystość trafia do licznika wycieku $\mathrm{leak}_{\mathrm{EC}}$. Zgodność kluczy sprawdza hasz uniwersalny, a wzmacnianie prywatności to mnożenie przez losową macierz Toeplitza. Długość klucza liczymy wzorem GLLP z granicami decoy. Wiedzę pasywnej Ewy mierzymy dokładnie: ujawnione parzystości i wiersze macierzy Toeplitza to funkcje liniowe klucza nad GF(2), więc liczba bitów klucza końcowego znanych Ewie to wymiar przecięcia ich rozpięć.
+Po siftingu Alice i Bob ujawniają losową próbkę (10\%) i estymują z niej QBER. Korekcję błędów robi Cascade z czterema przebiegami \cite{brassard1994cascade,martinezmateo2015cascade} albo kod LDPC z syndromem (podrozdz.~\ref{sec:ldpc}), a każda ujawniona parzystość trafia do licznika wycieku $\mathrm{leak}_{\mathrm{EC}}$. Zgodność kluczy sprawdza hasz uniwersalny, a wzmacnianie prywatności to mnożenie przez losową macierz Toeplitza. Długość klucza liczymy wzorem GLLP z granicami decoy. Wiedzę pasywnej Ewy mierzymy dokładnie: ujawnione parzystości (także wiersze syndromu LDPC) i wiersze macierzy Toeplitza to funkcje liniowe klucza nad GF(2), więc liczba bitów klucza końcowego znanych Ewie to wymiar przecięcia ich rozpięć.
 
 \subsection{Implementacja i testy}
 
-Kod to Python i numpy, sprawdzany \texttt{mypy --strict}. Testy: 474 szybkich (jednostkowe, regresji ze ,,złotymi wartościami'', własności przez \texttt{hypothesis}, krzyżowe z \texttt{qkd} i QuTiP) i 56 wolnych, statystycznych, które porównują Monte Carlo ze wzorem przez $z$-score przy stałych ziarnach ($|z| < 4$). Pokrycie gałęzi rdzenia szybkimi testami: 95\%. Fragmenty kwantowe ataków 5 i 6 weryfikuje niezależnie QuTiP. Każdy z szesnastu eksperymentów kończy się błędem, jeśli wynik wyjdzie poza tolerancję, a całość odtwarza \texttt{make figures}.
+Kod to Python i numpy, sprawdzany \texttt{mypy --strict}. Testy: 527 szybkich (jednostkowe, regresji ze ,,złotymi wartościami'', własności przez \texttt{hypothesis}, krzyżowe z \texttt{qkd} i QuTiP) i 57 wolnych, statystycznych, które porównują Monte Carlo ze wzorem przez $z$-score przy stałych ziarnach ($|z| < 4$). Pokrycie gałęzi rdzenia szybkimi testami: 95\%. Fragmenty kwantowe ataków 5 i 6 weryfikuje niezależnie QuTiP. Każdy z dwudziestu eksperymentów kończy się błędem, jeśli wynik wyjdzie poza tolerancję, a całość odtwarza \texttt{make figures}.
 
 \section{Walidacja}
 
@@ -110,15 +110,15 @@ Tabela~\ref{tab:map} to centralny wynik projektu. Każdy atak, który nie podnos
     \toprule
     Atak & Złamane założenie & Obrona & Metryka (wynik) \\
     \midrule
-    1. Intercept-resend & żadne; przy małej próbce Z8 & próg QBER 11\%, skończony klucz & QBER 26,5\% przy pełnym ataku; przechwycenie 4\% impulsów wykryte w 23\% sesji przy próbce 1000 bitów \\
+    1. Intercept-resend & żadne; przy małej próbce Z8 & test progu QBER, skończony klucz & QBER 26,5\% przy pełnym ataku; przechwycenie 4\% impulsów wykryte w 23\% sesji przy próbce 1000 bitów, AUC 0,872 \\
     2. Oślepianie detektorów & Z3 & losowe tłumienie 3~dB w 10\% bramek; monitor mocy; MDI-QKD & QBER i zysk bez zmian, Ewa zna 100\% klucza; test tłumienia $z \approx -35$, AUC $= 1$ od $3\cdot 10^4$ bramek \\
     3. PNS & Z1 & stany decoy & od 32,8~km Ewa zna 98--100\% klucza; spójność decoy $z$ od $-69$ do $-10$, AUC $= 1$ \\
-    4. Time-shift & Z3 (sprawność w czasie) & losowe przypisanie bit $\leftrightarrow$ detektor; MDI-QKD & QBER i zysk bez zmian, Ewa zna 0,31 bitu na wykryty bit; z obroną 0 \\
-    5. Trojan horse & Z2 & izolacja, losowa faza, monitor mocy & 0,135 bitu przy 0,1 fotonu w sondzie; wyciek $\le 10^{-3}$ wymaga np.\ 102~dB izolacji \\
-    6. Optymalny atak indywidualny & Z7 (granica indywidualna to nie granica ogólna) & próg Shora--Preskilla 11,00\% & $I_{AB} = I_{AE}$ przy $D^* = 14{,}64\%$; numpy i QuTiP zgodne do $10^{-12}$ \\
+    4. Time-shift & Z3 (sprawność w czasie) & losowe przypisanie bit $\leftrightarrow$ detektor; monitor czasu przyjścia; MDI-QKD & QBER i zysk bez zmian, Ewa zna 0,31 bitu na wykryty bit; z obroną 0; monitor wykrywa atak po 30 kliknięciach \\
+    5. Trojan horse & Z2 & izolacja, losowa faza, monitor mocy na wejściu Alice & 0,135 bitu przy 0,1 fotonu w sondzie; wyciek $\le 10^{-3}$ wymaga 102~dB izolacji, z monitorem 69,2~dB \\
+    6. Optymalny atak indywidualny & Z7 (granica indywidualna to nie granica ogólna) & próg Shora--Preskilla 11,00\%; test progu QBER & $I_{AB} = I_{AE}$ przy $D^* = 14{,}64\%$; numpy i QuTiP zgodne do $10^{-12}$; $D = 5\%$ wykryte w 99,8\% sesji \\
     7. Man-in-the-middle & Z5a & Wegman--Carter & przerwanie przy pierwszym tagu Ewy; fałszerstwo $1/p \approx 2^{-61}$ \\
     7$'$. MITM przy ML-DSA & Z5a w trakcie sesji, Z5b & hybryda WC + ML-DSA, odcisk klucza & podpis złamany na żywo lub podmieniony klucz: MITM udany; hybryda wykrywa \\
-    8. Słaby generator & Z6 & QRNG; testy losowości tylko na obciążenie i korelacje & znane ziarno: Ewa zna 100\% klucza, testy odrzucają generator w 1\% ($= \alpha$) \\
+    8. Słaby generator & Z6 & QRNG z ekstrakcją i testami zdrowia; testy losowości tylko na obciążenie i korelacje & znane ziarno: Ewa zna 100\% klucza, testy odrzucają generator w 1\% ($= \alpha$); oślepiony detektor QRNG wykryty po 41 bitach \\
     \bottomrule
   \end{tabularx}
 \end{table}
@@ -210,6 +210,26 @@ Przy obciążonych bazach Ewa mierzy zawsze w częstszej i trafia z p-stwem $p$:
   \label{fig:e13}
 \end{figure}
 
+Obroną jest kwantowy generator losowy, ale i on ma niedoskonałe detektory. Symulujemy generator na dzielniku wiązki \cite{jennewein2000qrng,herrero2017qrng}: bit 0, gdy klika tylko jeden detektor, 1, gdy tylko drugi. Procesy kliknięć obu detektorów są niezależne, więc obciążenie bitów liczymy dokładnie także przy czasie martwym i afterpulsach, a Monte Carlo się z nim zgadza. Czas martwy odwraca kolejne bity (bit równy poprzedniemu z p-stwem 0,34), czego nie widzi min-entropia bez kontekstu (0,95), a z kontekstem czterech bitów spada ona do 0,49 (metoda najczęstszej wartości z NIST SP 800-90B \cite{nist2018sp80090b}). Macierz Toeplitza skraca blok do $nH - 2\log_2(1/\varepsilon)$ bitów, które przechodzą testy. Surowe bity generatora o niedopasowanych detektorach ($\eta_1/\eta_0 = 0{,}7$) użyte jako bazy dają Ewie trafienie bazy z p-stwem 0,59, a po ekstrakcji 0,5. Testy zdrowia z normy (powtórzeń i proporcji, progi zgodne z jej Tabelą~2) nie alarmują na zdrowym generatorze, oślepiony detektor wykrywają po 41 bitach, a dryf sprawności z p-stwem na okno zgodnym ze wzorem dwumianowym (rys.~\ref{fig:e19}).
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{e19_qrng}
+  \caption{Symulator QRNG: min-entropia surowych bitów i po ekstrakcji w funkcji kontekstu, p-stwo alarmu testu proporcji przy dryfie sprawności oraz bazy Alice z surowego i wyekstrahowanego generatora pod atakiem intercept-resend.}
+  \label{fig:e19}
+\end{figure}
+
+\subsection{Obrony z progiem i krzywe ROC}
+
+Każda obrona z progiem ma krzywą ROC (rys.~\ref{fig:e17}). Test progu QBER (ataki 1 i 6) ujawnia $k$ bitów i przerywa protokół, gdy błędów jest więcej niż próg ustalony z góry; liczba błędów to rozkład dwumianowy, więc krzywa jest dokładna. Przy $k = 1000$ i tle 2\% przechwycenie 4\% impulsów wykrywa się w 23,4\% sesji przy 1\% fałszywych alarmów, tak jak w Monte Carlo skończonego klucza, a atak Fuchsa z $D = 5\%$ w 99,8\%. Monitor czasu przyjścia (atak 4) liczy kliknięcia poza oknem $\pm 200$~ps: Ewa przesuwa impulsy o $-355$ i 395~ps, więc po 30 kliknięciach wykrywa ją w 100\% testów nawet przy rozmyciu czasowym 150~ps. Fotodioda na wejściu Alice (atak 5) przepuszcza bez alarmu tylko sondy do $5{,}7\cdot 10^5$ fotonów na impuls, co obniża wymaganą izolację ze 102 do 69,2~dB.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{e17_detection_roc}
+  \caption{Krzywe ROC obron z progiem: test progu QBER (ataki 1 i 6), monitor czasu przyjścia (atak 4) i monitor światła wchodzącego do Alice (atak 5).}
+  \label{fig:e17}
+\end{figure}
+
 \subsection{MDI-QKD: obrona przed wszystkimi atakami na detektory}
 
 W MDI-QKD \cite{lo2012mdi} Alice i Bob wysyłają stany BB84 do niezaufanego przekaźnika, który wykonuje pomiar Bella na dzielniku 50:50 z dwoma PBS i czterema detektorami. Detektory nie należą do żadnej ze stron, więc ataki 2 i 4 przestają mieć sens. Przekaźnik symulujemy dokładnie: przy ustalonych fazach źródeł każdy detektor dostaje stan koherentny, więc liczby fotonów są niezależne (Poisson), a fazy losujemy. Zyski i QBER w obu bazach zgadzają się ze wzorami Ma i Razaviego zaimplementowanymi w \texttt{qkd} (do $10^{-9}$), a parę pojedynczych fotonów liczymy z interferencji dwufotonowej. Przy parametrach z artykułu (sprawność przekaźnika 14,5\%, tło $6{,}02\cdot 10^{-6}$ na parę detektorów, błąd optyki 1,5\%) zasięg wynosi 207,5~km, zgodnie z ,,ponad 200~km''. Decoy BB84 z tymi samymi detektorami sięga 159,6~km, więc w tym modelu MDI wydłuża zasięg 1,3 raza, a nie dwukrotnie. Ewa jako przekaźnik, mierząca oba impulsy w bazie Z, zna cały klucz bez błędów w bazie klucza, ale w bazie testowej daje 50\% błędów wobec około 25\% uczciwego przekaźnika przy WCP (rys.~\ref{fig:e15}).
@@ -232,6 +252,32 @@ Test CHSH bez założenia fair sampling, z brakiem kliknięcia czytanym jako wyn
   \includegraphics[width=\linewidth]{e16_entangled}
   \caption{Splątane pary: BBM92 z SPDC na tle decoy BB84, CHSH i stopa device-independent w funkcji sprawności detekcji oraz fałszywe naruszenie przez sterowanie detektorami.}
   \label{fig:e16}
+\end{figure}
+
+\section{Detektory z pamięcią i uzgadnianie LDPC}
+
+\subsection{Czas martwy i afterpulsy}
+\label{sec:memory}
+
+Po kliknięciu detektor jest martwy przez $\tau$ bramek (model nieparaliżowalny), a z p-stwem $p$ klika sam w pierwszej żywej bramce; afterpuls może wywołać następny. Przy niezależnych świeżych kliknięciach z p-stwem $f$ stacjonarne p-stwo kliknięcia to $c = 1/(\tau + 1 + (1-p)(1/f - 1))$, a Monte Carlo zgadza się z tym wzorem na czterech rzędach wielkości $f$. Afterpuls w bramce $t+1$ zależy tylko od kliknięcia w bramce $t$, więc działa jak niezależne ciemne zliczenie z p-stwem $pc$; dokładny model toru wystarczy o nie uzupełnić. Wzory Lima i in.\ \cite{lim2014concise} dla afterpulsów, $R = D(1 + p_{\mathrm{ap}})$ i błąd $p_{\mathrm{ap}}D/2$, są jego pierwszym rzędem, gdy $p_{\mathrm{ap}} = p/(1-p)$ obejmuje kaskady. Afterpulsy 4\% podnoszą QBER o 2~pp, cztery razy więcej niż cały błąd optyki w tym modelu (rys.~\ref{fig:e18}). Czas martwy jest też podstawą ataków na detektory \cite{weier2011deadtime}, których nie modelujemy.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{e18_detector_memory}
+  \caption{Pamięć detektora: nasycenie kliknięć przy czasie martwym i afterpulsach (wzór i Monte Carlo) oraz zysk i QBER toru z afterpulsami na tle modelu dokładnego i wzorów Lima i in.}
+  \label{fig:e18}
+\end{figure}
+
+\subsection{Uzgadnianie LDPC}
+\label{sec:ldpc}
+
+Cascade jest interaktywny: na 16\,384 bity wysyła 170--850 wiadomości. Alternatywą jest kod LDPC \cite{gallager1962ldpc}: Alice wysyła syndrom $Hx$, a Bob dekoduje swój klucz algorytmem propagacji przekonań do $\hat{x}$ z $H\hat{x} = Hx$. Używamy kodów o stałym stopniu zmiennych 3 i syndromie $m = \lceil f n h(\hat{Q}) \rceil$. Ewolucja gęstości \cite{richardson2001capacity} na siatce LLR daje próg kodu (3,6) 0,0841 wobec 0,084 z literatury. Przy $Q = 1$--5\% kody regularne potrzebują $f \approx 1{,}3$--$1{,}7$ dla 10\% błędnych ramek przy ramce 16\,384 bitów, a granica z ewolucji gęstości to 1,26--1,52; Cascade daje około 1,15. Na torze GYS 25~km klucz końcowy z LDPC jest o 18\% krótszy, ale uzgadnianie zajmuje 5 wiadomości zamiast 1916 (rys.~\ref{fig:e20}). Kody nieregularne z adaptacją sprawności osiągają $f \approx 1{,}1$ \cite{elkouss2009efficient}.
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\linewidth]{e20_ldpc}
+  \caption{Uzgadnianie LDPC: p-stwo błędu ramki kodu (3,6) dla rosnącej długości ramki na tle progu z ewolucji gęstości, błąd ramki w funkcji zakładanej sprawności oraz sprawność LDPC i Cascade.}
+  \label{fig:e20}
 \end{figure}
 
 \section{Skończony klucz}
@@ -327,9 +373,9 @@ Wniosek: QKD i ML-KEM chronią przed różnymi rzeczami. QKD daje bezpieczeństw
 
 \section{Ograniczenia i wnioski}
 
-Model pomija dyspersję i dryf polaryzacji, a $e_d$ i $Y_0$ nie zależą od długości ani od czasu. Skończony klucz dla WCP z decoy liczymy wzorami Lima i in., których granica błędu fazowego według dokumentacji \texttt{qkd} nie jest ścisła (nie weryfikowaliśmy tego); przebieg Monte Carlo z asymetrycznym wyborem baz jest jednoprocesowy. Atak 6 działa na pojedynczych fotonach i idealnych detektorach, bo jest granicą teoretyczną. Krzywe sprawności w ataku time-shift to Gaussy, a nie zmierzony profil bramki. W ataku Trojan horse nie modelujemy filtrów ani czasu otwarcia modulatora i nie porównujemy wyników z ograniczeniami Lucamariniego i in.\ \cite{lucamarini2015practical}. Scenariusze złamania ML-DSA są wyidealizowane (Ewa ma po prostu klucz prywatny), a kanałów bocznych implementacji PQC nie modelujemy. Czas CPU Wegmana--Cartera mierzymy na implementacji w Pythonie i nie jest on reprezentatywny dla metody.
+Model pomija dyspersję i dryf polaryzacji, a $e_d$ i $Y_0$ nie zależą od długości ani od czasu. Skończony klucz dla WCP z decoy liczymy wzorami Lima i in., których granica błędu fazowego według dokumentacji \texttt{qkd} nie jest ścisła (nie weryfikowaliśmy tego); przebieg Monte Carlo z asymetrycznym wyborem baz jest jednoprocesowy. Atak 6 działa na pojedynczych fotonach i idealnych detektorach, bo jest granicą teoretyczną. Krzywe sprawności w ataku time-shift to Gaussy, a nie zmierzony profil bramki. W ataku Trojan horse nie modelujemy filtrów ani czasu otwarcia modulatora i nie porównujemy wyników z ograniczeniami Lucamariniego i in.\ \cite{lucamarini2015practical}. Scenariusze złamania ML-DSA są wyidealizowane (Ewa ma po prostu klucz prywatny), a kanałów bocznych implementacji PQC nie modelujemy. Czas CPU Wegmana--Cartera mierzymy na implementacji w Pythonie i nie jest on reprezentatywny dla metody. Afterpulsy nie zależą od odstępu od lawiny, a czas martwy liczymy w bramkach. Min-entropię QRNG szacujemy jednym estymatorem normy zamiast pełnego zestawu. Kody LDPC są regularne, bez przebijania i skracania dla adaptacji sprawności.
 
-Wnioski: (1) zwalidowany tor Monte Carlo odtwarza wartości kontrolne z literatury i z niezależnej implementacji; (2) wszystkie ataki, które nie podnoszą QBER (oślepianie, PNS, time-shift, Trojan horse, MITM, słaby generator), łamią założenie dowodu, a nie wzór na długość klucza, i każdy ma obronę z mierzalną metryką; (3) generator ze znanym ziarnem przechodzi testy statystyczne, a mimo to oddaje Ewie cały klucz; MDI-QKD usuwa ataki na detektory, bo Ewa kontrolująca przekaźnik zdradza się w bazie testowej; test CHSH na samych koincydencjach niczego nie dowodzi, a device-independent wymaga sprawności detekcji ponad 92\%; (4) uwierzytelnianie podpisem postkwantowym zachowuje zaletę QKD wobec ,,harvest now, decrypt later'', o ile podpis wytrzymuje czas sesji, a hybryda z Wegmanem--Carterem usuwa nawet to założenie.
+Wnioski: (1) zwalidowany tor Monte Carlo odtwarza wartości kontrolne z literatury i z niezależnej implementacji; (2) wszystkie ataki, które nie podnoszą QBER (oślepianie, PNS, time-shift, Trojan horse, MITM, słaby generator), łamią założenie dowodu, a nie wzór na długość klucza, i każdy ma obronę z mierzalną metryką; (3) generator ze znanym ziarnem przechodzi testy statystyczne, a mimo to oddaje Ewie cały klucz; MDI-QKD usuwa ataki na detektory, bo Ewa kontrolująca przekaźnik zdradza się w bazie testowej; test CHSH na samych koincydencjach niczego nie dowodzi, a device-independent wymaga sprawności detekcji ponad 92\%; (4) jednowiadomościowe uzgadnianie LDPC kosztuje przy kodach regularnych kilkanaście procent klucza względem Cascade, a afterpulsy kosztują więcej QBER niż błąd optyki; (5) uwierzytelnianie podpisem postkwantowym zachowuje zaletę QKD wobec ,,harvest now, decrypt later'', o ile podpis wytrzymuje czas sesji, a hybryda z Wegmanem--Carterem usuwa nawet to założenie.
 
 Kod, dane i wykresy: repozytorium projektu (\texttt{make figures}, \texttt{make report}).
 

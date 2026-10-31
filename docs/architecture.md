@@ -16,7 +16,7 @@ flowchart LR
         BS --> DET["Detektory SPAD<br/>P6"]
     end
     DET --> REC["Rekordy Alice i Boba"]
-    REC --> PP["Postprocessing:<br/>sifting, estymacja, Cascade,<br/>weryfikacja, wzmacnianie prywatności"]
+    REC --> PP["Postprocessing:<br/>sifting, estymacja, Cascade albo LDPC,<br/>weryfikacja, wzmacnianie prywatności"]
     PP <--> CC["Kanał klasyczny<br/>P8"]
     PP --> KEY["Klucz końcowy"]
     EVE[("EveLog")] -.-> MET["metrics:<br/>QBER Z/X, zyski, I_AE,<br/>wiedza Ewy o kluczu"]
@@ -28,14 +28,14 @@ flowchart LR
 
 | Punkt | Miejsce | Typ hooka (ADR 0003) | Ataki | Obrony |
 | --- | --- | --- | --- | --- |
-| P1 | RNG Alice: bity, bazy, wybór intensywności | losowość | 8 | QRNG, testy losowości |
+| P1 | RNG Alice: bity, bazy, wybór intensywności | losowość | 8 | QRNG z ekstrakcją i testami zdrowia (`qrng.py`, `defenses/health_tests.py`), testy losowości |
 | P2 | źródło: rozkład liczby fotonów | kwantowy | 3 (wykorzystuje impulsy wielofotonowe) | stany decoy |
-| P3 | modulator Alice: światło wpuszczone z kanału | kwantowy (wsteczny) | 5 | izolator, monitor mocy, filtr |
-| P4 | kanał kwantowy | kwantowy | 1, 3, 6 | QBER, monitor zysku, decoy |
+| P3 | modulator Alice: światło wpuszczone z kanału | kwantowy (wsteczny) | 5 | izolator, monitor mocy (`defenses/input_monitor.py`), filtr |
+| P4 | kanał kwantowy | kwantowy | 1, 3, 6 | test progu QBER (`defenses/qber_test.py`), monitor zysku, decoy |
 | P5 | wejście Boba (przed PBS) | kwantowy | 2 (światło CW + faked states), 4 (przesunięcie w czasie) | monitor mocy/fotoprądu |
-| P6 | detektory Boba | kwantowy (stan detektora) | 2, 4 (wykorzystywane podatności) | losowa sprawność, losowe przypisanie bit ↔ detektor, MDI |
+| P6 | detektory Boba | kwantowy (stan detektora) | 2, 4 (wykorzystywane podatności) | losowa sprawność, losowe przypisanie bit ↔ detektor, monitor czasu przyjścia (`defenses/timing_monitor.py`), MDI |
 | P7 | RNG Boba: wybór bazy | losowość | 8 | jak P1 |
-| P8 | kanał klasyczny | klasyczny + `Authenticator` (ADR 0006) | 7, pasywny podsłuch korekcji błędów, fałszerstwo podpisu, podmiana klucza publicznego | Wegman–Carter, ML-DSA lub hybryda, odjęcie leak_EC |
+| P8 | kanał klasyczny | klasyczny + `Authenticator` (ADR 0006) | 7, pasywny podsłuch korekcji błędów (Cascade albo LDPC), fałszerstwo podpisu, podmiana klucza publicznego | Wegman–Carter, ML-DSA lub hybryda, odjęcie leak_EC |
 
 ## Zasady
 

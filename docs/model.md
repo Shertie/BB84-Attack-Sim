@@ -7,6 +7,7 @@ Dokument referencyjny dla kodu w `src/qkdsim/`. Zmiana modelu = zmiana tego plik
 - Protokół: BB84 z kodowaniem polaryzacyjnym, bazy Z (H/V) i X (D/A).
 - Kanał: światłowód 1550 nm, straty wykładnicze w długości, stały błąd optyki.
 - Źródło: słabe impulsy koherentne (WCP), opcjonalnie z kilkoma intensywnościami (decoy).
+- Warianty protokołu (F7): MDI-QKD z niezaufanym przekaźnikiem (rozdz. 12) i BBM92 ze splątanymi parami (rozdz. 13).
 - Bob: **aktywny** wybór bazy (modulator przed jednym PBS), dwa detektory SPAD w trybie bramkowanym. Przy biernym wyborze bazy (dzielnik wiązki i dwa PBS) zmienia się m.in. moc potrzebna do ataku oślepiania (Lydersen et al. 2010). Taki wariant to osobna decyzja.
 
 ## 2. Konwencje
@@ -89,7 +90,9 @@ Przy Z5a widać różnicę między QKD a ML-KEM (ROADMAP, rozdz. 2.2a). QKD potr
 - e_d i Y₀ nie zależą od L ani od czasu.
 - Brak dyspersji i dryfu polaryzacji w kanale.
 - Brak czasu martwego i afterpulsingu (do F7; od F7 opcjonalne, rozdz. 14).
-- Skończony klucz tylko dla modelu jednofotonowego. WCP + decoy (Lim et al. 2014) dopiero w F7.
+- Skończony klucz tylko dla modelu jednofotonowego. WCP + decoy (Lim et al. 2014) od F7 (rozdz. 9).
+- Uzgadnianie tylko Cascade; od F7 także LDPC z syndromem (rozdz. 16).
+- Generator Alice to generator pseudolosowy; od F7 także symulowany QRNG (rozdz. 15).
 
 ## 7. Postprocessing (F2)
 
@@ -188,3 +191,10 @@ Przy Z5a widać różnicę między QKD a ML-KEM (ROADMAP, rozdz. 2.2a). QKD potr
 - **Wyniki (e20):** przy Q = 1–5% kody regularne potrzebują f ≈ 1,30–1,68 dla FER = 10% przy ramce 16 384 bitów, a granica z ewolucji gęstości to 1,26–1,52. Cascade daje 1,12–1,16, ale potrzebuje 170–850 wiadomości na 16 384 bity. Na torze GYS 25 km klucz końcowy z LDPC jest o ok. 18% krótszy niż z Cascade, a uzgadnianie zajmuje 5 wiadomości zamiast 1916.
 - **Liniowa Ewa:** wiersze syndromu idą do transkryptu przy `record_rows=True`, więc `leakage.linear_eve_knowledge` działa jak dla Cascade (wymaga zdekodowania wszystkich ramek).
 - **Ograniczenia:** kody regularne zamiast nieregularnych optymalizowanych ewolucją gęstości, brak adaptacji sprawności przez przebijanie i skracanie (Elkouss i in. 2009 osiągają f ≈ 1,1), brak usuwania krótkich cykli i dekodera z wczesnym zatrzymaniem po stagnacji.
+
+## 17. Obrony z progiem i krzywe ROC (e17, definicja ukończenia)
+
+- **Test progu QBER (ataki 1 i 6, `defenses/qber_test.py`):** Alice i Bob ujawniają k bitów i przerywają, gdy błędów jest więcej niż t, gdzie t ustalone z góry tak, by uczciwy przebieg przerywał się z p-stwem ≤ α. Liczba błędów to Bin(k, Q), więc ROC jest dokładna: FPR = P(Bin(k, Q₀) > t), TPR = P(Bin(k, Q₁) > t). Przy k = 1000 i tle 2%: przechwycenie 4% impulsów wykryte w 23,4% sesji (jak Monte Carlo w e07), atak Fuchsa z D = 5% w 99,8%. Tę samą funkcję progu używa e07.
+- **Monitor czasu przyjścia (atak 4, `defenses/timing_monitor.py`):** Bob znakuje czas kliknięcia z rozmyciem Gaussa σ i liczy kliknięcia poza oknem ±w; bez ataku to 2Φ(−w/σ), a Ewa przesuwa impulsy o −355 i 395 ps, więc większość jej kliknięć wypada z okna. Przy 30 kliknięciach na test wykrycie 100% przy rozmyciu 50 i 150 ps; Monte Carlo na przesunięciach z prawdziwego przebiegu ataku zgadza się z modelem dwumianowym.
+- **Monitor światła wchodzącego do Alice (atak 5, `defenses/input_monitor.py`):** ta sama fotodioda co w e05 (odczep 1%, szum odczytu), średnia z 1000 odczytów przy 2 MHz. Alarm przy średniej powyżej z_{1−α}σ/√W; największa sonda, którą monitor przeoczy z p-stwem ≥ 1%, ma 5,7·10⁵ fotonów na impuls. Wtedy do wycieku ≤ 10⁻³ bitu na impuls przy odbiciu −20 dB wystarcza 69,2 dB izolacji: monitor ogranicza μ_in, izolacja μ_out.
+- **Ograniczenia:** monitor czasu zakłada gaussowskie rozmycie i znany nominalny czas przyjścia (bez dryfu); monitor wejściowy nie widzi sond poza pasmem fotodiody ani impulsów krótszych niż czas całkowania.
