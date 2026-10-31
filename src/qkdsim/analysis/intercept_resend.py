@@ -70,14 +70,18 @@ def intercept_resend_model(
     fraction: float,
     position: float,
     dark_count: float,
+    right_basis: float = 0.5,
 ) -> InterceptResendModel:
-    """Model ataku 1: Ewa przechwytuje ułamek `fraction` w punkcie `position`."""
+    """Model ataku 1: Ewa przechwytuje ułamek `fraction` w punkcie `position`.
+
+    `right_basis`: p-stwo, że Ewa mierzy w bazie Alice (½ przy losowej bazie; atak 8: więcej).
+    """
     t_before = 10.0 ** (-p.alpha_db_per_km * length_km * position / 10.0)
     t_after = 10.0 ** (-p.alpha_db_per_km * length_km * (1.0 - position) / 10.0)
     eta_resent = p.eta_bob * t_after
     measured = -math.expm1(-mu * t_before)  # Ewa dostała co najmniej jeden foton
-    right_basis = single_photon_clicks(eta_resent, dark_count, p.misalignment)
-    wrong_basis = single_photon_clicks(eta_resent, dark_count, 0.5)
+    right_clicks = single_photon_clicks(eta_resent, dark_count, p.misalignment)
+    wrong_clicks = single_photon_clicks(eta_resent, dark_count, 0.5)
     clicks = _mix(
         [
             (
@@ -87,12 +91,12 @@ def intercept_resend_model(
                 ),
             ),
             (fraction * (1.0 - measured), single_photon_clicks(0.0, dark_count, 0.5)),
-            (fraction * measured * 0.5, right_basis),
-            (fraction * measured * 0.5, wrong_basis),
+            (fraction * measured * right_basis, right_clicks),
+            (fraction * measured * (1.0 - right_basis), wrong_clicks),
         ]
     )
-    measured_detected = fraction * measured * right_basis.detected
-    return InterceptResendModel(clicks, measured_detected, 0.5 * measured_detected)
+    measured_detected = fraction * measured * right_clicks.detected
+    return InterceptResendModel(clicks, measured_detected, right_basis * measured_detected)
 
 
 def qber_line(fraction: float, misalignment: float) -> float:

@@ -1,0 +1,16 @@
+# E13: atak 8, słaby generator Alice (F6.8–F6.10). GYS, μ = 0,48.
+seed: 20261106
+length_km: 25.0
+mu: 0.48
+nu: 0.05
+pulses: 10_000_000
+basis_bias: [0.5, 0.55, 0.6, 0.7, 0.8, 0.9]
+markov_stays: [0.9, 0.99, 0.999]
+markov_pulses: 20_000_000
+test_lengths: [100, 1000, 10000, 100000]
+test_runs: 300
+test_bias: 0.55
+test_stay: 0.55
+known_seed_runs: 100
+known_seed_length: 1_000_000
+alpha: 0.01

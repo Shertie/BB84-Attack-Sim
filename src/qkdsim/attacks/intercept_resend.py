@@ -18,7 +18,7 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from qkdsim.eve import NO_BASIS, EveLog
+from qkdsim.eve import NO_BASIS, BasisPredictor, EveLog
 from qkdsim.optics import analyzer_angle, polarization_angle, prob_detector0
 from qkdsim.pulses import Pulses
 
@@ -30,6 +30,7 @@ class InterceptResend:
     fraction: float  # p: ułamek przechwytywanych impulsów
     position: float = 1.0  # 0 = tuż za Alice, 1 = tuż przed Bobem
     lossless_after: bool = False
+    predictor: BasisPredictor | None = None  # atak 8: bazy z przewidywania; None = losowo
 
     def __post_init__(self) -> None:
         if not 0.0 <= self.fraction <= 1.0:
@@ -41,7 +42,10 @@ class InterceptResend:
         n = len(pulses)
         chosen = rng.random(n) < self.fraction
         measured = chosen & (pulses.n > 0)
-        basis = rng.integers(0, 2, size=n, dtype=np.uint8)
+        if self.predictor is None:
+            basis = rng.integers(0, 2, size=n, dtype=np.uint8)
+        else:
+            basis = self.predictor.bases(n)
         p0 = prob_detector0(pulses.theta, analyzer_angle(basis))
         bit = (rng.random(n) >= p0).astype(np.uint8)
         resent = pulses.replace(

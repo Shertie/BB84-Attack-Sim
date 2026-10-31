@@ -40,6 +40,14 @@ class EveLog:
         )
 
 
+class BasisPredictor(Protocol):
+    """Przewidywanie baz Alice przez Ewę (atak 8: słaby generator Alice)."""
+
+    def bases(self, n: int) -> Bits:
+        """Bazy, które Ewa przypisuje kolejnym n impulsom."""
+        ...
+
+
 class ChannelAttack(Protocol):
     """Atak wpinany w światłowód (punkt P4/P5 z docs/architecture.md)."""
 
