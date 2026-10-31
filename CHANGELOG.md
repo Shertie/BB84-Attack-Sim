@@ -4,6 +4,10 @@ Format na wzór [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersje
 
 ## [Unreleased]
 
+### Dodane
+
+- DOI wersji 1.2.1 z Zenodo (10.5281/zenodo.23841567) w `CITATION.cff`.
+
 ## [1.2.1] – 2026-10-31
 
 Poprawki metadanych po pierwszym archiwum w Zenodo; kod i wyniki bez zmian.

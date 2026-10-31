@@ -18,6 +18,9 @@ identifiers:
   - type: doi
     value: 10.5281/zenodo.23840267
     description: "Wersja 1.2.0 (Zenodo)"
+  - type: doi
+    value: 10.5281/zenodo.23841567
+    description: "Wersja 1.2.1 (Zenodo)"
 abstract: >-
   Symulator Monte Carlo protokołu BB84 na poziomie impulsów (źródło WCP z decoy,
   światłowód, detektory SPAD, Cascade, wzmacnianie prywatności, skończony klucz),
