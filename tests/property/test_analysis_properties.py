@@ -1,4 +1,4 @@
-"""Własności wzorów analitycznych dla dowolnych parametrów (F1.13, hypothesis)."""
+"""Własności wzorów analitycznych dla dowolnych parametrów (hypothesis)."""
 
 import math
 

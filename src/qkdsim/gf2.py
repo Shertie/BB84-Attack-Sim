@@ -1,6 +1,6 @@
 """Algebra liniowa nad GF(2) na wierszach zapisanych jako liczby całkowite (bit j = kolumna j).
 
-Do dokładnej analizy wiedzy Ewy, która zna liniowe funkcje klucza (F2.8).
+Do dokładnej analizy wiedzy Ewy, która zna liniowe funkcje klucza.
 """
 
 from collections.abc import Iterable

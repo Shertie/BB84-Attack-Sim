@@ -1,4 +1,4 @@
-"""E04: atak intercept-resend (F3.3): QBER(p), zysk jako drugi detektor ataku, I_AB i I_AE.
+"""E04: atak intercept-resend: QBER(p), zysk jako drugi detektor ataku, I_AB i I_AE.
 
 Wynik: figures/e04_intercept_resend.png i results/e04_intercept_resend.json.
 Kończy się błędem, jeśli któryś punkt odbiega od modelu analitycznego o |z| ≥ z_max.
@@ -98,7 +98,7 @@ def plot(cfg: Config, points: list[dict[str, float]], path: Path) -> None:
         )  # fmt: skip
     ax_e.plot(
         grid, [100 * qber_line(f, GYS.misalignment) for f in grid],
-        "k--", linewidth=1, label="plan: e$_d$ + p(¼ − e$_d$/2)",
+        "k--", linewidth=1, label="jednofotonowo: e$_d$ + p(¼ − e$_d$/2)",
     )  # fmt: skip
     ax_e.set_xlabel("ułamek przechwyconych impulsów p")
     ax_e.set_ylabel("QBER [%]")

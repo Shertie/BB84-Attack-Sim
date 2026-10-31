@@ -1,4 +1,4 @@
-"""Struktura Pulses: walidacja, wartości domyślne, niezmienność (ADR 0001)."""
+"""Struktura Pulses: walidacja, wartości domyślne, niezmienność."""
 
 import numpy as np
 import pytest

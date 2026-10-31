@@ -1,6 +1,6 @@
 """Długość klucza: Shor–Preskill, GLLP, stany decoy (Ma, Qi, Zhao, Lo 2005).
 
-Wszystkie stopy są w bitach na wysłany impuls. Wartości kontrolne: ROADMAP, rozdz. 3.2.
+Wszystkie stopy są w bitach na wysłany impuls. Wartości kontrolne: tests/golden.py.
 """
 
 import math

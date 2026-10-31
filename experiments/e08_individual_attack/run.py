@@ -1,4 +1,4 @@
-"""E08: granice informacyjne, atak indywidualny Fuchsa vs ataki ogólne (F4.10).
+"""E08: granice informacyjne, atak indywidualny Fuchsa vs ataki ogólne.
 
 Wynik: figures/e08_individual_attack.png i results/e08_individual_attack.json.
 (a) I_AB i I_AE w funkcji błędu D: wzory (linie) i Monte Carlo klonera (punkty),

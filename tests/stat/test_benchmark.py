@@ -1,4 +1,4 @@
-"""Benchmark warstwy statystyk (F1.14).
+"""Benchmark warstwy statystyk.
 
 Punkt odniesienia z 30.10.2026 (12 rdzeni, Python 3.14): ~92 ns na impuls w jednym procesie.
 Próg testu jest celowo luźny (5×), bo CI ma wolniejsze maszyny; łapie tylko duże regresje,

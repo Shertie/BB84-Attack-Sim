@@ -1,7 +1,7 @@
 """Alice, Bob i sifting.
 
-Etap 1 (F1.3): idealny BB84, jeden foton na impuls, kanał bez strat. Etap 2 (F1.7): pomiar
-parą detektorów progowych z ciemnymi zliczeniami i podwójnymi kliknięciami.
+Najprostszy wariant: idealny BB84, jeden foton na impuls, kanał bez strat. Pełny wariant:
+pomiar parą detektorów progowych z ciemnymi zliczeniami i podwójnymi kliknięciami.
 """
 
 from dataclasses import dataclass
@@ -35,7 +35,7 @@ class BobRecord:
     bits: Bits
     detected: npt.NDArray[np.bool_]
     double: npt.NDArray[np.bool_]  # kliknęły oba detektory; bit wylosowany (squashing)
-    attenuated: npt.NDArray[np.bool_] | None = None  # bramki z tłumikiem Boba (obrona F3.9)
+    attenuated: npt.NDArray[np.bool_] | None = None  # bramki z tłumikiem (obrona przed oślepianiem)
 
 
 @dataclass(frozen=True, eq=False)
@@ -90,7 +90,7 @@ def bob_measure(
     Pojedyncze kliknięcie daje bit równy numerowi detektora. Podwójne kliknięcie dostaje
     losowy bit z generatora Boba i nie jest odrzucane (squashing, docs/model.md).
 
-    `random_assignment` (obrona przed time-shift, F6.4): Bob w każdej bramce losuje, czy
+    `random_assignment` (obrona przed time-shift): Bob w każdej bramce losuje, czy
     zamienić przypisanie bit ↔ detektor, i odwraca odczyt tam, gdzie zamienił.
     """
     bases = rng.bases(len(pulses))

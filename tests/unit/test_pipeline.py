@@ -1,4 +1,4 @@
-"""Warstwa bitów i warstwa statystyk (F1.10) oraz estymaty z liczników (F1.11)."""
+"""Warstwa bitów i warstwa statystyk oraz estymaty z liczników."""
 
 import numpy as np
 import pytest

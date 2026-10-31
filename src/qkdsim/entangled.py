@@ -1,4 +1,4 @@
-"""QKD ze splątanymi parami: BBM92 ze źródłem SPDC i test CHSH (Ekert 1991), F7.
+"""QKD ze splątanymi parami: BBM92 ze źródłem SPDC i test CHSH (Ekert 1991).
 
 - `simulate_pairs`: źródło SPDC pośrodku, dwie niezależne pary trybów o termicznej liczbie par
   (analysis/entangled.py); każdy foton dociera z p-stwem η po swojej stronie, u Boba trafia do

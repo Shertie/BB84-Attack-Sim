@@ -1,4 +1,4 @@
-"""Skończony klucz (Tomamichel et al. 2012) i porównanie z wersją z planu (F4.1–F4.3)."""
+"""Skończony klucz (Tomamichel et al. 2012) i porównanie z Hoeffdingiem na samej próbce."""
 
 import math
 
@@ -9,7 +9,7 @@ from qkdsim.postprocessing.finite_key import (
     abort_probability,
     exchanged_signals,
     key_length,
-    key_length_plan_hoeffding,
+    key_length_sample_hoeffding,
     key_length_tight,
     optimal_key_rate,
     statistical_deviation,
@@ -42,7 +42,7 @@ def test_tight_theorem_is_not_worse_and_plan_version_overestimates(
     leak = 1.1 * n * h2(q)
     main = key_length(n, k, q, leak, EPS_SEC, EPS_COR)
     assert key_length_tight(n, k, q, leak, EPS_SEC, EPS_COR) >= main
-    assert key_length_plan_hoeffding(n, k, q, leak, EPS_SEC, EPS_COR) > main
+    assert key_length_sample_hoeffding(n, k, q, leak, EPS_SEC, EPS_COR) > main
 
 
 def test_key_length_vanishes_when_correction_reaches_half() -> None:
@@ -88,7 +88,8 @@ def test_optimal_rate_approaches_asymptote() -> None:
 def test_optimized_rate_close_to_paper_table(n: int, qber: float, table: float) -> None:
     """Tabela 1 Tomamichela et al.: optymalizacja po k i Q_tol daje stopy w granicach 10%.
 
-    Optymalne parametry różnią się od tabeli (ROADMAP, K18), więc sprawdzamy tylko stopę.
+    Optymalne parametry różnią się od tabeli (wydrukowane twierdzenie daje stopy o 8–14%
+    niższe), więc sprawdzamy tylko stopę.
     """
     rate, _k, _q_tol = optimal_key_rate(n, qber, EPS_SEC, EPS_COR)
     assert rate == pytest.approx(table, rel=0.1)

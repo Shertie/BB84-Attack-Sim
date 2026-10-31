@@ -1,4 +1,4 @@
-"""Atak 8 w torze impulsów: Monte Carlo vs model (F6.8–F6.10)."""
+"""Atak 8 w torze impulsów: Monte Carlo vs model."""
 
 import dataclasses
 import math

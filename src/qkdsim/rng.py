@@ -1,4 +1,4 @@
-"""Źródła losowości (ADR 0003).
+"""Źródła losowości.
 
 Alice i Bob dostają wstrzykiwany RandomSource, żeby atak 8 (słaby generator) mógł podmienić
 tylko ich wybory. Przyroda (liczba fotonów, wynik pomiaru) i Ewa mają osobne generatory, więc
@@ -86,7 +86,7 @@ class RandomStreams:
         """Z ziarna albo z gałęzi SeedSequence (np. osobnej dla każdego punktu L).
 
         Gałęzie SeedSequence zależą tylko od swojego numeru, więc dodanie strumienia `public`
-        jako piątego nie zmieniło czterech pierwszych (wyniki F1 są odtwarzalne).
+        jako piątego nie zmieniło czterech pierwszych (wcześniejsze wyniki są odtwarzalne).
         """
         sequence = (
             seed if isinstance(seed, np.random.SeedSequence) else np.random.SeedSequence(seed)

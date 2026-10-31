@@ -1,4 +1,4 @@
-"""E16: QKD ze splątanymi parami: BBM92, CHSH i device-independent (F7).
+"""E16: QKD ze splątanymi parami: BBM92, CHSH i device-independent.
 
 Wynik: figures/e16_entangled.png, figures/e16_entangled.md i results/e16_entangled.json.
 (a) BBM92 ze źródłem SPDC pośrodku i detektorami GYS: stopa w funkcji L przy optymalnej

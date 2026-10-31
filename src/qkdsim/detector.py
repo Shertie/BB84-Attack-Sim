@@ -1,4 +1,4 @@
-"""Para progowych detektorów SPAD za PBS Boba (F1.7, tryb liniowy F3.5).
+"""Para progowych detektorów SPAD za PBS Boba (z trybem liniowym).
 
 Tryb Geigera (docs/model.md, rozdz. 4): fotony rozdzielają się na detektory według reguły
 Borna, każdy jest wykryty z p-stwem `efficiency`, a każdy detektor ma niezależne ciemne
@@ -11,10 +11,10 @@ ani nie ma ciemnych zliczeń, a klika tylko od impulsu klasycznego: nigdy dla P 
 zawsze dla P ≥ P_always, pomiędzy z p-stwem rosnącym liniowo (to założenie modelu; artykuł
 podaje tylko oba progi).
 
-Krzywe sprawności w czasie (atak 4, F6.1): opcjonalne `timing` zmienia sprawność każdego
+Krzywe sprawności w czasie (atak 4): opcjonalne `timing` zmienia sprawność każdego
 detektora zależnie od czasu przyjścia impulsu `Pulses.t`. Bez `timing` czas jest ignorowany.
 
-Pamięć detektora (F7): po kliknięciu detektor jest martwy przez `dead_time_gates` kolejnych bramek
+Pamięć detektora: po kliknięciu detektor jest martwy przez `dead_time_gates` kolejnych bramek
 (model nieparaliżowalny), a z p-stwem `afterpulse` klika sam w pierwszej żywej bramce
 (afterpuls; może wywołać następny). Kliknięcia z fotonów i ciemnych zliczeń w martwych bramkach
 przepadają. Pamięć działa w obrębie paczki impulsów; stan nie przechodzi między paczkami
@@ -70,7 +70,7 @@ class LinearMode:
 
 @dataclass(frozen=True)
 class EfficiencyMismatch:
-    """Sprawność detektorów w funkcji czasu przyjścia impulsu t [ns] (atak 4, F6.1).
+    """Sprawność detektorów w funkcji czasu przyjścia impulsu t [ns] (atak 4).
 
     η_j(t) = η·exp(−[(t − c_j)² − c_j²]/(2σ_j²)): Gauss o środku c_j i szerokości σ_j,
     unormowany tak, że w nominalnym czasie przyjścia t = 0 oba detektory mają sprawność η
@@ -161,8 +161,8 @@ class DetectorPair:
     ) -> tuple[Clicks, Clicks]:
         """Kliknięcia detektora 0 i detektora 1 dla każdego impulsu.
 
-        `swap`: Bob obraca polaryzację o 90° przed PBS tam, gdzie swap = 1 (obrona F6.4),
-        więc bit 0 trafia wtedy do detektora 1.
+        `swap`: Bob obraca polaryzację o 90° przed PBS tam, gdzie swap = 1 (obrona przed
+        time-shift), więc bit 0 trafia wtedy do detektora 1.
         """
         analyzer = analyzer_angle(bob_bases)
         if swap is not None:
@@ -178,7 +178,7 @@ class DetectorPair:
         silent1 = self.silent_probability(
             to1, classical * (1.0 - p0), self.blinded(pulses.cw_power, 1), 1, eta1
         )
-        # Porównanie z p-stwem ciszy (u ≥ cisza), jak w F1: te same ziarna dają te same wyniki.
+        # Porównanie z p-stwem ciszy (u ≥ cisza): te same ziarna dają te same wyniki.
         u = nature.random((2, len(pulses)))
         click0, click1 = u[0] >= silent0, u[1] >= silent1
         if self.dead_time_gates == 0 and self.afterpulse == 0.0:

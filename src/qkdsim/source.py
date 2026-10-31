@@ -1,8 +1,8 @@
-"""Źródło słabych impulsów koherentnych z losową fazą (F1.5).
+"""Źródło słabych impulsów koherentnych z losową fazą.
 
 Liczba fotonów w impulsie ~ Poisson(μ_i), gdzie i to intensywność wylosowana przez Alice
-(sygnał, decoy, próżnia). Wiele intensywności jest obsługiwanych od początku, żeby stany decoy
-w F3 nie wymagały przebudowy.
+(sygnał, decoy, próżnia). Wiele intensywności
+obsługuje stany decoy.
 """
 
 import math

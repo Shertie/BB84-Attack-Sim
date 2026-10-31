@@ -1,4 +1,4 @@
-"""E03: bilans klucza od impulsów do klucza końcowego dla GYS (F2.9) i test liniowej Ewy (F2.8).
+"""E03: bilans klucza od impulsów do klucza końcowego dla GYS i test liniowej Ewy.
 
 Wynik: figures/e03_key_balance.md (tabela do README) i results/e03_key_balance.json.
 """
@@ -85,7 +85,7 @@ def balance_at(cfg: Config, index: int) -> dict[str, float]:
 
 
 def linear_eve_demo(cfg: Config) -> dict[str, int]:
-    """F2.8 na fragmencie prawdziwego klucza z 25 km: wiedza Ewy z i bez odjęcia wycieku."""
+    """Liniowa Ewa na fragmencie prawdziwego klucza z 25 km: wiedza Ewy z i bez odjęcia wycieku."""
     link = Link(
         WCPSource((cfg.mu,)),
         FiberChannel(25.0, GYS.alpha_db_per_km, GYS.misalignment),
@@ -142,9 +142,9 @@ def markdown(points: list[dict[str, float]], eve: dict[str, int]) -> str:
         + "\n".join(lines)
         + "\n\nℓ/N jest o kilka procent niższe od wzoru asymptotycznego. 10% bitów po siftingu "
         "idzie na próbkę (strata ×0,9), co tylko częściowo kompensuje Cascade z f ≈ 1,16 zamiast "
-        "1,22 przyjętego we wzorze. Udział jednofotonowych i e₁ pochodzą na razie z modelu "
-        "(granica decoy); w F3 zastąpi je estymata z Monte Carlo.\n\n"
-        "## Pasywna Ewa i zapomniany wyciek (F2.8)\n\n"
+        "1,22 przyjętego we wzorze. Udział jednofotonowych i e₁ pochodzą z modelu "
+        "(granica decoy); estymatę decoy z danych Monte Carlo pokazuje e06.\n\n"
+        "## Pasywna Ewa i zapomniany wyciek\n\n"
         f"Klucz {eve['reconciled']} bitów z 25 km. Ewa zna wszystkie parzystości Cascade i hasz "
         f"weryfikacji: rząd {eve['disclosed_rank']} niezależnych funkcji liniowych klucza.\n\n"
         "| Długość klucza końcowego | ℓ [bit] | Bity znane Ewie z pewnością |\n"

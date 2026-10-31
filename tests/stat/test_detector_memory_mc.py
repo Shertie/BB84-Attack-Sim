@@ -1,4 +1,4 @@
-"""Tor z afterpulsami: Monte Carlo a dokładny model (afterpuls jako ciemne zliczenie), F7."""
+"""Tor z afterpulsami: Monte Carlo a dokładny model (afterpuls jako ciemne zliczenie)."""
 
 import pytest
 

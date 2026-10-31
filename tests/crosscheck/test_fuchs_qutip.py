@@ -1,4 +1,4 @@
-"""Atak 6: weryfikacja w QuTiP (F4.8, ADR 0004).
+"""Atak 6: weryfikacja w QuTiP.
 
 Unitarna Ewy jest tu zbudowana niezależnie, z operatorów QuTiP: kloner jako exp(ηA),
 A = |01⟩⟨10| − |10⟩⟨01|, obrót układu jako exp(−i(π/3)(X + Y + Z)/√3). Wierności Boba i Ewy

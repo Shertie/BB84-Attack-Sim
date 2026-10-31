@@ -6,7 +6,7 @@ import pytest
 
 pytest.importorskip("qkd", reason="testy krzyżowe wymagają qkd: pip install -e '.[crosscheck]'")
 
-from qkd import _core as core  # wzory Ma, Funga i Lo w qkd 0.2.0 (ADR 0007)
+from qkd import _core as core  # wzory Ma, Funga i Lo w qkd 0.2.0
 from qkd.pairs import DI_ETA_SINGLET
 
 from qkdsim.analysis.entangled import (

@@ -1,4 +1,4 @@
-"""Weryfikacja kluczy, długość klucza i wzmacnianie prywatności (F2.5–F2.7)."""
+"""Weryfikacja kluczy, długość klucza i wzmacnianie prywatności."""
 
 import math
 from dataclasses import dataclass
@@ -45,11 +45,11 @@ def key_length(
     leaked_bits: int,
     single_photon_fraction: float = 1.0,
 ) -> int:
-    """ℓ = ⌊n·s·[1 − h(e_ph)] − wyciek⌋, nie mniej niż 0 (wersja asymptotyczna, F2.7).
+    """ℓ = ⌊n·s·[1 − h(e_ph)] − wyciek⌋, nie mniej niż 0 (wersja asymptotyczna).
 
     Dla źródła jednofotonowego s = 1 i e_ph to błąd fazowy. Dla WCP s = Q₁/Q_μ to udział
-    detekcji z impulsów jednofotonowych, a e_ph = e₁ (GLLP); w F2 oba pochodzą z modelu,
-    w F3 z estymaty decoy. Poprawki skończonego klucza dochodzą w F4.
+    detekcji z impulsów jednofotonowych, a e_ph = e₁ (GLLP); oba pochodzą z modelu
+    albo z estymaty decoy. Skończony klucz: finite_key.py i finite_key_decoy.py.
     """
     if not 0.0 <= single_photon_fraction <= 1.0:
         raise ValueError("single_photon_fraction musi być w [0, 1]")

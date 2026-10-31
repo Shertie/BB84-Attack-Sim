@@ -1,4 +1,4 @@
-"""Źródło WCP, światłowód i para detektorów (F1.5–F1.7)."""
+"""Źródło WCP, światłowód i para detektorów."""
 
 import math
 

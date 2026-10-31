@@ -1,4 +1,4 @@
-"""E19: symulator QRNG na dzielniku wiązki (F7, przedłużenie ataku 8).
+"""E19: symulator QRNG na dzielniku wiązki (przedłużenie ataku 8).
 
 Wynik: figures/e19_qrng.png, figures/e19_qrng.md i results/e19_qrng.json.
 (a) surowe bity czterech generatorów (idealny, niedopasowane detektory, pamięć detektorów, oba):

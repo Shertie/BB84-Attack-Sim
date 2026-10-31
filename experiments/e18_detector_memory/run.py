@@ -1,4 +1,4 @@
-"""E18: pamięć detektora, czyli czas martwy i afterpulsing (F1.8, F7).
+"""E18: pamięć detektora, czyli czas martwy i afterpulsing.
 
 Wynik: figures/e18_detector_memory.png, figures/e18_detector_memory.md
 i results/e18_detector_memory.json.

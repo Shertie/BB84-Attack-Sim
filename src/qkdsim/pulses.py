@@ -1,4 +1,4 @@
-"""Impulsy jako struktura tablic (ADR 0001).
+"""Impulsy jako struktura tablic.
 
 Pulses niesie pełną prawdę o każdym impulsie. Funkcje fizyki czytają tylko pola fizyczne
 (n, theta, t, power, cw_power); bit, basis i intensity to etykiety Alice potrzebne do metryk.

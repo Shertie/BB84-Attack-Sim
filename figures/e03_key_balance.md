@@ -18,9 +18,9 @@
 | Wzór asymptotyczny R(L) [bit na impuls] | 7,54e-04 | 2,23e-04 |
 | Przy 2 MHz [bit/s] | 1 440 | 415 |
 
-ℓ/N jest o kilka procent niższe od wzoru asymptotycznego. 10% bitów po siftingu idzie na próbkę (strata ×0,9), co tylko częściowo kompensuje Cascade z f ≈ 1,16 zamiast 1,22 przyjętego we wzorze. Udział jednofotonowych i e₁ pochodzą na razie z modelu (granica decoy); w F3 zastąpi je estymata z Monte Carlo.
+ℓ/N jest o kilka procent niższe od wzoru asymptotycznego. 10% bitów po siftingu idzie na próbkę (strata ×0,9), co tylko częściowo kompensuje Cascade z f ≈ 1,16 zamiast 1,22 przyjętego we wzorze. Udział jednofotonowych i e₁ pochodzą z modelu (granica decoy); estymatę decoy z danych Monte Carlo pokazuje e06.
 
-## Pasywna Ewa i zapomniany wyciek (F2.8)
+## Pasywna Ewa i zapomniany wyciek
 
 Klucz 1980 bitów z 25 km. Ewa zna wszystkie parzystości Cascade i hasz weryfikacji: rząd 654 niezależnych funkcji liniowych klucza.
 

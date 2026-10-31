@@ -1,4 +1,4 @@
-"""Atak 4: time-shift (Qi et al. 2007, eksperyment Zhao et al. 2008), F6.2.
+"""Atak 4: time-shift (Qi et al. 2007, eksperyment Zhao et al. 2008).
 
 Ewa niczego nie mierzy i nie przygotowuje. Przesuwa każdy impuls w czasie: z p-stwem p_A do
 chwili A, w której sprawniejszy jest detektor 0, inaczej do chwili B, w której sprawniejszy jest

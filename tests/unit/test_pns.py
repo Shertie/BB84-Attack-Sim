@@ -1,4 +1,4 @@
-"""Atak 3, PNS: zachowanie na impulsach, model analityczny i strategia Ewy (F3.11–F3.12)."""
+"""Atak 3, PNS: zachowanie na impulsach, model analityczny i strategia Ewy."""
 
 import math
 from typing import Any

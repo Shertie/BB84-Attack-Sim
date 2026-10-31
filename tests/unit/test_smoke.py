@@ -1,4 +1,4 @@
-"""Test dymny fazy F0: pakiet się importuje, a fiksura RNG jest deterministyczna."""
+"""Test dymny: pakiet się importuje, a fiksura RNG jest deterministyczna."""
 
 import importlib
 

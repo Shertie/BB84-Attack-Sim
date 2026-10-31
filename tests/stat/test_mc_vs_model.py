@@ -1,6 +1,6 @@
-"""Monte Carlo vs dokładny model detektorów (rozdz. 7.2: porównanie przez z-score).
+"""Monte Carlo vs dokładny model detektorów (porównanie przez z-score).
 
-Szybkie testy na krótkich dystansach; pełna bramka G1 (0–150 km) jest w test_gate_g1.py.
+Szybkie testy na krótkich dystansach; pełna walidacja na 0–150 km jest w test_validation_link.py.
 """
 
 import pytest

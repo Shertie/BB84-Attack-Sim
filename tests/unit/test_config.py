@@ -1,4 +1,4 @@
-"""Ścisłe wczytywanie konfiguracji (ADR 0005)."""
+"""Ścisłe wczytywanie konfiguracji."""
 
 from dataclasses import dataclass
 from pathlib import Path

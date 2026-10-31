@@ -1,8 +1,8 @@
-"""Cały postprocessing z bilansem klucza (F2.9).
+"""Cały postprocessing z bilansem klucza.
 
 klucz po siftingu → próbka i QBER → Cascade albo LDPC → weryfikacja → wzmacnianie prywatności → ℓ
 
-Przy LDPC (F7) ramki, których Bob nie zdekodował, odpadają z klucza obu stron przed weryfikacją.
+Przy LDPC ramki, których Bob nie zdekodował, odpadają z klucza obu stron przed weryfikacją.
 """
 
 from dataclasses import dataclass, field
@@ -34,7 +34,7 @@ class PostprocessingConfig:
     # Model długości klucza (amplification.key_length). None → błąd fazowy = estymowany QBER.
     single_photon_fraction: float = 1.0
     phase_error: float | None = None
-    # False tylko do demonstracji błędu „zapomniany leak_EC” (F2.8).
+    # False tylko do demonstracji błędu „zapomniany leak_EC”.
     subtract_leakage: bool = True
     record_rows: bool = False
 
@@ -132,7 +132,7 @@ def postprocess(
     if not check.passed:
         length = 0  # weryfikacja nieudana: klucz odrzucony
     pa = privacy_amplification(alice, corrected, length, public, channel)
-    channel.close_round()  # uwierzytelnienie transkryptu przed użyciem klucza (F4.12)
+    channel.close_round()  # uwierzytelnienie transkryptu przed użyciem klucza
 
     balance = KeyBalance(
         sifted=len(key),

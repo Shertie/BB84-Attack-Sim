@@ -1,4 +1,4 @@
-# E16: QKD ze splątanymi parami (BBM92, CHSH, device-independent), F7.
+# E16: QKD ze splątanymi parami (BBM92, CHSH, device-independent).
 seed: 20261109
 # BBM92: źródło SPDC pośrodku, po obu stronach detektory jak w GYS.
 eta_detector: 0.045

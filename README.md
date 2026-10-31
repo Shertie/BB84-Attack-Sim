@@ -2,11 +2,11 @@
 
 Symulator Monte Carlo BB84 na poziomie impulsów, w którym ataki są wykonywane, a nie wyceniane wzorem. Każdy wynik jest porównany ze wzorem lub publikacją, od fotonu do klucza końcowego, a obrony są oceniane krzywymi ROC.
 
-Model: polaryzacyjny BB84, światłowód 1550 nm, źródło słabych impulsów koherentnych (WCP), dwa detektory SPAD po stronie Boba (opcjonalnie z czasem martwym i afterpulsami), Cascade albo LDPC, hasz Toeplitza i skończony klucz. Parametry z eksperymentu GYS (Ma, Qi, Zhao, Lo 2005). Wzory sprawdzamy też niezależną implementacją [`qkd`](https://pypi.org/project/qkd/), która wycenia część tych samych ataków w formie zamkniętej ([porównanie](docs/related.md)).
+Model: polaryzacyjny BB84, światłowód 1550 nm, źródło słabych impulsów koherentnych (WCP), dwa detektory SPAD po stronie Boba (opcjonalnie z czasem martwym i afterpulsami), Cascade albo LDPC, hasz Toeplitza i skończony klucz. Parametry z eksperymentu GYS (Ma, Qi, Zhao, Lo 2005). Wzory sprawdzamy też niezależną implementacją [`qkd`](https://pypi.org/project/qkd/), która wycenia część tych samych ataków w formie zamkniętej ([porównanie](docs/architecture.md#powiązane-narzędzia)).
 
-Pomost do kryptografii postkwantowej (wariant E): kanał klasyczny uwierzytelniany Wegmanem–Carterem, podpisem ML-DSA (FIPS 204) albo hybrydowo, z tabelą modeli zagrożeń QKD wobec ML-KEM.
+Pomost do kryptografii postkwantowej: kanał klasyczny uwierzytelniany Wegmanem–Carterem, podpisem ML-DSA (FIPS 204) albo hybrydowo, z tabelą modeli zagrożeń QKD wobec ML-KEM.
 
-> **Status: v1.2.** Komplet ośmiu ataków z planu z obronami: intercept-resend, oślepianie detektorów, PNS, time-shift, Trojan horse, optymalny atak indywidualny, MITM i słaby generator; każdy spełnia definicję ukończenia z [ROADMAP.md](ROADMAP.md) (rozdz. 7.1). Do tego skończony klucz i uwierzytelnianie postkwantowe oraz wszystkie rozszerzenia F7: skończony klucz z decoy, MDI-QKD, splątane pary z CHSH, pamięć detektorów, symulator QRNG i uzgadnianie LDPC. Raport: [report/main.tex](report/main.tex) (`make report`).
+> **Wersja 1.2.** Osiem ataków z obronami: intercept-resend, oślepianie detektorów, PNS, time-shift, Trojan horse, optymalny atak indywidualny, MITM i słaby generator. Każdy ma moduł, eksperyment porównany ze wzorem lub publikacją, testy jednostkowe i statystyczne, obronę z metryką wykrycia i opis modelu ([tabela](docs/architecture.md#ataki-moduły-eksperymenty-testy-i-obrony)). Do tego skończony klucz, uwierzytelnianie postkwantowe i rozszerzenia: skończony klucz z decoy, MDI-QKD, splątane pary z CHSH, pamięć detektorów, symulator QRNG i uzgadnianie LDPC. Raport: [report/main.tex](report/main.tex) (`make report`).
 
 ## Wyniki kontrolne
 
@@ -32,17 +32,17 @@ Wszystkie wykresy odtwarza `make figures` (20 eksperymentów, około 13 min na 1
 
 Każdy atak, który nie podnosi QBER, łamie któreś założenie dowodu bezpieczeństwa, a nie wzór na długość klucza. Założenia Z1–Z8 opisuje [docs/model.md](docs/model.md), rozdz. 5.
 
-| Atak | Status | Złamane założenie | Obrona | Metryka (wynik) |
+| Atak | Eksperyment | Złamane założenie | Obrona | Metryka (wynik) |
 | --- | --- | --- | --- | --- |
-| 1. Intercept-resend | v1.0, [e04](figures/e04_intercept_resend.png) | żadne: atak mieści się w modelu dowodu; przy małej próbce Z8 | test progu QBER na próbce; skończony klucz (Tomamichel et al. 2012) | QBER 26,5% przy pełnym ataku; przechwycenie 4% impulsów przy próbce 1000 bitów wykryte w 23% sesji, AUC 0,872 ([e07](figures/e07_finite_key.png), [ROC](figures/e17_detection_roc.png)) |
-| 2. Oślepianie detektorów | v1.0, [e05](figures/e05_blinding.png) | Z3: detektor w trybie jednofotonowym | losowe tłumienie 3 dB w 10% bramek; monitor mocy; MDI-QKD ([e15](figures/e15_mdi_qkd.md)) | QBER i zysk bez zmian, Ewa zna 100% klucza; test tłumienia z ≈ −35; [ROC](figures/e05_blinding_roc.png) |
-| 3. Photon-number splitting | v1.0, [e06](figures/e06_decoy_pns.png) | Z1: rozkład liczby fotonów uwzględniony w długości klucza | stany decoy (vacuum+weak) | od 32,8 km Ewa zna 98–100% klucza przy niezmienionym QBER i zysku; decoy przerywa protokół |
-| 6. Optymalny atak indywidualny | v1.0, [e08](figures/e08_individual_attack.png) | Z7: granica dla ataków indywidualnych nie jest granicą ogólną | próg Shora–Preskilla 11,00% zamiast 14,64%; test progu QBER | I_AB = I_AE przy D\* = 14,64%; numpy i QuTiP zgodne do 10⁻¹²; D = 5% wykryte w 99,8% sesji ([ROC](figures/e17_detection_roc.png)) |
-| 7. Man-in-the-middle | v1.0, [e09](figures/e09_mitm.md) | Z5a: kanał klasyczny uwierzytelniony | Wegman–Carter z kluczem współdzielonym | przerwanie przy pierwszym tagu Ewy; fałszerstwo z p-stwem 1/p ≈ 2⁻⁶¹; 122 bity klucza na rundę |
-| 7′. MITM przy podpisie ML-DSA | v1.0, [e10](figures/e10_pqc_auth.md) | Z5a w trakcie sesji; Z5b: autentyczne klucze publiczne | hybryda Wegman–Carter + ML-DSA; weryfikacja odcisku klucza | ML-DSA złamane na żywo lub podmieniony klucz: MITM udany; hybryda: wykryty; złamanie po sesji: 0 bitów klucza dla Ewy |
-| 4. Time-shift | v1.1, [e11](figures/e11_time_shift.md) | Z3: sprawność niezależna od czasu przyjścia | losowe przypisanie bit ↔ detektor; monitor czasu przyjścia; MDI-QKD ([e15](figures/e15_mdi_qkd.md)) | QBER i zysk bez zmian; Ewa zna 0,31 bitu na wykryty bit przy krzywych Zhao et al. 2008; obrona: 0,000 ± 0,000; monitor czasu wykrywa atak w 100% testów po 30 kliknięć ([ROC](figures/e17_detection_roc.png)) |
-| 5. Trojan horse | v1.1, [e12](figures/e12_trojan_horse.md) | Z2: brak kanałów bocznych u Alice | izolacja, losowa faza odbitego światła, monitor mocy na wejściu Alice | QBER i zysk bez zmian; przy 0,1 fotonu w odbitej sondzie Ewa zna 0,135 bitu (0,095 z losową fazą); wyciek ≤ 10⁻³ przy sondzie 10⁹ fotonów i modulatorze (−20 dB) wymaga 102 dB izolacji, a z monitorem ([e17](figures/e17_detection_roc.md)) 69,2 dB |
-| 8. Słaby generator | v1.1, [e13](figures/e13_weak_rng.md) | Z6: losowe i prywatne wybory | QRNG z ekstrakcją i testami zdrowia NIST SP 800-90B ([e19](figures/e19_qrng.md)); testy losowości łapią obciążenie i korelacje, nie przewidywalność | znane ziarno: Ewa zna 100% klucza bez dotykania światłowodu, a testy odrzucają generator w 1% przypadków (= α); bazy obciążone 0,9: QBER 8%, Ewa zna 90% bitów; surowy QRNG z niedopasowanymi detektorami daje Ewie trafienie bazy 0,59, po ekstrakcji 0,5 |
+| 1. Intercept-resend | [e04](figures/e04_intercept_resend.png) | żadne: atak mieści się w modelu dowodu; przy małej próbce Z8 | test progu QBER na próbce; skończony klucz (Tomamichel et al. 2012) | QBER 26,5% przy pełnym ataku; przechwycenie 4% impulsów przy próbce 1000 bitów wykryte w 23% sesji, AUC 0,872 ([e07](figures/e07_finite_key.png), [ROC](figures/e17_detection_roc.png)) |
+| 2. Oślepianie detektorów | [e05](figures/e05_blinding.png) | Z3: detektor w trybie jednofotonowym | losowe tłumienie 3 dB w 10% bramek; monitor mocy; MDI-QKD ([e15](figures/e15_mdi_qkd.md)) | QBER i zysk bez zmian, Ewa zna 100% klucza; test tłumienia z ≈ −35; [ROC](figures/e05_blinding_roc.png) |
+| 3. Photon-number splitting | [e06](figures/e06_decoy_pns.png) | Z1: rozkład liczby fotonów uwzględniony w długości klucza | stany decoy (vacuum+weak) | od 32,8 km Ewa zna 98–100% klucza przy niezmienionym QBER i zysku; decoy przerywa protokół |
+| 6. Optymalny atak indywidualny | [e08](figures/e08_individual_attack.png) | Z7: granica dla ataków indywidualnych nie jest granicą ogólną | próg Shora–Preskilla 11,00% zamiast 14,64%; test progu QBER | I_AB = I_AE przy D\* = 14,64%; numpy i QuTiP zgodne do 10⁻¹²; D = 5% wykryte w 99,8% sesji ([ROC](figures/e17_detection_roc.png)) |
+| 7. Man-in-the-middle | [e09](figures/e09_mitm.md) | Z5a: kanał klasyczny uwierzytelniony | Wegman–Carter z kluczem współdzielonym | przerwanie przy pierwszym tagu Ewy; fałszerstwo z p-stwem 1/p ≈ 2⁻⁶¹; 122 bity klucza na rundę |
+| 7′. MITM przy podpisie ML-DSA | [e10](figures/e10_pqc_auth.md) | Z5a w trakcie sesji; Z5b: autentyczne klucze publiczne | hybryda Wegman–Carter + ML-DSA; weryfikacja odcisku klucza | ML-DSA złamane na żywo lub podmieniony klucz: MITM udany; hybryda: wykryty; złamanie po sesji: 0 bitów klucza dla Ewy |
+| 4. Time-shift | [e11](figures/e11_time_shift.md) | Z3: sprawność niezależna od czasu przyjścia | losowe przypisanie bit ↔ detektor; monitor czasu przyjścia; MDI-QKD ([e15](figures/e15_mdi_qkd.md)) | QBER i zysk bez zmian; Ewa zna 0,31 bitu na wykryty bit przy krzywych Zhao et al. 2008; obrona: 0,000 ± 0,000; monitor czasu wykrywa atak w 100% testów po 30 kliknięć ([ROC](figures/e17_detection_roc.png)) |
+| 5. Trojan horse | [e12](figures/e12_trojan_horse.md) | Z2: brak kanałów bocznych u Alice | izolacja, losowa faza odbitego światła, monitor mocy na wejściu Alice | QBER i zysk bez zmian; przy 0,1 fotonu w odbitej sondzie Ewa zna 0,135 bitu (0,095 z losową fazą); wyciek ≤ 10⁻³ przy sondzie 10⁹ fotonów i modulatorze (−20 dB) wymaga 102 dB izolacji, a z monitorem ([e17](figures/e17_detection_roc.md)) 69,2 dB |
+| 8. Słaby generator | [e13](figures/e13_weak_rng.md) | Z6: losowe i prywatne wybory | QRNG z ekstrakcją i testami zdrowia NIST SP 800-90B ([e19](figures/e19_qrng.md)); testy losowości łapią obciążenie i korelacje, nie przewidywalność | znane ziarno: Ewa zna 100% klucza bez dotykania światłowodu, a testy odrzucają generator w 1% przypadków (= α); bazy obciążone 0,9: QBER 8%, Ewa zna 90% bitów; surowy QRNG z niedopasowanymi detektorami daje Ewie trafienie bazy 0,59, po ekstrakcji 0,5 |
 
 ## Pozostałe wyniki
 
@@ -54,7 +54,7 @@ Oślepianie detektorów (progi Clavis2 z Lydersena et al. 2010): skalibrowana Ew
 
 ![Skończony klucz](figures/e07_finite_key.png)
 
-Skończony klucz (Tomamichel et al. 2012): stopa rośnie z blokiem n w stronę granicy 1 − 2h(Q). Uproszczenie z planu (Hoeffding na samej próbce) zawyża długość klucza o 95% przy n = 3000 i o 15% przy 10⁵.
+Skończony klucz (Tomamichel et al. 2012): stopa rośnie z blokiem n w stronę granicy 1 − 2h(Q). Uproszczenie (Hoeffding na samej próbce) zawyża długość klucza o 95% przy n = 3000 i o 15% przy 10⁵.
 
 ![MITM i uwierzytelnianie](figures/e09_mitm.png)
 
@@ -62,7 +62,7 @@ Atak MITM: bez uwierzytelniania Ewa zna klucze Alice i Boba przy QBER jak bez at
 
 ![Uwierzytelnianie postkwantowe](figures/e10_pqc_auth.png)
 
-Wariant E ([scenariusze i tabela modeli zagrożeń](figures/e10_pqc_auth.md)): ML-DSA nie zużywa klucza, więc przy 10⁶ impulsów na rundę bilans jest dodatni do ~140 km zamiast 60 km. Ceną są 2 × 3309 B na rundę i założenie obliczeniowe, które musi stać w trakcie sesji. Nagrany szyfrogram ML-KEM-768 oddaje po złamaniu krat cały sekret, a złamanie podpisu po sesji QKD nic Ewie nie daje.
+Uwierzytelnianie postkwantowe ([scenariusze i tabela modeli zagrożeń](figures/e10_pqc_auth.md)): ML-DSA nie zużywa klucza, więc przy 10⁶ impulsów na rundę bilans jest dodatni do ~140 km zamiast 60 km. Ceną są 2 × 3309 B na rundę i założenie obliczeniowe, które musi stać w trakcie sesji. Nagrany szyfrogram ML-KEM-768 oddaje po złamaniu krat cały sekret, a złamanie podpisu po sesji QKD nic Ewie nie daje.
 
 ![Atak time-shift](figures/e11_time_shift.png)
 
@@ -126,12 +126,9 @@ make figures
 
 ## Dokumentacja
 
-- [ROADMAP.md](ROADMAP.md): fazy, bramki jakości, harmonogram
-- [Plan projektu](<assets/Symulator BB84 z atakami – plan projektu.md>): założenia i teoria
-- [docs/model.md](docs/model.md): założenia fizyczne i dowodu, konwencje, parametry
-- [docs/architecture.md](docs/architecture.md): tor impulsów i punkty ataku P1–P8
-- [docs/adr/](docs/adr/): decyzje architektoniczne
-- [docs/related.md](docs/related.md): istniejące symulatory i czym ten projekt się od nich różni
+- [docs/model.md](docs/model.md): założenia fizyczne i dowodu, konwencje, parametry, model każdego ataku i rozszerzenia
+- [docs/architecture.md](docs/architecture.md): tor impulsów, punkty ataku P1–P8, zasady konstrukcji, tabela ataków (moduł, eksperyment, testy, obrona) i powiązane narzędzia
+- [report/main.tex](report/main.tex): raport (`make report`)
 - [CHANGELOG.md](CHANGELOG.md): historia wersji
 
 ## Cytowanie i licencja

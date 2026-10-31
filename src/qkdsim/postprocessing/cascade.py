@@ -1,4 +1,4 @@
-"""Korekcja błędów Cascade (Brassard, Salvail 1993), F2.3.
+"""Korekcja błędów Cascade (Brassard, Salvail 1993).
 
 - przebieg 1: bloki rozmiaru k₁ ≈ 0,73/Q, kolejne przebiegi: rozmiar 2×, losowa permutacja;
 - w bloku z niezgodną parzystością BINARY (bisekcja) znajduje i poprawia jeden błąd;
@@ -72,7 +72,7 @@ def cascade(
     """Poprawia klucz Boba do klucza Alice.
 
     `record_rows=True` zapisuje w transkrypcie pozycje każdej ogłoszonej parzystości,
-    potrzebne do dokładnej analizy wiedzy liniowej Ewy (F2.8). Kosztuje pamięć.
+    potrzebne do dokładnej analizy wiedzy liniowej Ewy. Kosztuje pamięć.
     """
     n = len(alice)
     if len(bob) != n:

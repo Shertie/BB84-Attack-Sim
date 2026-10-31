@@ -1,4 +1,4 @@
-"""QKD ze splątanymi parami: BBM92 ze źródłem SPDC, CHSH i device-independent (F7)."""
+"""QKD ze splątanymi parami: BBM92 ze źródłem SPDC, CHSH i device-independent."""
 
 import math
 

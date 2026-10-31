@@ -1,4 +1,4 @@
-"""Atak 5, Trojan horse: wiedza Ewy o bicie i bazie, izolacja, atak w torze (F6.5–F6.7)."""
+"""Atak 5, Trojan horse: wiedza Ewy o bicie i bazie, izolacja, atak w torze."""
 
 import math
 

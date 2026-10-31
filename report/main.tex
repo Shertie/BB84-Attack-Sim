@@ -1,4 +1,4 @@
-% Raport v1.1 (F5.3 i F6.11 w ROADMAP.md). Liczby pochodzą z results/*.json i figures/*.md,
+% Raport do wersji 1.2. Liczby pochodzą z results/*.json i figures/*.md,
 % które odtwarza `make figures`.
 \documentclass[11pt,a4paper]{article}
 \usepackage[T1]{fontenc}
@@ -67,7 +67,7 @@ Kod to Python i numpy, sprawdzany \texttt{mypy --strict}. Testy: 528 szybkich (j
   \label{fig:e01}
 \end{figure}
 
-Bez ataku zysk i QBER z Monte Carlo zgadzają się ze wzorami na całym zakresie 0--150~km (rys.~\ref{fig:e01}). Tabela~\ref{tab:control} zbiera wartości kontrolne z planu projektu: liczby z literatury, nasze przeliczenie i wynik niezależnej implementacji \texttt{qkd}~0.2.0.
+Bez ataku zysk i QBER z Monte Carlo zgadzają się ze wzorami na całym zakresie 0--150~km (rys.~\ref{fig:e01}). Tabela~\ref{tab:control} zbiera wartości kontrolne: liczby z literatury, nasze przeliczenie i wynik niezależnej implementacji \texttt{qkd}~0.2.0.
 
 \begin{table}[t]
   \centering
@@ -99,7 +99,7 @@ Bez ataku zysk i QBER z Monte Carlo zgadzają się ze wzorami na całym zakresie
 
 \section{Ataki i obrony}
 
-Tabela~\ref{tab:map} to centralny wynik projektu. Każdy atak, który nie podnosi QBER, łamie jedno z założeń dowodu, a obrona przywraca to założenie albo wykrywa jego złamanie. Plan projektu przewidywał to dla ataków 2, 4, 5, 7 i 8, a wyniki to potwierdzają. Dochodzi do nich PNS, który przy niezmienionym QBER i zysku łamie założenie o znanym rozkładzie liczby fotonów.
+Tabela~\ref{tab:map} to centralny wynik projektu. Każdy atak, który nie podnosi QBER, łamie jedno z założeń dowodu, a obrona przywraca to założenie albo wykrywa jego złamanie. Dotyczy to ataków 2, 4, 5, 7 i 8, a także PNS, który przy niezmienionym QBER i zysku łamie założenie o znanym rozkładzie liczby fotonów.
 
 \begin{table}[t]
   \centering
@@ -282,7 +282,7 @@ Cascade jest interaktywny: na 16\,384 bity wysyła 170--850 wiadomości. Alterna
 
 \section{Skończony klucz}
 
-Rachunek asymptotyczny zakłada nieskończony blok. Dla bloku $n$ bitów klucza i $k$ bitów testu używamy twierdzenia Tomamichela i in.\ \cite{tomamichel2012tight}: protokół przerywa się, gdy QBER z próbki przekroczy próg $Q_{\mathrm{tol}}$ ustalony z góry, a długość klucza zależy od $Q_{\mathrm{tol}}$ i poprawki statystycznej, a nie od zmierzonego QBER. Stopa rośnie z $n$ w stronę granicy $1 - 2h(Q)$ (rys.~\ref{fig:e07}). Uproszczenie z planu projektu (nierówność Hoeffdinga na samej próbce) pomija przeniesienie błędu z próbki na klucz przy losowaniu bez zwracania i zawyża długość klucza o 95\% przy $n = 3000$ i o 15\% przy $n = 10^5$.
+Rachunek asymptotyczny zakłada nieskończony blok. Dla bloku $n$ bitów klucza i $k$ bitów testu używamy twierdzenia Tomamichela i in.\ \cite{tomamichel2012tight}: protokół przerywa się, gdy QBER z próbki przekroczy próg $Q_{\mathrm{tol}}$ ustalony z góry, a długość klucza zależy od $Q_{\mathrm{tol}}$ i poprawki statystycznej, a nie od zmierzonego QBER. Stopa rośnie z $n$ w stronę granicy $1 - 2h(Q)$ (rys.~\ref{fig:e07}). Uproszczenie (nierówność Hoeffdinga na samej próbce) pomija przeniesienie błędu z próbki na klucz przy losowaniu bez zwracania i zawyża długość klucza o 95\% przy $n = 3000$ i o 15\% przy $n = 10^5$.
 
 Uwaga: oba twierdzenia wydrukowane w artykule dają przy parametrach jego Tabeli~1 stopy niższe o 8--14\% niż sama tabela. Implementacja trzyma się wzorów, a rozbieżność zostaje otwarta.
 

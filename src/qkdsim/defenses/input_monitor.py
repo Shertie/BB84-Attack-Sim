@@ -1,4 +1,4 @@
-"""Obrona przed atakiem 5: monitor światła wchodzącego do Alice (Gisin i in. 2006), rozdz. 7.1.
+"""Obrona przed atakiem 5: monitor światła wchodzącego do Alice (Gisin i in. 2006).
 
 Ta sama fotodioda co w obronie przed oślepianiem (`PowerMonitor`: odczep i szum odczytu), tylko
 na wejściu Alice. Sonda Ewy o μ_in fotonach na impuls przy częstości `repetition_hz` to średnia
@@ -20,7 +20,7 @@ from qkdsim.detector import PHOTON_ENERGY_J
 @dataclass(frozen=True)
 class InputMonitor:
     monitor: PowerMonitor
-    repetition_hz: float = 2e6  # GYS (ROADMAP, K1)
+    repetition_hz: float = 2e6  # GYS: częstość powtarzania z Tabeli I Ma et al. 2005
     windows: int = 1000
 
     def _sigma(self) -> float:

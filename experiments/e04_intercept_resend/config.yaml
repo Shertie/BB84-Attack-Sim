@@ -1,4 +1,4 @@
-# E04: atak intercept-resend na GYS przy 25 km (F3.3). Ewa tuż za Alice (0) i tuż przed Bobem (1).
+# E04: atak intercept-resend na GYS przy 25 km. Ewa tuż za Alice (0) i tuż przed Bobem (1).
 seed: 20261102
 mu: 0.48
 length_km: 25.0

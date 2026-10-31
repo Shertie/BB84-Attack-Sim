@@ -4,7 +4,7 @@ import pytest
 
 pytest.importorskip("qkd", reason="testy krzyżowe wymagają qkd: pip install -e '.[crosscheck]'")
 
-from qkd import _core as core  # wzory Lima w qkd 0.2.0 (ADR 0007)
+from qkd import _core as core  # wzory Lima w qkd 0.2.0
 
 from qkdsim.analysis.finite_key_decoy import LimChannel, ProtocolChoice, expected_counts
 from qkdsim.postprocessing.finite_key_decoy import (

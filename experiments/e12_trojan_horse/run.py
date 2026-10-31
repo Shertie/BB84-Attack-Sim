@@ -1,4 +1,4 @@
-"""E12: atak 5, Trojan horse (F6.5–F6.7).
+"""E12: atak 5, Trojan horse.
 
 Wynik: figures/e12_trojan_horse.png, figures/e12_trojan_horse.md i results/e12_trojan_horse.json.
 (a) informacja Ewy o bicie w funkcji μ_out, ze stałą i losową fazą: wzory Gisina et al. 2006,

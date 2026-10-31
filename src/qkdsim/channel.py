@@ -1,4 +1,4 @@
-"""Światłowód: straty i błąd optyki (F1.6)."""
+"""Światłowód: straty i błąd optyki."""
 
 import math
 from dataclasses import dataclass

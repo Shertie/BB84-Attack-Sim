@@ -1,4 +1,4 @@
-"""Uwierzytelnianie kanału klasycznego: Wegman–Carter (F4.12, ADR 0006).
+"""Uwierzytelnianie kanału klasycznego: Wegman–Carter.
 
 Tag wiadomości m: t = (h_k(m) + r) mod p, gdzie
 - h_k to hasz wielomianowy nad GF(p): kawałki m to współczynniki wielomianu w punkcie k
@@ -71,7 +71,7 @@ def message_bits(message: Message) -> Bits:
 
 
 class Authenticator(Protocol):
-    """Metoda uwierzytelniania kanału klasycznego (ADR 0006).
+    """Metoda uwierzytelniania kanału klasycznego.
 
     `genuine`: prawdziwy nadawca taguje dane, a odbiorca je weryfikuje (zużywa zasoby).
     `impostor_passes`: najlepsza próba Ewy udającej `sender`; True, jeśli odbiorca ją przyjmie.

@@ -1,4 +1,4 @@
-"""Wiedza Ewy i interfejs ataków w kanale kwantowym (ADR 0001, ADR 0003).
+"""Wiedza Ewy i interfejs ataków w kanale kwantowym.
 
 Atak w kanale to obiekt z polem `position` (0 = tuż za Alice, 1 = tuż przed Bobem) i metodą
 `intercept`, która przekształca impulsy i zapisuje, co Ewa wie, w `EveLog`. Tor dzieli
@@ -58,7 +58,7 @@ class ChannelAttack(Protocol):
 
     @property
     def lossless_after(self) -> bool:
-        """True, gdy Ewa zastępuje dalszy odcinek kanałem bezstratnym (atak PNS, F3)."""
+        """True, gdy Ewa zastępuje dalszy odcinek kanałem bezstratnym (atak PNS)."""
         ...
 
     def intercept(self, pulses: Pulses, rng: np.random.Generator) -> tuple[Pulses, EveLog]: ...

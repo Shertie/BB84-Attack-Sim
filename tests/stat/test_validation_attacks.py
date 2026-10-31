@@ -1,4 +1,4 @@
-"""Bramka G3 (ROADMAP, rozdz. 6) przy 25 km, parametry GYS.
+"""Walidacja ataków 1–3 przy 25 km, parametry GYS.
 
 Wolne testy (`make test-slow`). Atak 1: siatka p × położenie Ewy; atak 2: siatka mocy impulsu
 wyzwalającego dla Ewy skalibrowanej i naiwnej; atak 3: estymacja decoy z MC na 0–100 km

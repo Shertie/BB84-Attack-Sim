@@ -1,4 +1,4 @@
-"""Model analityczny ataku 8: słaby generator Alice (F6.9–F6.10).
+"""Model analityczny ataku 8: słaby generator Alice.
 
 - Obciążone bazy: Ewa robi intercept-resend zawsze w częstszej bazie, więc trafia z p-stwem
   max(p_X, 1 − p_X) zamiast ½ (`intercept_resend_model` z `right_basis`). Znane ziarno: 1.

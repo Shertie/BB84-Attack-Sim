@@ -1,4 +1,4 @@
-"""E09: atak MITM i uwierzytelnianie Wegmana–Cartera (F4.11–F4.14).
+"""E09: atak MITM i uwierzytelnianie Wegmana–Cartera.
 
 Wynik: figures/e09_mitm.png, figures/e09_mitm.md i results/e09_mitm.json.
 (a) skuteczność podrobienia tagu w funkcji p: Monte Carlo vs 1/p;

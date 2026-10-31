@@ -1,7 +1,11 @@
 # Artykuły (PDF i źródła LaTeX) mają własne licencje i nie trafiają do publicznego repo.
-# Plan projektu (.md) w assets/ zostaje śledzony.
-assets/*.pdf
-assets/*.tex
+assets/
+
+# Dokumenty z etapu planowania (roadmapa, decyzje architektoniczne, przegląd narzędzi)
+# zostają lokalnie; repozytorium opisuje gotowy projekt.
+ROADMAP.md
+docs/adr/
+docs/related.md
 
 # Python
 __pycache__/

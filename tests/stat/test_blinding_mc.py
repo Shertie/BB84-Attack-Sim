@@ -1,4 +1,4 @@
-"""Atak 2: Monte Carlo vs model analityczny i wykrywanie przez obrony (F3.10)."""
+"""Atak 2: Monte Carlo vs model analityczny i wykrywanie przez obrony."""
 
 import math
 

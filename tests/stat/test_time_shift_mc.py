@@ -1,4 +1,4 @@
-"""Atak 4: Monte Carlo vs model time-shift i obrona losowym przypisaniem (F6.2–F6.4).
+"""Atak 4: Monte Carlo vs model time-shift i obrona losowym przypisaniem.
 
 Krzywe dopasowane do Zhao et al. 2008, GYS przy 75 km, Ewa tuż za Alice z linią bezstratną
 i tłumieniem, które wyrównuje zysk Boba.

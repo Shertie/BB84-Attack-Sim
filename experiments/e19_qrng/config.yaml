@@ -1,4 +1,4 @@
-# E19: symulator QRNG na dzielniku wiązki (F7, przedłużenie ataku 8).
+# E19: symulator QRNG na dzielniku wiązki (przedłużenie ataku 8).
 seed: 20261112
 mean_photons: 1.0
 efficiency: 0.1

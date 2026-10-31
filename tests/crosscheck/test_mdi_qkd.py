@@ -9,7 +9,7 @@ import pytest
 
 pytest.importorskip("qkd", reason="testy krzyżowe wymagają qkd: pip install -e '.[crosscheck]'")
 
-from qkd import _core as core  # wzory Ma i Razaviego w qkd 0.2.0 (ADR 0007)
+from qkd import _core as core  # wzory Ma i Razaviego w qkd 0.2.0
 
 from qkdsim.analysis.mdi import coherent_gains, single_photon_pair
 from qkdsim.mdi import Relay

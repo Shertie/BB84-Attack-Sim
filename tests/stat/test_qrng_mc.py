@@ -1,4 +1,4 @@
-"""QRNG z pamięcią detektorów: obciążenie na tle wzoru dokładnego i wyjście ekstraktora (F7)."""
+"""QRNG z pamięcią detektorów: obciążenie na tle wzoru dokładnego i wyjście ekstraktora."""
 
 import math
 

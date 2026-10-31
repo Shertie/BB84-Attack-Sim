@@ -1,4 +1,4 @@
-"""Obrona (a) przed oślepianiem: monitor mocy optycznej na wejściu Boba (F3.9).
+"""Obrona (a) przed oślepianiem: monitor mocy optycznej na wejściu Boba.
 
 Bob odprowadza ułamek `tap_fraction` światła do fotodiody i porównuje odczyt w każdym oknie
 pomiarowym z progiem. Sygnał kwantowy daje moc rzędu femtowatów, więc odczyt bez ataku to sam

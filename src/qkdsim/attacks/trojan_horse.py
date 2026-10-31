@@ -1,4 +1,4 @@
-"""Atak 5: Trojan horse (Gisin et al. 2006), F6.5–F6.6.
+"""Atak 5: Trojan horse (Gisin et al. 2006).
 
 Ewa wpuszcza do Alice sondę o średnio μ_in fotonach; wraca do niej stan koherentny
 o μ_out = μ_in·10^(−A/10) z polaryzacją ustawioną przez modulator Alice (analysis/trojan_horse.py).

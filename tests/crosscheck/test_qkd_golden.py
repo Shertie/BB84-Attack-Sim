@@ -1,7 +1,7 @@
-"""Testy krzyżowe: wartości kontrolne z publikacji vs. niezależna implementacja qkd (ADR 0007).
+"""Testy krzyżowe: wartości kontrolne z publikacji vs. niezależna implementacja qkd.
 
-Na tym etapie sprawdzają, że qkd odtwarza liczby z golden.py. Od F1.9 te same funkcje
-z qkd_oracle posłużą do porównania z modułem qkdsim.analysis.
+Sprawdzają, że qkd odtwarza liczby z golden.py; te same funkcje z qkd_oracle
+porównują się z modułem qkdsim.analysis (test_analysis_vs_qkd.py).
 """
 
 import math
@@ -28,7 +28,7 @@ def test_vacuum_weak_max_distance() -> None:
 def test_gllp_without_decoy_max_distance() -> None:
     got = oracle.max_distance(oracle.best_rate_gllp_no_decoy)
     assert got == pytest.approx(g.L_MAX_GLLP_NO_DECOY_KM, abs=g.L_MAX_TOLERANCE_KM)
-    # Plan: stany decoy wydłużają zasięg kilkukrotnie.
+    # Stany decoy wydłużają zasięg kilkukrotnie.
     assert oracle.max_distance(oracle.rate_vacuum_weak) > 3.0 * got
 
 
@@ -46,7 +46,7 @@ def test_vacuum_weak_deviation_at_40km() -> None:
 
 @pytest.mark.parametrize("length_km", range(0, 201, 10))
 def test_gain_approximation_is_negligible(length_km: int) -> None:
-    """Wzór (10) Ma et al., użyty w planie, pomija korektę podwójnego liczenia, którą ma qkd."""
+    """Wzór (10) Ma et al. pomija korektę podwójnego liczenia, którą ma qkd."""
     mu = g.VACUUM_WEAK_MU
     q_exact, e_exact = oracle.gain_and_qber(mu, length_km)
     detected = 1.0 - math.exp(-oracle.transmittance(length_km) * mu)

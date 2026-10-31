@@ -1,4 +1,4 @@
-"""Źródła losowości: zakresy, determinizm i niezależność strumieni (ADR 0003)."""
+"""Źródła losowości: zakresy, determinizm i niezależność strumieni."""
 
 import numpy as np
 import pytest
@@ -54,7 +54,7 @@ def test_different_seeds_give_different_streams(other_seed: int) -> None:
 
 
 def test_public_stream_did_not_change_the_first_four() -> None:
-    """Dodanie strumienia `public` (F2) nie zmienia losowań z F1: wyniki są odtwarzalne."""
+    """Dodanie strumienia `public` nie zmienia losowań pozostałych: wyniki są odtwarzalne."""
     alice_seq, _, nature_seq, _ = np.random.SeedSequence(SEED).spawn(4)
     streams = RandomStreams.from_seed(SEED)
     expected_bits = np.random.default_rng(alice_seq).integers(0, 2, 1000, dtype=np.uint8)

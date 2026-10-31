@@ -1,10 +1,10 @@
-"""Estymacja stanów decoy z liczników Monte Carlo (F3.13–F3.14).
+"""Estymacja stanów decoy z liczników Monte Carlo.
 
 Alice po pomiarze ujawnia, która intensywność była w którym impulsie. Z liczników Boba
 powstają Q_μ, E_μ (sygnał), Q_ν, E_ν (słaby decoy) i Y₀, e₀ (próżnia), a z nich granice
 vacuum+weak Ma et al. 2005: Y₁^L, e₁^U i stopa GLLP na impuls sygnałowy.
 
-Wersja asymptotyczna: fluktuacje statystyczne estymat nie są tu uwzględnione (F7, Lim et al.
+Wersja asymptotyczna: fluktuacje statystyczne estymat nie są tu uwzględnione (Lim et al.
 2014). `naive_rate` liczy klucz tak, jakby każda detekcja pochodziła z jednego fotonu; to
 właśnie błąd, który atak PNS wykorzystuje.
 """

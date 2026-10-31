@@ -1,13 +1,13 @@
-"""Model analityczny ataku Trojan horse (Gisin et al. 2006), F6.5–F6.7.
+"""Model analityczny ataku Trojan horse (Gisin et al. 2006).
 
 Ewa wpuszcza do modułu Alice jasny impuls sondujący. Odbija się on od modulatora polaryzacji
 i wraca do Ewy z polaryzacją ustawioną tak jak stan Alice (najgorszy przypadek: modulator
 nakłada swoje ustawienie na sondę tak samo jak na sygnał). Po drodze tłumią go izolator
 (raz, w kierunku zaporowym), tłumik Alice (dwa razy) i samo odbicie, więc wraca słaby stan
-koherentny o średniej μ_out = μ_in·10^(−A/10) (F6.5). Sygnału Ewa nie dotyka, więc QBER
+koherentny o średniej μ_out = μ_in·10^(−A/10). Sygnału Ewa nie dotyka, więc QBER
 i zysk się nie zmieniają.
 
-Wiedza Ewy (ROADMAP, K6):
+Wiedza Ewy (Helstrom dotyczy dwóch hipotez, więc bit i bazę liczymy osobno):
 - bit przy znanej bazie (Ewa trzyma sondę do ujawnienia baz): dwa stany czyste |α_θ⟩
   i |α_{θ+π/2}⟩, Helstrom P = ½(1 + √(1 − e^(−2μ))), informacja 1 − h(P) (wzór (1) artykułu);
 - z losową fazą (Alice losuje fazę światła, które może się odbić): Ewa ma mieszaninę stanów
@@ -51,7 +51,7 @@ def lidt_probe_photons(clock_hz: float, lidt_photons_per_s: float = LIDT_PHOTONS
 
 
 def returned_photons(probe_photons: float, attenuation_db: float) -> float:
-    """μ_out = μ_in·10^(−A/10) (F6.5)."""
+    """μ_out = μ_in·10^(−A/10)."""
     return float(probe_photons * 10.0 ** (-attenuation_db / 10.0))
 
 

@@ -1,4 +1,4 @@
-"""Symulator QRNG i testy zdrowia NIST SP 800-90B (F7)."""
+"""Symulator QRNG i testy zdrowia NIST SP 800-90B."""
 
 import math
 

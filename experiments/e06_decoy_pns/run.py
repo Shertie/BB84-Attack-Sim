@@ -1,4 +1,4 @@
-"""E06: atak PNS i stany decoy (F3.15–F3.16).
+"""E06: atak PNS i stany decoy.
 
 Wynik: figures/e06_decoy_pns.png i results/e06_decoy_pns.json.
 - R(L): GLLP bez decoy, decoy vacuum+weak (wzór i estymata z MC), granica decoy;

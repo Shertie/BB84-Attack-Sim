@@ -1,8 +1,8 @@
-"""E07: skończony klucz (F4.1–F4.5).
+"""E07: skończony klucz.
 
 Wynik: figures/e07_finite_key.png i results/e07_finite_key.json.
 (a) stopa klucza w funkcji bloku n vs Tabela 1 Tomamichela et al.;
-(b) ile wersja z planu (Hoeffding na samej próbce) zawyża długość klucza;
+(b) ile uproszczenie (Hoeffding na samej próbce) zawyża długość klucza;
 (c) „Ewa w szumie”: p-stwo wykrycia intercept-resend przy małym p dla różnych k (MC i analityka);
 (d) kompromis: ułamek klucza w funkcji N = n + k i ułamka próbki k/N.
 """
@@ -32,7 +32,7 @@ from qkdsim.pipeline import Link, run_bits
 from qkdsim.postprocessing.finite_key import (
     abort_probability,
     key_length,
-    key_length_plan_hoeffding,
+    key_length_sample_hoeffding,
     optimal_key_rate,
 )
 from qkdsim.rng import RandomStreams
@@ -127,15 +127,15 @@ def plot(cfg: Config, mc: dict[float, float], path: Path) -> dict[str, object]:
         _, k, _ = optimal_key_rate(n, q, cfg.eps_sec, cfg.eps_cor)
         leak = 1.1 * n * h2(q)
         exact = key_length(n, k, q, leak, cfg.eps_sec, cfg.eps_cor)
-        plan = key_length_plan_hoeffding(n, k, q, leak, cfg.eps_sec, cfg.eps_cor)
-        ratios.append(100 * (plan / exact - 1) if exact > 0 else float("nan"))
+        naive = key_length_sample_hoeffding(n, k, q, leak, cfg.eps_sec, cfg.eps_cor)
+        ratios.append(100 * (naive / exact - 1) if exact > 0 else float("nan"))
     ax_h.semilogx(cfg.block_sizes, ratios, "o-", color="C3")
     ax_h.set(
         xlabel="blok klucza n",
-        ylabel="zawyżenie ℓ przez wersję z planu [%]",
+        ylabel="zawyżenie ℓ przez uproszczenie [%]",
         title=f"Hoeffding na próbce vs twierdzenie (Q = {100 * q:g}%)",
     )
-    summary["plan_overestimate_percent"] = ratios
+    summary["naive_overestimate_percent"] = ratios
 
     fractions = np.linspace(0, max(cfg.noise_fractions), 101)
     honest = noise_qber(cfg, 0.0)
@@ -218,8 +218,8 @@ def main() -> int:
             + ", ".join(f"{100 * r:.1f}%" for r in summary[f"rates_{q}"])
         )  # type: ignore[union-attr]
     print(
-        "zawyżenie przez plan [%]: "
-        + ", ".join(f"{r:.1f}" for r in summary["plan_overestimate_percent"])
+        "zawyżenie przez uproszczenie [%]: "
+        + ", ".join(f"{r:.1f}" for r in summary["naive_overestimate_percent"])
     )  # type: ignore[union-attr]
     out = ROOT / "results" / f"{NAME}.json"
     out.parent.mkdir(parents=True, exist_ok=True)

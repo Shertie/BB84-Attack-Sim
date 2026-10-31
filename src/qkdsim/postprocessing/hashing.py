@@ -1,4 +1,4 @@
-"""Haszowanie macierzą Toeplitza: weryfikacja kluczy (F2.5) i wzmacnianie prywatności (F2.6).
+"""Haszowanie macierzą Toeplitza: weryfikacja kluczy i wzmacnianie prywatności.
 
 Macierz T (m × n) ma stałe przekątne: T[i, j] = s[i − j + n − 1] dla ziarna s długości n + m − 1.
 Rodzina {T} jest 2-uniwersalna: dla x ≠ y P[Tx = Ty] = 2⁻ᵐ.

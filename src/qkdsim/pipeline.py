@@ -1,4 +1,4 @@
-"""Tor impulsów Alice → kanał → Bob w dwóch warstwach danych (ADR 0002, F1.10).
+"""Tor impulsów Alice → kanał → Bob w dwóch warstwach danych.
 
 - `run_bits`: pełne rekordy Alice i Boba oraz klucz po siftingu; do około 10⁷ impulsów;
 - `run_counts`: pętla po paczkach zredukowanych do liczników; 10⁹–10¹⁰ impulsów bez trzymania
@@ -38,8 +38,8 @@ class Link:
     channel: FiberChannel
     detectors: DetectorPair
     eve: ChannelAttack | None = None
-    attenuator: RandomAttenuator | None = None  # obrona Boba przed oślepianiem (F3.9)
-    random_assignment: bool = False  # obrona Boba przed time-shift (F6.4)
+    attenuator: RandomAttenuator | None = None  # obrona Boba przed oślepianiem
+    random_assignment: bool = False  # obrona Boba przed time-shift
 
 
 def simulate(
@@ -93,7 +93,8 @@ class Counts:
     - `eve_correct`: jej wynik równa się bitowi Alice;
     - `eve_known`: mierzyła w bazie Alice, więc po siftingu zna bit na pewno.
 
-    `sent_attenuated` i `detected_attenuated` liczą bramki z tłumikiem Boba (obrona F3.9).
+    `sent_attenuated` i `detected_attenuated` liczą bramki z tłumikiem Boba (obrona przed
+    oślepianiem).
     """
 
     sent: Table
@@ -159,7 +160,7 @@ def run_counts(
     streams: RandomStreams,
     batch_size: int = DEFAULT_BATCH_SIZE,
 ) -> Counts:
-    """Warstwa liczników (ADR 0002): impulsy w paczkach, wynik tylko jako zliczenia."""
+    """Warstwa liczników: impulsy w paczkach, wynik tylko jako zliczenia."""
     if batch_size <= 0:
         raise ValueError("batch_size musi być dodatnie")
     n_intensities = len(link.source.intensities)

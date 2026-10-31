@@ -1,4 +1,4 @@
-"""Atak 5: Helstrom dla baz zweryfikowany w QuTiP (F6.6, ADR 0004).
+"""Atak 5: Helstrom dla baz zweryfikowany w QuTiP.
 
 Stany sondy są tu zbudowane niezależnie od numpy: stan koherentny jako iloczyn stanów
 `coherent` w modach H i V, stan Focka |n_θ⟩ z operatora kreacji (cos θ a_H† + sin θ a_V†)ⁿ.

@@ -1,4 +1,4 @@
-"""Model analityczny MDI-QKD (Lo, Curty, Qi 2012), F7: dokładna wartość oczekiwana dla mdi.py.
+"""Model analityczny MDI-QKD (Lo, Curty, Qi 2012): dokładna wartość oczekiwana dla mdi.py.
 
 - `coherent_gains`: zysk Q i QBER E w danej bazie dla stanów koherentnych o średnich μ_A, μ_B
   (po kanałach), średnio po bitach i po fazie względnej (całka liczona metodą trapezów; funkcja

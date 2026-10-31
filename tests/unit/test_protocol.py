@@ -1,4 +1,4 @@
-"""Etap 1 (F1.4): idealny BB84, jeden foton na impuls, kanał bez strat."""
+"""Etap 1: idealny BB84, jeden foton na impuls, kanał bez strat."""
 
 import numpy as np
 import pytest

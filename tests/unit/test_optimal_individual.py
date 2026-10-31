@@ -1,4 +1,4 @@
-"""Atak 6: kloner, granica Fuchsa i Monte Carlo (F4.7, F4.9)."""
+"""Atak 6: kloner, granica Fuchsa i Monte Carlo."""
 
 import math
 

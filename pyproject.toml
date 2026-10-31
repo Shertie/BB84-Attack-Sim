@@ -16,7 +16,7 @@ dependencies = [
     "scipy>=1.11",
     "matplotlib>=3.8",
     "pyyaml>=6.0",
-    "cryptography>=47",  # ML-DSA (wariant E, ADR 0006)
+    "cryptography>=47",  # ML-DSA (uwierzytelnianie postkwantowe)
 ]
 
 [project.optional-dependencies]
@@ -28,11 +28,11 @@ dev = [
     "mypy>=1.11",
     "pre-commit>=3.7",
     "types-PyYAML",
-    "dilithium-py",  # druga implementacja ML-DSA do testu zgodności (ADR 0006)
+    "dilithium-py",  # druga implementacja ML-DSA do testu zgodności
 ]
-# Tylko do weryfikacji fragmentów (atak 6, Trojan horse), patrz docs/adr/0004.
+# Tylko do weryfikacji fragmentów (atak 6, Trojan horse), patrz docs/architecture.md.
 verify = ["qutip>=5.0"]
-# Niezależna wyrocznia w testach krzyżowych (docs/adr/0007). Wersja przypięta dokładnie,
+# Niezależna wyrocznia w testach krzyżowych (docs/architecture.md). Wersja przypięta dokładnie,
 # bo testy korzystają z prywatnego modułu qkd._core.
 crosscheck = ["qkd==0.2.0"]
 
@@ -43,7 +43,7 @@ packages = ["src/qkdsim"]
 line-length = 100
 target-version = "py311"
 src = ["src", "tests"]
-# Bloki kodu w dokumentach (np. załącznik ROADMAP.md) nie są kodem projektu.
+# Bloki kodu w dokumentach Markdown nie są kodem projektu.
 extend-exclude = ["assets", "*.md"]
 
 [tool.ruff.lint]

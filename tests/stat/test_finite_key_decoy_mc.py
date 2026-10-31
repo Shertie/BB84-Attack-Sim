@@ -1,4 +1,4 @@
-"""Skończony klucz z decoy: liczby z Lima et al. 2014 i rachunek na danych Monte Carlo (F7)."""
+"""Skończony klucz z decoy: liczby z Lima et al. 2014 i rachunek na danych Monte Carlo."""
 
 import dataclasses
 

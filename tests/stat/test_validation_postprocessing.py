@@ -1,4 +1,4 @@
-"""Bramka G2 (ROADMAP, rozdz. 6): poprawność i sprawność postprocessingu.
+"""Walidacja postprocessingu: poprawność i sprawność.
 
 Wolne testy (`make test-slow`).
 """

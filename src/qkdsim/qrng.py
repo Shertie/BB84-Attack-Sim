@@ -1,4 +1,4 @@
-"""Kwantowy generator losowy na dzielniku wiązki (F7, przedłużenie ataku 8).
+"""Kwantowy generator losowy na dzielniku wiązki (przedłużenie ataku 8).
 
 Model (Jennewein i in. 2000; przegląd: Herrero-Collantes, Garcia-Escartin 2017): w każdym takcie
 laser daje stan koherentny o średniej μ, dzielnik o transmisji t kieruje go na detektory D0 i D1

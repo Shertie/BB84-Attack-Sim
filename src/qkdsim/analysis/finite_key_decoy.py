@@ -1,15 +1,15 @@
-"""Oczekiwane liczniki i optymalna stopa dla skończonego klucza z decoy (Lim et al. 2014), F7.
+"""Oczekiwane liczniki i optymalna stopa dla skończonego klucza z decoy (Lim et al. 2014).
 
 Dwa modele detekcji w zgodnej bazie (na impuls o średniej μ):
 - `LimChannel`: model z rozdziału „Evaluation” artykułu, z afterpulsami:
   D = 1 − (1 − 2p_dc)e^(−η_sys μ), R = D(1 + p_ap), e = p_dc + e_mis(1 − e^(−η_sys μ)) + p_ap D/2.
-  W e jest η_sys, a nie wydrukowane η_ch; tak odtwarzają się liczby z tekstu (ROADMAP, K20);
+  W e jest η_sys, a nie wydrukowane η_ch; tak odtwarzają się liczby z tekstu;
 - `SimulatorChannel`: dokładny model detektorów symulatora (analysis/wcp.py), bez afterpulsów.
 
 Lim et al. ustalają rozmiar bloku n_X (detekcje w bazie klucza) i optymalizują stopę R = ℓ/N
 po (q, p₁, p₂, μ₁, μ₂) przy stałym μ₃. ε_sec = 10⁻¹⁰ i ε_cor = 10⁻¹⁵ odtwarzają liczby z tekstu
 (135 km przy n_X = 10⁴, stosunek ≈ 1,75 stóp dla 10⁹ i 10⁷ przy 100 km); arXiv v1 opisuje
-zamiast tego ε_sec = κℓ z κ = 10⁻¹⁵ (ROADMAP, K21).
+zamiast tego ε_sec = κℓ z κ = 10⁻¹⁵ (to daje ok. 128 km zamiast 135 km z tekstu).
 """
 
 import math

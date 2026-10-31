@@ -1,10 +1,10 @@
-"""Estymacja parametrów: ujawniona próbka bitów, QBER, odrzucenie próbki (F2.2).
+"""Estymacja parametrów: ujawniona próbka bitów, QBER, odrzucenie próbki.
 
 Dwa warianty:
 
-- `estimate_random_sample`: losowa próbka k bitów bez zwracania (symetryczny BB84, plan);
+- `estimate_random_sample`: losowa próbka k bitów bez zwracania (symetryczny BB84);
 - `estimate_by_basis`: cała baza testowa idzie na estymację, klucz powstaje z drugiej bazy
-  (asymetryczny protokół Tomamichela et al. 2012, potrzebny w F4).
+  (asymetryczny protokół Tomamichela et al. 2012, potrzebny w skończonym kluczu).
 """
 
 import math

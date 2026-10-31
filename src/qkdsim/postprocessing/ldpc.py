@@ -1,4 +1,4 @@
-"""Uzgadnianie kluczy kodami LDPC z syndromem (F7, alternatywa dla Cascade).
+"""Uzgadnianie kluczy kodami LDPC z syndromem (alternatywa dla Cascade).
 
 Alice wysyła syndrom s = Hx swojego klucza x; Bob dekoduje swój klucz y algorytmem BP
 (sum-product w dziedzinie LLR) do x̂ z Hx̂ = s. Kanał to BSC(Q): LLR = ±ln((1 − Q)/Q). Jedna

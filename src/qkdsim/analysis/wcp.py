@@ -3,10 +3,10 @@
 Dwa modele, bo pełnią różne role:
 
 - `gain`, `qber` to model z artykułu (sumy wzorów (7) i (8)); na nim opierają się stopy klucza
-  i wartości kontrolne z ROADMAP 3.2;
+  i wartości kontrolne z tests/golden.py;
 - `click_probabilities`, `qber_squashed` to dokładna wartość oczekiwana dla modelu Monte Carlo
   z detector.py (dwa detektory progowe, niezależne ciemne zliczenia, podwójne kliknięcia
-  z losowym bitem). Z nią porównuje się wyniki MC w bramce G1.
+  z losowym bitem). Z nią porównuje się wyniki MC na 0–150 km (e01).
 
 Oba modele różnią się tylko traktowaniem podwójnych kliknięć; różnica jest rzędu (ημ)²·e_d
 (test w tests/unit/test_analysis.py).
@@ -29,7 +29,7 @@ def gain(mu: float, eta: float, background: float) -> float:
 
 
 def gain_eq10(mu: float, eta: float, background: float) -> float:
-    """Q_μ ≈ Y₀ + 1 − e^(−ημ): przybliżenie z wzoru (10), użyte w planie projektu."""
+    """Q_μ ≈ Y₀ + 1 − e^(−ημ): przybliżenie z wzoru (10) Ma et al."""
     return background + _one_minus_exp(eta * mu)
 
 

@@ -1,13 +1,13 @@
-"""E10: wariant E, czyli uwierzytelnianie postkwantowe i modele zagrożeń (F4.15–F4.21).
+"""E10: uwierzytelnianie postkwantowe i modele zagrożeń.
 
 Wynik: figures/e10_pqc_auth.png, figures/e10_pqc_auth.md i results/e10_pqc_auth.json.
-(a) scenariusze MITM (a)–(g) z F4.18 na tle przewidywań, w tym złamanie podpisu po sesji
+(a) scenariusze MITM (a)–(g) na tle przewidywań, w tym złamanie podpisu po sesji
     i kontrast z ML-KEM (harvest now, decrypt later) oraz hybrydą KDF(QKD ‖ ML-KEM);
 (b) narzut uwierzytelniania w uczciwej rundzie: bity klucza, bajty łącza klasycznego, czas CPU;
-    tag/podpis na transkrypt vs na wiadomość (decyzja z F4.16);
+    tag/podpis na transkrypt vs na wiadomość;
 (c) czas podpisu i weryfikacji ML-DSA-44/65/87 na transkrypcie rundy;
 (d) bilans klucza netto w funkcji L: Wegman–Carter zużywa klucz, ML-DSA nie;
-(e) tabela modeli zagrożeń QKD + ML-DSA vs ML-KEM vs hybryda (F4.20).
+(e) tabela modeli zagrożeń QKD + ML-DSA vs ML-KEM vs hybryda.
 """
 
 import json
@@ -423,7 +423,7 @@ def main() -> int:
         "podpis i weryfikację. Pierwsza runda Wegmana–Cartera zużywa dodatkowo 61 bitów na klucz "
         "haszu, potem tylko klucz jednorazowy na tag.",
         "",
-        f"Decyzja z F4.16: podpis na transkrypt. Podpis na wiadomość kosztuje "
+        f"Domyślnie podpis na transkrypt. Podpis na wiadomość kosztuje "
         f"{per_message.bytes_sent / per_round.bytes_sent:.0f} razy więcej bajtów "
         f"({thousands(per_message.bytes_sent)} B, czyli więcej niż sam klucz) i "
         f"{per_message.cpu_ms / per_round.cpu_ms:.0f} razy więcej czasu, a bezpieczeństwo "
@@ -478,7 +478,7 @@ def main() -> int:
         "założenie obliczeniowe, które musi stać w czasie sesji (scenariusz d), i kilobajty "
         "na rundę zamiast 16 B.",
         "",
-        "## Modele zagrożeń (F4.20)",
+        "## Modele zagrożeń",
         "",
         *threat_table(max_range, after),
     ]

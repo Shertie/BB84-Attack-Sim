@@ -1,4 +1,4 @@
-"""MDI-QKD: Monte Carlo przekaźnika kontra model i Ewa jako przekaźnik (F7)."""
+"""MDI-QKD: Monte Carlo przekaźnika kontra model i Ewa jako przekaźnik."""
 
 import math
 

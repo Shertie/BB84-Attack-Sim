@@ -1,4 +1,4 @@
-"""E20: uzgadnianie LDPC z syndromem zamiast Cascade (F7).
+"""E20: uzgadnianie LDPC z syndromem zamiast Cascade.
 
 Wynik: figures/e20_ldpc.png, figures/e20_ldpc.md i results/e20_ldpc.json.
 (a) ewolucja gęstości: progi BP kodów o d_v = 3 i różnych sprawnościach R; dla (3,6) próg 0,084

@@ -1,4 +1,4 @@
-"""qkdsim.analysis vs niezależna implementacja qkd w każdym punkcie L (ADR 0007, F1.9)."""
+"""qkdsim.analysis vs niezależna implementacja qkd w każdym punkcie L."""
 
 import pytest
 

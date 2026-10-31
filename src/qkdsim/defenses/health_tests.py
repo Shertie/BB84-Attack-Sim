@@ -1,4 +1,4 @@
-"""Testy zdrowia źródła entropii z NIST SP 800-90B (rozdz. 4.4): obrona generatora QRNG (F7).
+"""Testy zdrowia źródła entropii z NIST SP 800-90B (rozdz. 4.4): obrona generatora QRNG.
 
 - Repetition Count Test (4.4.1): alarm, gdy ta sama wartość pojawia się C razy z rzędu,
   C = 1 + ⌈−log₂ α / H⌉;

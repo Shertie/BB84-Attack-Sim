@@ -1,6 +1,6 @@
 """Wspólne fiksury testów.
 
-Stałe ziarna sprawiają, że testy statystyczne nie są losowo czerwone (ROADMAP, rozdz. 7.2).
+Stałe ziarna sprawiają, że testy statystyczne nie są losowo czerwone.
 """
 
 import os

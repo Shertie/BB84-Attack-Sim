@@ -1,4 +1,4 @@
-"""Atak 7: man-in-the-middle na nieuwierzytelniony kanał klasyczny (F4.11, F4.13).
+"""Atak 7: man-in-the-middle na nieuwierzytelniony kanał klasyczny.
 
 Ewa przecina światłowód i prowadzi dwa niezależne BB84: z Alice (udając Boba) i z Bobem
 (udając Alice). Fizyka nie ma tu nic do wykrycia: oba odcinki są uczciwymi łączami, więc

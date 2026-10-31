@@ -1,4 +1,4 @@
-"""E17: obrony z progiem dla ataków 1, 4, 5 i 6 i ich krzywe ROC (rozdz. 7.1).
+"""E17: obrony z progiem dla ataków 1, 4, 5 i 6 i ich krzywe ROC.
 
 Wynik: figures/e17_detection_roc.png, figures/e17_detection_roc.md
 i results/e17_detection_roc.json.

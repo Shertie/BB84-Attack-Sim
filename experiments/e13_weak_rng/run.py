@@ -1,4 +1,4 @@
-"""E13: atak 8, słaby generator Alice (F6.8–F6.10).
+"""E13: atak 8, słaby generator Alice.
 
 Wynik: figures/e13_weak_rng.png, figures/e13_weak_rng.md i results/e13_weak_rng.json.
 (a) intercept-resend z bazą przewidzianą z obciążonego generatora: QBER i wiedza Ewy w funkcji

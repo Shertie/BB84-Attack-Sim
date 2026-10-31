@@ -1,4 +1,4 @@
-"""Skończony klucz dla źródła WCP ze stanami decoy (Lim, Curty, Walenta, Xu, Zbinden 2014), F7.
+"""Skończony klucz dla źródła WCP ze stanami decoy (Lim, Curty, Walenta, Xu, Zbinden 2014).
 
 Protokół asymetryczny: baza klucza z p-stwem q (u obu stron), baza testowa z 1 − q, trzy
 intensywności μ₁ > μ₂ + μ₃, μ₂ > μ₃ ≥ 0. Z liczb detekcji n_k i błędów m_k w obu bazach:
@@ -10,7 +10,7 @@ intensywności μ₁ > μ₂ + μ₃, μ₂ > μ₃ ≥ 0. Z liczb detekcji n_k 
 
 Poprawki statystyczne: n±_k = (e^{μ_k}/p_k)(n_k ± √(n/2 · ln(21/ε_sec))), n = Σ_k n_k (Hoeffding;
 każda z 21 granic zawodzi z p-stwem ε_sec/21). leak_EC = n f h(e) liczymy w bitach, jak `qkd`;
-wydrukowane „f_EC h(e_obs)” to błąd druku (ROADMAP, K20).
+wydrukowane „f_EC h(e_obs)” to błąd druku.
 
 Zastrzeżenie: dokumentacja `qkd` 0.2.0 powołuje się na Tupkary et al. (arXiv:2502.10340), według
 których oszacowanie błędu fazowego (5) nie jest ścisłą granicą. Nie weryfikowaliśmy tego.

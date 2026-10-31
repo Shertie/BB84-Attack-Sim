@@ -1,4 +1,4 @@
-"""Obrona przed atakiem 8: testy losowości ciągu bitów (F6.10).
+"""Obrona przed atakiem 8: testy losowości ciągu bitów.
 
 Podzbiór w stylu NIST SP 800-22 (rev. 1a): test częstości (monobit, rozdz. 2.1) i test serii
 (runs, rozdz. 2.3, z warunkiem wstępnym |π − ½| < 2/√n), plus test autokorelacji z przesunięciem

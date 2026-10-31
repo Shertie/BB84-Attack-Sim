@@ -1,7 +1,7 @@
-"""E01: zysk Q_μ(L) i QBER E_μ(L) z Monte Carlo na tle wzorów Ma et al. 2005 (F1.12).
+"""E01: zysk Q_μ(L) i QBER E_μ(L) z Monte Carlo na tle wzorów Ma et al. 2005.
 
 Wynik: figures/e01_gain_qber_vs_L.png i results/e01_gain_qber_vs_L.json.
-Kończy się błędem, jeśli którykolwiek punkt odbiega od modelu o |z| ≥ z_max (bramka G1).
+Kończy się błędem, jeśli którykolwiek punkt odbiega od modelu o |z| ≥ z_max.
 """
 
 import json

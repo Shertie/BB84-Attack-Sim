@@ -1,4 +1,4 @@
-"""Metryka wykrycia PNS: spójność zysków sygnału i decoy (F3.16).
+"""Metryka wykrycia PNS: spójność zysków sygnału i decoy.
 
 Bez ataku Q_i = 1 − (1 − Y₀)e^(−ημ_i) dla każdej intensywności z tym samym η. Z Q_μ i Y₀
 można więc wyliczyć η̂ i przewidzieć Q_ν. Ewa widzi tylko liczbę fotonów, nie intensywność:

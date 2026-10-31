@@ -1,4 +1,4 @@
-"""Model analityczny ataku intercept-resend na źródło WCP (F3.3).
+"""Model analityczny ataku intercept-resend na źródło WCP.
 
 Dokładna wartość oczekiwana dla symulatora (attacks/intercept_resend.py), w zgodnej bazie:
 
@@ -7,10 +7,11 @@ Dokładna wartość oczekiwana dla symulatora (attacks/intercept_resend.py), w z
 - przechwycony i zmierzony (p·(1 − e^(−μT₁))): Ewa wysyła jeden foton; w połowie przypadków
   w bazie Alice (błąd e_d u Boba), w połowie w bazie sprzężonej (błąd ½).
 
-T₁ to transmisja do Ewy, T₂ od Ewy do Boba. Uproszczony wynik z planu, QBER = e_d + p(¼ − e_d/2)
-(`qber_line`), jest dokładny dla p = 0 i p = 1. Pomiędzy zakłada, że impulsy przechwycone
-i nieprzechwycone są wykrywane równie często. Dla WCP tak nie jest: Ewa wysyła 1 foton
-z p-stwem 1 − e^(−μT₁), a niezaatakowany impuls daje detekcję z p-stwem ≈ μT₁·ηT₂, więc
+T₁ to transmisja do Ewy, T₂ od Ewy do Boba. Uproszczony wynik jednofotonowy,
+QBER = e_d + p(¼ − e_d/2) (`qber_line`), jest dokładny dla p = 0 i p = 1. Pomiędzy zakłada,
+że impulsy przechwycone i nieprzechwycone są wykrywane równie często. Dla WCP tak nie jest:
+Ewa wysyła 1 foton z p-stwem 1 − e^(−μT₁), a niezaatakowany impuls daje detekcję z p-stwem
+≈ μT₁·ηT₂, więc
 QBER(p) leży poniżej prostej (do −0,33 pp przy 25 km dla GYS). Prosta jest dobra, gdy Ewa stoi
 tuż przed Bobem, μT₁ ≪ 1 i ciemne zliczenia są pomijalne (około 50 km dla GYS: ±0,07 pp).
 """
@@ -100,5 +101,5 @@ def intercept_resend_model(
 
 
 def qber_line(fraction: float, misalignment: float) -> float:
-    """QBER = e_d + p(¼ − e_d/2): uproszczony wynik z planu (warunki: docstring modułu)."""
+    """QBER = e_d + p(¼ − e_d/2): uproszczony wynik jednofotonowy (warunki: docstring modułu)."""
     return misalignment + fraction * (0.25 - 0.5 * misalignment)

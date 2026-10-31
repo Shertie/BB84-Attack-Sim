@@ -1,4 +1,4 @@
-"""Model analityczny QKD ze splątanymi parami: BBM92 i CHSH (Ekert 1991, Bennett i in. 1992), F7.
+"""Model analityczny QKD ze splątanymi parami: BBM92 i CHSH (Ekert 1991, Bennett i in. 1992).
 
 BBM92 ze źródłem SPDC (Ma, Fung, Lo 2007): stan to dwie niezależne pary trybów (A_H, B_V)
 i (A_V, B_H), każda o termicznej liczbie par z średnią λ, P(n) = λⁿ/(1 + λ)ⁿ⁺¹. Wykładnik

@@ -5,7 +5,7 @@
 | zasięg przy n_X = 10⁴ | 135 km | 135,2 km |
 | R(n_X = 10⁹) / R(n_X = 10⁷) przy 100 km | ≈ 1,75 | 1,780 |
 
-Parametry z artykułu: η_Bob = 10%, p_dc = 6·10⁻⁷, p_ap = 4%, e_mis = 0,5%, f = 1,16, α = 0,2 dB/km, μ₃ = 2·10⁻⁴, ε_cor = 10⁻¹⁵, optymalizacja po (q, p₁, p₂, μ₁, μ₂). Liczby z tekstu odtwarza ε_sec = 10⁻¹⁰ i η_sys w modelu błędu (ROADMAP, K20 i K21).
+Parametry z artykułu: η_Bob = 10%, p_dc = 6·10⁻⁷, p_ap = 4%, e_mis = 0,5%, f = 1,16, α = 0,2 dB/km, μ₃ = 2·10⁻⁴, ε_cor = 10⁻¹⁵, optymalizacja po (q, p₁, p₂, μ₁, μ₂). Liczby z tekstu odtwarza ε_sec = 10⁻¹⁰ (zamiast κℓ z arXiv v1, które daje ok. 128 km) i η_sys zamiast wydrukowanego η_ch w modelu błędu.
 
 | n_X | Zasięg (Lim) | Zasięg (GYS, symulator) |
 | --- | --- | --- |

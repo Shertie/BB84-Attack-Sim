@@ -1,4 +1,4 @@
-"""Obrona przed atakiem 4: monitor czasu przyjścia kliknięć, rozdz. 7.1.
+"""Obrona przed atakiem 4: monitor czasu przyjścia kliknięć.
 
 Bob znakuje czas każdego kliknięcia z rozmyciem Gaussa o odchyleniu `jitter_ns` i liczy kliknięcia
 poza oknem ±`window_ns` wokół nominalnego przyjścia. Bez ataku to ułamek p₀ = 2Φ(−w/σ); Ewa, która

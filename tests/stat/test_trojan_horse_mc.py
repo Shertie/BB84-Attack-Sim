@@ -1,4 +1,4 @@
-"""Atak 5 w torze impulsów: QBER i zysk bez zmian, wiedza Ewy zgodna z modelem (F6.6)."""
+"""Atak 5 w torze impulsów: QBER i zysk bez zmian, wiedza Ewy zgodna z modelem."""
 
 import math
 

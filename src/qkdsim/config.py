@@ -1,4 +1,4 @@
-"""Ścisłe wczytywanie konfiguracji YAML do zamrożonych dataclass (ADR 0005).
+"""Ścisłe wczytywanie konfiguracji YAML do zamrożonych dataclass.
 
 Nieznany klucz, brakujący klucz bez wartości domyślnej i zły typ to błąd. Literówka w YAML
 nie może po cichu dać wartości domyślnej. Zakresy wartości sprawdzają `__post_init__`

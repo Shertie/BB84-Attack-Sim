@@ -1,4 +1,4 @@
-# E12: atak 5, Trojan horse (Gisin et al. 2006), F6.5–F6.7. GYS, Ewa sonduje modulator Alice.
+# E12: atak 5, Trojan horse (Gisin et al. 2006). GYS, Ewa sonduje modulator Alice.
 seed: 20261105
 length_km: 25.0
 mu: 0.48

@@ -1,4 +1,4 @@
-"""Uzgadnianie LDPC z syndromem i ewolucja gęstości (F7)."""
+"""Uzgadnianie LDPC z syndromem i ewolucja gęstości."""
 
 import math
 

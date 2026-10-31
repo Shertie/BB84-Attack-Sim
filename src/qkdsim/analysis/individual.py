@@ -1,4 +1,4 @@
-"""Granice informacyjne: atak indywidualny (Fuchs et al. 1997) vs ataki ogólne (F4.9–F4.10).
+"""Granice informacyjne: atak indywidualny (Fuchs et al. 1997) vs ataki ogólne.
 
 Przy błędzie D wprowadzanym u Boba:
 - I_AB = 1 − h(D);

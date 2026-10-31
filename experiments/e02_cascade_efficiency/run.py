@@ -1,4 +1,4 @@
-"""E02: sprawność Cascade f(Q) na kluczach syntetycznych (F2.4).
+"""E02: sprawność Cascade f(Q) na kluczach syntetycznych.
 
 Wynik: figures/e02_cascade_efficiency.png i results/e02_cascade_efficiency.json.
 """
@@ -55,7 +55,7 @@ def measure(cfg: Config, index: int) -> dict[str, float]:
 def plot(cfg: Config, points: list[dict[str, float]], path: Path) -> None:
     q = [100 * p["qber"] for p in points]
     fig, ax = plt.subplots(figsize=(6.4, 4.2), constrained_layout=True)
-    ax.axhspan(1.1, 1.2, color="C2", alpha=0.12, label="cel z planu (1,1–1,2)")
+    ax.axhspan(1.1, 1.2, color="C2", alpha=0.12, label="typowe f Cascade (1,1–1,2)")
     ax.axhline(1.0, color="0.4", linestyle="--", linewidth=1, label="granica Shannona (f = 1)")
     ax.errorbar(
         q, [p["f_mean"] for p in points], yerr=[p["f_std"] for p in points],
@@ -86,7 +86,7 @@ def main() -> int:
     out = ROOT / "results" / f"{NAME}.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({"config": asdict(cfg), "points": points}, indent=2), "utf-8")
-    in_target = all(1.1 <= p["f_mean"] <= 1.2 for p in points)  # cel z planu
+    in_target = all(1.1 <= p["f_mean"] <= 1.2 for p in points)  # typowe f Cascade
     return 0 if in_target else 1
 
 

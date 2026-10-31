@@ -1,4 +1,4 @@
-"""Model analityczny ataku oślepiania (F3.7–F3.8).
+"""Model analityczny ataku oślepiania.
 
 Dokładna wartość oczekiwana dla symulatora (attacks/blinding.py + detector.py), na impuls
 i w zgodnej bazie Alice–Boba. Odpowiedź pojedynczego detektora bierze się z

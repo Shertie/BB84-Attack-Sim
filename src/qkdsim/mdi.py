@@ -1,4 +1,4 @@
-"""MDI-QKD: Alice i Bob wysyłają stany BB84 do niezaufanego przekaźnika (Lo, Curty, Qi 2012), F7.
+"""MDI-QKD: Alice i Bob wysyłają stany BB84 do niezaufanego przekaźnika (Lo, Curty, Qi 2012).
 
 Przekaźnik (rys. 1 artykułu): dzielnik 50:50, za każdym wyjściem PBS (H/V) i dwa detektory
 progowe. Udany pomiar Bella to dokładnie dwa kliknięcia o ortogonalnych polaryzacjach:

@@ -1,4 +1,4 @@
-"""Atak 1: Monte Carlo vs model analityczny (F3.4). Szybkie testy; pełna siatka w test_gate_g3."""
+"""Atak 1: Monte Carlo vs model analityczny (pełna siatka w test_validation_attacks)."""
 
 import numpy as np
 import pytest
@@ -38,7 +38,7 @@ def test_full_attack_matches_model(position: float) -> None:
     assert abs(gain(counts).z_score(model.clicks.detected)) < Z_MAX
     assert abs(matched_qber(counts).z_score(model.clicks.qber)) < Z_MAX
     assert abs(eve_known_fraction(counts).z_score(model.known_fraction)) < Z_MAX
-    # Wśród impulsów, które Ewa zmierzyła, trafia w 3/4 przypadków (plan: 75%).
+    # Wśród impulsów, które Ewa zmierzyła, trafia w 3/4 przypadków (oczekiwane 75%).
     assert abs(eve_guess_accuracy(counts).z_score(0.75)) < Z_MAX
 
 

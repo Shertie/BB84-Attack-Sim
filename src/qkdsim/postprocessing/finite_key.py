@@ -1,19 +1,19 @@
-"""Długość klucza przy skończonej próbce (Tomamichel, Lim, Gisin, Renner 2012), F4.1–F4.2.
+"""Długość klucza przy skończonej próbce (Tomamichel, Lim, Gisin, Renner 2012).
 
 Protokół asymetryczny: n bitów klucza z jednej bazy, k bitów testu z drugiej. Alice i Bob
 przerywają, gdy QBER z próbki przekroczy próg Q_tol ustalony z góry; ℓ zależy od Q_tol,
-a nie od wyniku pomiaru. Źródło jednofotonowe (dla WCP z decoy: Lim et al. 2014, F7).
+a nie od wyniku pomiaru. Źródło jednofotonowe (dla WCP z decoy: Lim et al. 2014).
 
 - `key_length`: twierdzenie z tekstu głównego (wzór (2)):
   ℓ = ⌊n(q − h(Q_tol + μ)) − leak_EC − log₂(2/(ε_sec²·ε_cor))⌋,
   μ = √[(n + k)/(nk) · (k + 1)/k · ln(4/ε_sec)];
 - `key_length_tight`: twierdzenie z sekcji Methods, z optymalizacją po ε i ε̄ (2ε + ε̄ ≤ ε_sec),
   μ(ε) z ln(1/ε) i członem 2·log₂(1/(2ε̄));
-- `key_length_plan_hoeffding`: uproszczenie z planu projektu, Q^U = Q̂ + √(ln(1/ε)/(2k)) na samej
+- `key_length_sample_hoeffding`: uproszczenie, Q^U = Q̂ + √(ln(1/ε)/(2k)) na samej
   próbce. Nie uwzględnia przeniesienia błędu z próbki na klucz (losowanie bez zwracania),
-  więc zawyża ℓ (ROADMAP, K3).
+  więc zawyża ℓ.
 
-Uwaga (ROADMAP, K18): oba wydrukowane twierdzenia dają stopy o 8–14% niższe niż Tabela 1
+Uwaga: oba wydrukowane twierdzenia dają stopy o 8–14% niższe niż Tabela 1
 artykułu przy jej parametrach. Implementacja trzyma się wzorów; rozbieżność jest otwarta.
 """
 
@@ -78,10 +78,10 @@ def key_length_tight(
     return max(0, math.floor(best))
 
 
-def key_length_plan_hoeffding(
+def key_length_sample_hoeffding(
     n: int, k: int, qber_sample: float, leak_ec: float, eps_sec: float, eps_cor: float
 ) -> int:
-    """Wersja z planu projektu (ROADMAP, K3): zawyża ℓ, do porównania."""
+    """Hoeffding na samej próbce, bez przeniesienia błędu na klucz: zawyża ℓ, do porównania."""
     upper = qber_sample + math.sqrt(math.log(1.0 / eps_sec) / (2.0 * k))
     secret = n * (1.0 - _h(upper))
     return max(0, math.floor(secret - leak_ec - math.log2(2.0 / (eps_sec**2 * eps_cor))))

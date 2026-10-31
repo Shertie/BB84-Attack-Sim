@@ -1,4 +1,4 @@
-"""Cały postprocessing, bilans klucza i test liniowej Ewy (F2.8–F2.9)."""
+"""Cały postprocessing, bilans klucza i test liniowej Ewy."""
 
 import numpy as np
 import pytest
@@ -53,7 +53,7 @@ def test_failed_verification_discards_key() -> None:
 
 @pytest.mark.parametrize("subtract", [True, False])
 def test_linear_eve_knows_nothing_only_if_leak_is_subtracted(subtract: bool) -> None:
-    """F2.8: dokładna wiedza Ewy, która zna parzystości Cascade i hasz weryfikacyjny."""
+    """Dokładna wiedza Ewy, która zna parzystości Cascade i hasz weryfikacyjny."""
     key = synthetic_key(2200, 0.03)
     config = PostprocessingConfig(record_rows=True, subtract_leakage=subtract)
     result = postprocess(key, np.random.default_rng(SEED), config)

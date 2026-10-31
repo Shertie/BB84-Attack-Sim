@@ -1,4 +1,4 @@
-"""Atak 2: tryb liniowy detektora, atak oślepiania i obrony (F3.5–F3.9)."""
+"""Atak 2: tryb liniowy detektora, atak oślepiania i obrony."""
 
 import math
 from typing import Any

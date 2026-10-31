@@ -1,4 +1,4 @@
-"""Obrona przed atakami 1 i 6: próg QBER na losowej próbce (test jednostronny), F5.1 / rozdz. 7.1.
+"""Obrona przed atakami 1 i 6: próg QBER na losowej próbce (test jednostronny).
 
 Alice i Bob ujawniają k bitów i przerywają, gdy błędów jest więcej niż próg ustalony z góry tak,
 by uczciwy przebieg przerywał się z p-stwem ≤ α. Liczba błędów w próbce to Bin(k, Q), więc

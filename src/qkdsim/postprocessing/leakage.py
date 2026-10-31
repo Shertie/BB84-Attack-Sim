@@ -1,4 +1,4 @@
-"""Dokładna wiedza pasywnej, liniowej Ewy o kluczu końcowym (F2.8).
+"""Dokładna wiedza pasywnej, liniowej Ewy o kluczu końcowym.
 
 Ewa słyszy cały kanał klasyczny. Każda parzystość Cascade, każdy bit syndromu LDPC i każdy bit
 hasza weryfikacyjnego to znana jej liniowa funkcja klucza Alice x, czyli wiersz macierzy P

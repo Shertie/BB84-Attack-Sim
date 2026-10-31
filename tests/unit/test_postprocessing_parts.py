@@ -1,4 +1,4 @@
-"""Części postprocessingu: kanał, estymacja, Cascade, hasze, GF(2) (F2.1–F2.7)."""
+"""Części postprocessingu: kanał, estymacja, Cascade, hasze, GF(2)."""
 
 import math
 from collections.abc import Callable

@@ -1,4 +1,4 @@
-"""Pamięć detektora: czas martwy i afterpulsy (F1.8, F7)."""
+"""Pamięć detektora: czas martwy i afterpulsy."""
 
 import math
 

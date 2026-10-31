@@ -1,4 +1,4 @@
-"""Splątane pary: Monte Carlo kontra model (BBM92, CHSH) i fałszywe naruszenie CHSH (F7)."""
+"""Splątane pary: Monte Carlo kontra model (BBM92, CHSH) i fałszywe naruszenie CHSH."""
 
 import math
 

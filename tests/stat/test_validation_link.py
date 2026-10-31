@@ -1,4 +1,4 @@
-"""Bramka G1 (ROADMAP, rozdz. 6): MC zgodne z modelem na 0–150 km dla parametrów GYS.
+"""Walidacja toru: MC zgodne z modelem na 0–150 km dla parametrów GYS.
 
 Testy wolne (`make test-slow`): łącznie około 8·10⁸ impulsów, liczone równolegle.
 """

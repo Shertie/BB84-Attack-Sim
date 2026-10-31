@@ -1,4 +1,4 @@
-"""Moduł analityczny: entropia, modele zysku i QBER, wzory stopy klucza (F1.9)."""
+"""Moduł analityczny: entropia, modele zysku i QBER, wzory stopy klucza."""
 
 import math
 

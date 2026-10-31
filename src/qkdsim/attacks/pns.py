@@ -1,4 +1,4 @@
-"""Atak 3: photon-number splitting (Brassard, Lütkenhaus, Mor, Sanders 2000), F3.11.
+"""Atak 3: photon-number splitting (Brassard, Lütkenhaus, Mor, Sanders 2000).
 
 Opis strategii i model analityczny: analysis/pns.py. Ewa nie zmienia polaryzacji, więc QBER
 zostaje bez zmian; zabiera po jednym fotonie z impulsów wielofotonowych i po ujawnieniu baz

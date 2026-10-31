@@ -1,8 +1,8 @@
-"""Metryki przebiegu (F1.11).
+"""Metryki przebiegu.
 
 Warstwa bitów: QBER i udział bitów po siftingu z `SiftedKey`.
 Warstwa statystyk: estymaty z liczników `Counts` z odchyleniem standardowym i z-score
-względem wartości oczekiwanej (rozdz. 7.2 ROADMAP: porównanie MC ze wzorem przez z-score).
+względem wartości oczekiwanej (porównanie MC ze wzorem przez z-score).
 """
 
 import math

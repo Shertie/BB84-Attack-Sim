@@ -1,4 +1,4 @@
-"""E15: MDI-QKD (Lo, Curty, Qi 2012), F7.
+"""E15: MDI-QKD (Lo, Curty, Qi 2012).
 
 Wynik: figures/e15_mdi_qkd.png, figures/e15_mdi_qkd.md i results/e15_mdi_qkd.json.
 (a) stopa klucza MDI-QKD w funkcji odległości Alice–Bob (przekaźnik pośrodku) na tle decoy BB84

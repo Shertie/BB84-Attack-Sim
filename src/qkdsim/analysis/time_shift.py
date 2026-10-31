@@ -1,4 +1,4 @@
-"""Model analityczny ataku time-shift (Qi et al. 2007, Zhao et al. 2008), F6.1–F6.3.
+"""Model analityczny ataku time-shift (Qi et al. 2007, Zhao et al. 2008).
 
 Detektory Boba mają różne krzywe sprawności w czasie (`detector.EfficiencyMismatch`). Ewa nie
 mierzy impulsów, tylko przesuwa każdy w czasie: z p-stwem p_A do chwili A, w której przeważa

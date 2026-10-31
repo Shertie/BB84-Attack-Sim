@@ -1,4 +1,4 @@
-"""E14: skończony klucz dla WCP ze stanami decoy (Lim et al. 2014), F7.
+"""E14: skończony klucz dla WCP ze stanami decoy (Lim et al. 2014).
 
 Wynik: figures/e14_finite_key_decoy.png, figures/e14_finite_key_decoy.md
 i results/e14_finite_key_decoy.json.
@@ -165,7 +165,8 @@ def main() -> int:
         "",
         "Parametry z artykułu: η_Bob = 10%, p_dc = 6·10⁻⁷, p_ap = 4%, e_mis = 0,5%, f = 1,16, "
         "α = 0,2 dB/km, μ₃ = 2·10⁻⁴, ε_cor = 10⁻¹⁵, optymalizacja po (q, p₁, p₂, μ₁, μ₂). "
-        "Liczby z tekstu odtwarza ε_sec = 10⁻¹⁰ i η_sys w modelu błędu (ROADMAP, K20 i K21).",
+        "Liczby z tekstu odtwarza ε_sec = 10⁻¹⁰ (zamiast κℓ z arXiv v1, które daje ok. 128 km) "
+        "i η_sys zamiast wydrukowanego η_ch w modelu błędu.",
         "",
         "| n_X | Zasięg (Lim) | Zasięg (GYS, symulator) |",
         "| --- | --- | --- |",

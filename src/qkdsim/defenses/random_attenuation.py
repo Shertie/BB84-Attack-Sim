@@ -1,4 +1,4 @@
-"""Obrona (b) przed oślepianiem: losowe tłumienie przed detektorami (F3.9).
+"""Obrona (b) przed oślepianiem: losowe tłumienie przed detektorami.
 
 Bob w losowym, tajnym ułamku `fraction` bramek wstawia tłumik o transmisji `factor`.
 - Bez ataku (tryb Geigera) odsetek kliknięć w tych bramkach spada o znany czynnik

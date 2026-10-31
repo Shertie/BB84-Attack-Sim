@@ -1,4 +1,4 @@
-"""Atak 6: optymalny atak indywidualny (Fuchs et al. 1997), F4.7 i F4.9.
+"""Atak 6: optymalny atak indywidualny (Fuchs et al. 1997).
 
 Ewa splata każdy foton z własnym kubitem (sondą, początkowo |0⟩) fazowo-kowariantnym
 klonerem: częściową zamianą w podprzestrzeni {|01⟩, |10⟩} o kąt η,
@@ -12,7 +12,7 @@ Bob ma błąd D = sin²(η/2). Ewa po ujawnieniu baz mierzy sondę w bazie Alice
 
 Atak działa na pojedynczych fotonach i idealnych detektorach (granica teoretyczna), dlatego
 ma własny sampler zamiast toru impulsów: prawdopodobieństwa wyników liczy się raz dla czterech
-stanów wejściowych, a potem losuje wektorowo (F4.9).
+stanów wejściowych, a potem losuje wektorowo.
 """
 
 import math

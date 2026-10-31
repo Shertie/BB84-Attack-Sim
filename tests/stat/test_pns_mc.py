@@ -1,4 +1,4 @@
-"""Atak 3: Monte Carlo vs model PNS, estymacja decoy z danych i wykrywanie (F3.13–F3.16)."""
+"""Atak 3: Monte Carlo vs model PNS, estymacja decoy z danych i wykrywanie."""
 
 import pytest
 

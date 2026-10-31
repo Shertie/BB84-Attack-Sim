@@ -1,4 +1,4 @@
-"""Atak 2: oślepianie detektorów (Lydersen et al. 2010), F3.7.
+"""Atak 2: oślepianie detektorów (Lydersen et al. 2010).
 
 1. Ewa świeci na detektory Boba ciągłym światłem `blind_power_w`; detektory przechodzą
    w tryb liniowy (detector.py).

@@ -1,4 +1,4 @@
-"""MDI-QKD: pomiar Bella w przekaźniku, Tabela 1, idealny przekaźnik i Ewa jako przekaźnik (F7)."""
+"""MDI-QKD: pomiar Bella w przekaźniku, Tabela 1, idealny przekaźnik i Ewa jako przekaźnik."""
 
 import math
 

@@ -1,7 +1,7 @@
-"""Wartości kontrolne z publikacji (ROADMAP, rozdz. 3.2).
+"""Wartości kontrolne z publikacji.
 
 Każda liczba ma podane źródło. Z tych samych stałych korzystają testy krzyżowe z qkd
-(tests/crosscheck) i, od F1.9, testy własnego modułu qkdsim.analysis.
+(tests/crosscheck) i testy własnego modułu qkdsim.analysis.
 """
 
 # Parametry GYS: Ma, Qi, Zhao, Lo 2005, Tabela I; f_EC z tekstu artykułu (docs/model.md, rozdz. 3).
@@ -31,7 +31,7 @@ DEVIATION_40KM_Y1_PERCENT = 3.5
 DEVIATION_40KM_E1_PERCENT = 16.8
 DEVIATION_TOLERANCE_PERCENT = 0.05  # zaokrąglenie do jednego miejsca w artykule
 
-# GLLP bez stanów decoy: własne przeliczenie z ROADMAP 3.2 (≈ 40 km), potwierdzone modelem
+# GLLP bez stanów decoy: własne przeliczenie (≈ 40 km), potwierdzone modelem
 # zysku qkd 0.2.0 (40,20 km). Artykuł nie podaje tej liczby wprost.
 L_MAX_GLLP_NO_DECOY_KM = 40.2
 

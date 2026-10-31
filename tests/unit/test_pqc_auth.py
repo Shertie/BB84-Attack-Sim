@@ -1,4 +1,4 @@
-"""Wariant E: uwierzytelnianie ML-DSA, scenariusze MITM i „everlasting security” (F4.15–F4.18)."""
+"""Uwierzytelnianie postkwantowe: ML-DSA, scenariusze MITM i „everlasting security”."""
 
 from typing import Any
 
@@ -49,7 +49,7 @@ def test_sizes_match_fips_204(level: int) -> None:
 
 @pytest.mark.parametrize("level", [44, 65, 87])
 def test_cryptography_and_dilithium_py_interoperate(level: int) -> None:
-    """Podpis jedną implementacją, weryfikacja drugą, w obie strony (ADR 0006)."""
+    """Podpis jedną implementacją, weryfikacja drugą, w obie strony."""
     message = b"transkrypt rundy"
     private, public = generate(level)
     assert PURE_PYTHON[level].verify(public, message, private.sign(message, CONTEXT), ctx=CONTEXT)
@@ -119,7 +119,7 @@ def test_mlkem_secret_falls_to_harvest_now_decrypt_later() -> None:
 
 
 def test_hybrid_key_survives_harvest_now_decrypt_later() -> None:
-    """F4.21: Ewa z sekretem ML-KEM (HNDL), ale bez klucza QKD, nie zna klucza hybrydowego."""
+    """Ewa z sekretem ML-KEM (HNDL), ale bez klucza QKD, nie zna klucza hybrydowego."""
     qkd_key = np.random.default_rng(SEED).integers(0, 2, 256, dtype=np.uint8)
     decapsulation_key = mlkem.MLKEM768PrivateKey.generate()
     secret, recorded_ciphertext = decapsulation_key.public_key().encapsulate()

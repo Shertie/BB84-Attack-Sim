@@ -1,4 +1,4 @@
-"""Atak 4, time-shift: krzywe sprawności, model, dane Zhao et al. 2008 i obrona (F6.1–F6.4)."""
+"""Atak 4, time-shift: krzywe sprawności, model, dane Zhao et al. 2008 i obrona."""
 
 import numpy as np
 import pytest

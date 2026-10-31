@@ -1,9 +1,9 @@
-"""Uwierzytelnianie podpisem ML-DSA (FIPS 204) i hybryda z Wegmanem–Carterem (F4.15–F4.17).
+"""Uwierzytelnianie podpisem ML-DSA (FIPS 204) i hybryda z Wegmanem–Carterem.
 
 Backend: `cryptography` (≥ 47, ML-DSA z OpenSSL). Implementacja w czystym Pythonie
-(`dilithium-py`) służy tylko do testu zgodności (ADR 0006).
+(`dilithium-py`) służy tylko do testu zgodności.
 
-Model zaufania (F4.17): każda strona ma katalog kluczy publicznych rozprowadzony z góry, bez PKI.
+Model zaufania: każda strona ma katalog kluczy publicznych rozprowadzony z góry, bez PKI.
 Odbiorca weryfikuje podpis kluczem z katalogu dla deklarowanego nadawcy. Scenariusze ataku
 zmieniają tylko to, czym Ewa może podpisać i co jest w katalogu:
 - „honest”: Ewa ma tylko własny klucz, więc jej podpis nie przechodzi;

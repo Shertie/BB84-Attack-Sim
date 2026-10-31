@@ -1,4 +1,4 @@
-"""Atak 1: intercept-resend (F3.1–F3.2).
+"""Atak 1: intercept-resend.
 
 Ewa przechwytuje ułamek `fraction` impulsów w punkcie `position` światłowodu, mierzy każdy
 w losowej bazie idealnym detektorem i wysyła Bobowi jeden foton w stanie, który zmierzyła.
@@ -7,7 +7,7 @@ w losowej bazie idealnym detektorem i wysyła Bobowi jeden foton w stanie, któr
 - Impuls wielofotonowy w zgodnej bazie daje wynik deterministyczny, a w niezgodnej
   przypadkowy, więc jedno losowanie z reguły Borna jest dokładnym modelem jej detektora
   (przy podwójnym kliknięciu losuje bit).
-- Ewa mierzy stan przed obrotem polaryzacji, bo błąd optyki leży po stronie Boba (K14).
+- Ewa mierzy stan przed obrotem polaryzacji, bo błąd optyki leży po stronie Boba.
 
 Oczekiwany wynik: QBER ≈ e_d + p(¼ − e_d/2) dla Ewy tuż przed Bobem; po siftingu Ewa
 zgaduje 75% bitów z impulsów, które zmierzyła, a połowę zna na pewno. Ewa tuż za Alice

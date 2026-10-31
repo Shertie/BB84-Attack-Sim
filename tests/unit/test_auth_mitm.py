@@ -1,4 +1,4 @@
-"""Atak 7: uwierzytelnianie Wegmana–Cartera i MITM (F4.11–F4.13)."""
+"""Atak 7: uwierzytelnianie Wegmana–Cartera i MITM."""
 
 import math
 

@@ -1,4 +1,4 @@
-"""Moduł qkdsim.analysis vs wartości kontrolne z publikacji (ROADMAP 3.2, F1.9)."""
+"""Moduł qkdsim.analysis vs wartości kontrolne z publikacji (tests/golden.py)."""
 
 import pytest
 from scipy.optimize import brentq

@@ -1,4 +1,4 @@
-# E15: MDI-QKD (Lo, Curty, Qi 2012), F7. Parametry z podpisu rys. 2 artykułu.
+# E15: MDI-QKD (Lo, Curty, Qi 2012). Parametry z podpisu rys. 2 artykułu.
 seed: 20261108
 relay_efficiency: 0.145
 dark_count: 3.01e-6  # na detektor: tło 6,02·10⁻⁶ z artykułu liczymy na parę detektorów

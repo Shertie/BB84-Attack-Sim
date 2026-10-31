@@ -1,4 +1,4 @@
-"""Model analityczny ataku PNS (photon-number splitting), F3.11–F3.12.
+"""Model analityczny ataku PNS (photon-number splitting).
 
 Ewa stoi tuż za Alice i mierzy liczbę fotonów n bez naruszania polaryzacji (pomiar QND):
 - n = 1: blokuje impuls z p-stwem `block`, inaczej przepuszcza foton;

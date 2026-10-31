@@ -1,4 +1,4 @@
-"""E05: oślepianie detektorów i obrony (F3.8–F3.9).
+"""E05: oślepianie detektorów i obrony.
 
 Wyniki: figures/e05_blinding.png (atak w funkcji mocy impulsu wyzwalającego),
 figures/e05_blinding_roc.png (krzywe ROC obron) i results/e05_blinding.json.

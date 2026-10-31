@@ -1,4 +1,4 @@
-"""Jedyny punkt dostępu do pakietu qkd w testach (docs/adr/0007).
+"""Jedyny punkt dostępu do pakietu qkd w testach (docs/architecture.md).
 
 Przekłada prywatne funkcje qkd._core na nazwy i konwencje projektu. Domyślne parametry to zestaw
 GYS z golden.py. Zmiana API qkd ma dotykać tylko tego pliku.

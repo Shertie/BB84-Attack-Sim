@@ -1,4 +1,4 @@
-"""Hybrydowe łączenie kluczy: KDF(klucz QKD ‖ sekret ML-KEM) (F4.21, opcjonalne).
+"""Hybrydowe łączenie kluczy: KDF(klucz QKD ‖ sekret ML-KEM) (opcjonalne).
 
 Klucz wynikowy pozostaje tajny, dopóki tajna jest choć jedna składowa (HKDF-SHA256 jako
 ekstraktor; sekret hybrydowy dopuszcza też NIST SP 800-56C Rev. 2). Ewa, która

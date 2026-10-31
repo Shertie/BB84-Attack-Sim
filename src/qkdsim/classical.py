@@ -1,4 +1,4 @@
-"""Uwierzytelniony (na razie) kanał klasyczny z transkryptem (F2.1, ADR 0003).
+"""Kanał klasyczny z transkryptem.
 
 Każda wiadomość niesie dwie liczby:
 
@@ -7,8 +7,8 @@ Każda wiadomość niesie dwie liczby:
   do estymacji nie ujawniają nic o reszcie klucza; parzystości Cascade i hasz weryfikacyjny
   ujawniają po jednym bicie na bit.
 
-Transkrypt to wszystko, co słyszy pasywna Ewa. Hooki `Message → Message` pozwolą w F4
-podpiąć atak MITM i uwierzytelnianie.
+Transkrypt to wszystko, co słyszy pasywna Ewa. Hooki `Message → Message` podpinają
+atak MITM i uwierzytelnianie.
 """
 
 from collections.abc import Callable, Sequence

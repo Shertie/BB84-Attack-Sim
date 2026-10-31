@@ -1,5 +1,5 @@
-# E02: sprawność Cascade f(Q) = leak_EC / (n·h(Q)) na kluczach syntetycznych (F2.4).
-# Cel z planu: f w okolicach 1,1–1,2.
+# E02: sprawność Cascade f(Q) = leak_EC / (n·h(Q)) na kluczach syntetycznych.
+# Cel: f w okolicach 1,1–1,2 (typowe dla Cascade, Martinez-Mateo et al. 2015).
 seed: 20261102
 key_bits: 100_000
 runs: 20

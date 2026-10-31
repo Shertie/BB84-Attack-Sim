@@ -1,6 +1,6 @@
-"""Atak 8: słaby generator losowy Alice (F6.8).
+"""Atak 8: słaby generator losowy Alice.
 
-Generator Alice to wstrzykiwany `RandomSource` (ADR 0003), więc podmiana go zmienia tylko jej
+Generator Alice to wstrzykiwany `RandomSource`, więc podmiana go zmienia tylko jej
 wybory. Warianty:
 - `known_seed_source`: MT19937 o ziarnie znanym Ewie; statystycznie dobry, ale przewidywalny;
 - `BiasedSource` (z rng.py): obciążone bity i bazy (np. 0,55/0,45);

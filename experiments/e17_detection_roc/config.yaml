@@ -1,4 +1,4 @@
-# E17: obrony z progiem i krzywe ROC dla ataków 1, 4, 5 i 6 (definicja ukończenia, rozdz. 7.1).
+# E17: obrony z progiem i krzywe ROC dla ataków 1, 4, 5 i 6 .
 seed: 20261110
 false_alarm: 0.01
 # Test progu QBER (ataki 1 i 6): próbka k bitów, tło jak w e07 (błąd optyki 2%).

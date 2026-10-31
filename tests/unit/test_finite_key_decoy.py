@@ -1,4 +1,4 @@
-"""Skończony klucz z decoy (Lim et al. 2014): wzory (1)–(5) i modele kanału (F7)."""
+"""Skończony klucz z decoy (Lim et al. 2014): wzory (1)–(5) i modele kanału."""
 
 import math
 

@@ -1,4 +1,4 @@
-"""E11: atak 4, time-shift (F6.1–F6.4).
+"""E11: atak 4, time-shift.
 
 Wynik: figures/e11_time_shift.png, figures/e11_time_shift.md i results/e11_time_shift.json.
 (a) krzywe sprawności dopasowane do Tabeli I(a) Zhao et al. 2008 i przesunięcia Ewy A, B;
