@@ -4,7 +4,7 @@
   "description": "Symulator Monte Carlo protokołu BB84 na poziomie impulsów (źródło WCP z decoy, światłowód, detektory SPAD, Cascade, wzmacnianie prywatności, skończony klucz), zwalidowany względem wzorów Ma et al. 2005 i niezależnej implementacji qkd. Wykonuje osiem ataków (intercept-resend, oślepianie detektorów, PNS, time-shift, Trojan horse, optymalny atak indywidualny, man-in-the-middle, słaby generator) z obronami i krzywymi ROC oraz porównuje uwierzytelnianie Wegmana–Cartera, ML-DSA i hybrydowe w kontekście QKD i ML-KEM. Rozszerzenia: skończony klucz z decoy, MDI-QKD, BBM92 z testem CHSH, czas martwy i afterpulsy detektorów, symulator QRNG i uzgadnianie LDPC.",
   "creators": [
     {
-      "name": "Shertie"
+      "name": "Kosidowski, Jakub"
     }
   ],
   "license": "MIT",

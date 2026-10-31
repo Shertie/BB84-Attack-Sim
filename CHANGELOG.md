@@ -8,6 +8,10 @@ Format na wzór [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersje
 
 - DOI z Zenodo: 10.5281/zenodo.23840266 (wszystkie wersje), 10.5281/zenodo.23840267 (wersja 1.2.0), w `CITATION.cff` i README.
 
+### Zmienione
+
+- Autor: Jakub Kosidowski (`pyproject.toml`, `CITATION.cff`, `.zenodo.json`, `LICENSE`, raport).
+
 ## [1.2.0] – 2026-10-31
 
 Rozszerzenia modelu i protokołu, obrony z krzywymi ROC dla wszystkich ataków z progiem.

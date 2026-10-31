@@ -3,7 +3,9 @@ message: "Jeśli korzystasz z tego oprogramowania, zacytuj je według tych metad
 title: "bb84-attacks: symulator Monte Carlo BB84 z atakami i uwierzytelnianiem postkwantowym"
 type: software
 authors:
-  - alias: Shertie
+  - given-names: Jakub
+    family-names: Kosidowski
+    alias: Shertie
 version: 1.2.0
 date-released: "2026-10-31"
 license: MIT
