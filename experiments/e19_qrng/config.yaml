@@ -1,0 +1,20 @@
+# E19: symulator QRNG na dzielniku wiązki (F7, przedłużenie ataku 8).
+seed: 20261112
+mean_photons: 1.0
+efficiency: 0.1
+mismatch: 0.9          # η₁/η₀ generatora niedopasowanego
+strong_mismatch: 0.7   # η₁/η₀ w ataku na bazy (c)
+dead_time_gates: 10
+afterpulse: 0.03
+slots: 50_000_000
+contexts: [0, 1, 2, 3, 4]
+calibration_context: 4
+block: 65536
+epsilon: 1.0e-10
+test_bits: 1_000_000
+batches: 100
+length_km: 10.0
+mu: 0.48
+pulses: 4_000_000
+drifts: [0.9, 0.8, 0.7, 0.6, 0.5]
+drift_windows: 2000
