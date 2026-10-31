@@ -11,6 +11,7 @@ Format na wzór [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersje
 ### Zmienione
 
 - Autor: Jakub Kosidowski (`pyproject.toml`, `CITATION.cff`, `.zenodo.json`, `LICENSE`, raport).
+- Raport: w nagłówku wersja 1.2 zamiast 1.1.
 
 ## [1.2.0] – 2026-10-31
 
