@@ -1,15 +1,16 @@
 """Dokładna wiedza pasywnej, liniowej Ewy o kluczu końcowym (F2.8).
 
-Ewa słyszy cały kanał klasyczny. Każda parzystość Cascade i każdy bit hasza weryfikacyjnego
-to znana jej liniowa funkcja klucza Alice x, czyli wiersz macierzy P nad GF(2). Klucz końcowy
-to Tx. Ewa zna dokładnie dim(span P ∩ span T) bitów klucza końcowego (liniowych kombinacji).
+Ewa słyszy cały kanał klasyczny. Każda parzystość Cascade, każdy bit syndromu LDPC i każdy bit
+hasza weryfikacyjnego to znana jej liniowa funkcja klucza Alice x, czyli wiersz macierzy P
+nad GF(2). Klucz końcowy to Tx. Ewa zna dokładnie dim(span P ∩ span T) bitów klucza końcowego
+(liniowych kombinacji).
 
 - Gdy ℓ uwzględnia wyciek (ℓ ≤ n − rank P), dla losowej T ta wiedza wynosi 0 z dużym p-stwem.
 - Gdy ktoś zapomni odjąć wycieku, wymiar przekroju wynosi co najmniej ℓ − (n − rank P) > 0:
   Ewa zna te bity z pewnością, bez żadnego ataku na kanał kwantowy.
 
-Wymaga transkryptu z `record_rows=True` w Cascade. Algebra na liczbach całkowitych, więc
-rozsądne dla n do kilku tysięcy bitów.
+Wymaga transkryptu z `record_rows=True` w Cascade albo LDPC. Algebra na liczbach całkowitych,
+więc rozsądne dla n do kilku tysięcy bitów.
 """
 
 from dataclasses import dataclass
@@ -29,13 +30,13 @@ class LinearEveKnowledge:
 
 
 def disclosed_rows(channel: ClassicalChannel, n: int) -> list[int]:
-    """Wiersze P: parzystości Cascade i bity hasza weryfikacyjnego."""
+    """Wiersze P: parzystości Cascade, syndromy LDPC i bity hasza weryfikacyjnego."""
     rows: list[int] = []
-    for message in channel.messages("cascade_"):
+    for message in channel.messages("cascade_") + channel.messages("ldpc_"):
         if message.leaked_bits == 0:
             continue
         if message.payload is None:
-            raise ValueError("Cascade bez record_rows=True: brak pozycji parzystości")
+            raise ValueError("uzgadnianie bez record_rows=True: brak pozycji parzystości")
         rows.extend(row_from_positions(positions, n) for positions in message.payload)
     for seed_message in channel.messages("verify_seed"):
         seed = seed_message.payload

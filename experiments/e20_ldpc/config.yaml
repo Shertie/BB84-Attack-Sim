@@ -1,0 +1,16 @@
+# E20: uzgadnianie LDPC z syndromem zamiast Cascade (F7).
+seed: 20261113
+de_rates: [0.5, 0.6, 0.7, 0.8, 0.85, 0.9]
+waterfall_qbers: [0.05, 0.06, 0.07, 0.075, 0.08, 0.082]
+waterfall_lengths: [1024, 8192, 65536]
+waterfall_trials: [200, 60, 15]
+qbers: [0.01, 0.02, 0.03, 0.05]
+efficiencies: [1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 2.0]
+frame: 16384
+trials: 20
+max_iterations: 100
+target_fer: 0.1
+cascade_runs: 5
+length_km: 25.0
+mu: 0.48
+pulses: 20_000_000
