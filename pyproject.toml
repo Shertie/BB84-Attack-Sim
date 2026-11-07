@@ -39,6 +39,8 @@ verify = ["qutip>=5.0"]
 # Niezależna wyrocznia w testach krzyżowych (docs/architecture.md). Wersja przypięta dokładnie,
 # bo testy korzystają z prywatnego modułu qkd._core.
 crosscheck = ["qkd==0.2.0"]
+# Interfejs interaktywny (app/streamlit_app.py, `make app`).
+app = ["streamlit>=1.40"]
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/qkdsim"]
@@ -46,7 +48,7 @@ packages = ["src/qkdsim"]
 [tool.ruff]
 line-length = 100
 target-version = "py311"
-src = ["src", "tests"]
+src = ["src", "tests", "app"]
 # Bloki kodu w dokumentach Markdown nie są kodem projektu.
 extend-exclude = ["assets", "*.md"]
 
@@ -58,7 +60,7 @@ ignore = ["RUF001", "RUF002", "RUF003"]
 [tool.mypy]
 python_version = "3.11"
 strict = true
-files = ["src", "tests"]
+files = ["src", "tests", "app"]
 
 [[tool.mypy.overrides]]
 module = ["scipy.*", "matplotlib.*", "qutip.*", "qkd.*", "dilithium_py.*"]

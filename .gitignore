@@ -38,3 +38,6 @@ report/*.out
 report/*.toc
 report/*.synctex.gz
 report/main.pdf
+
+# Lokalna konfiguracja narzędzi
+.claude/

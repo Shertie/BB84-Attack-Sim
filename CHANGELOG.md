@@ -6,7 +6,12 @@ Format na wzór [Keep a Changelog](https://keepachangelog.com/pl/1.1.0/), wersje
 
 ### Dodane
 
+- Interfejs interaktywny w Streamlit (`make app`, `app/streamlit_app.py`): atak i obrona z Monte Carlo obok modelu, klucz końcowy (Cascade albo LDPC), stopa klucza R(L), przegląd wyników eksperymentów. Scenariusze w `qkdsim.scenarios`, zależność opcjonalna `app`.
 - DOI wersji 1.2.1 z Zenodo (10.5281/zenodo.23841567) w `CITATION.cff`.
+
+### Zmienione
+
+- CI bez nocnego uruchamiania: testy wolne i odtworzenie wykresów tylko na tagach i ręcznie (`workflow_dispatch`).
 
 ## [1.2.1] – 2026-10-31
 

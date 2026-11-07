@@ -3,13 +3,10 @@ name: CI
 on:
   push:
   pull_request:
-  schedule:
-    - cron: "0 3 * * *" # nightly: testy @slow
-  workflow_dispatch:
+  workflow_dispatch: # ręcznie: także testy @slow i wszystkie wykresy
 
 jobs:
   check:
-    if: github.event_name != 'schedule'
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -21,11 +18,11 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
           cache: pip
-      - run: python -m pip install -e '.[dev,crosscheck,verify]'
+      - run: python -m pip install -e '.[dev,crosscheck,verify,app]'
       - run: make lint typecheck coverage PY=python
 
   slow:
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
@@ -33,13 +30,13 @@ jobs:
         with:
           python-version: "3.13"
           cache: pip
-      - run: python -m pip install -e '.[dev,crosscheck,verify]'
+      - run: python -m pip install -e '.[dev,crosscheck,verify,app]'
       - run: make test-slow PY=python
 
   # Czysty klon odtwarza wszystkie wykresy; każdy eksperyment kończy się błędem,
   # gdy jego wynik wyjdzie poza tolerancję. Lokalnie (12 rdzeni) ok. 13 min.
   figures:
-    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/')
     runs-on: ubuntu-latest
     timeout-minutes: 90
     steps:
@@ -48,7 +45,7 @@ jobs:
         with:
           python-version: "3.13"
           cache: pip
-      - run: python -m pip install -e '.[dev,crosscheck,verify]'
+      - run: python -m pip install -e '.[dev,crosscheck,verify,app]'
       - name: make figures (z pomiarem czasu)
         run: |
           start=$(date +%s)

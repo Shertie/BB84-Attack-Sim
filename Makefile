@@ -1,7 +1,7 @@
 PY ?= .venv/bin/python
 EXPERIMENTS := $(sort $(wildcard experiments/e*/run.py))
 
-.PHONY: help install lint typecheck test test-slow coverage check figures report clean
+.PHONY: help install lint typecheck test test-slow coverage check figures report app clean
 
 help:
 	@echo "install    - venv z zależnościami deweloperskimi"
@@ -13,10 +13,11 @@ help:
 	@echo "check      - lint + typecheck + test"
 	@echo "figures    - uruchamia experiments/e*/run.py, wykresy trafiają do figures/"
 	@echo "report     - kompiluje report/main.tex"
+	@echo "app        - interfejs interaktywny (Streamlit) w przeglądarce"
 
 install:
 	python3 -m venv .venv
-	$(PY) -m pip install -e '.[dev,crosscheck,verify]'
+	$(PY) -m pip install -e '.[dev,crosscheck,verify,app]'
 
 lint:
 	$(PY) -m ruff check .
@@ -42,6 +43,9 @@ figures:
 
 report:
 	cd report && latexmk -pdf -interaction=nonstopmode main.tex
+
+app:
+	$(PY) -m streamlit run app/streamlit_app.py
 
 clean:
 	rm -rf .pytest_cache .mypy_cache .ruff_cache .hypothesis build dist

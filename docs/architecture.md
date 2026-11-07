@@ -47,6 +47,7 @@ flowchart LR
 - **Konfiguracja:** pliki YAML wczytywane ściśle do zamrożonych dataclass (`config.py`): nieznany albo brakujący klucz to błąd, typy są sprawdzane. Ziarno jest częścią konfiguracji.
 - **Uwierzytelnianie:** wspólny interfejs `Authenticator` (`postprocessing/auth.py`): Wegman–Carter z kluczem współdzielonym, podpis ML-DSA (`cryptography`, zgodność z `dilithium-py`) i hybryda obu.
 - **Weryfikacja niezależna:** fragmenty kwantowe ataków 5 i 6 liczy też QuTiP (zależność `verify`); wzory analityczne porównujemy z pakietem `qkd` 0.2.0 (zależność `crosscheck`, jedyny punkt dostępu `tests/qkd_oracle.py`). Testy pomijają się, gdy pakiet nie jest zainstalowany.
+- **Interfejs interaktywny:** `app/streamlit_app.py` zawiera tylko widok; scenariusze (łącze, atak skalibrowany jak w eksperymentach, model analityczny, postprocessing) są w `qkdsim.scenarios` i mają własne testy. Test `tests/unit/test_app.py` renderuje aplikację dla każdego ataku (`streamlit.testing`).
 - **Metryki:** moduł `metrics` jest jedynym miejscem, które zestawia prawdę z wiedzą Ewy i z kluczem.
 
 ## Ataki: moduły, eksperymenty, testy i obrony

@@ -134,10 +134,19 @@ make figures
 
 `make check` uruchamia lintera (ruff), sprawdzanie typów (mypy --strict) i szybkie testy. Pozostałe cele: `make test-slow` (testy statystyczne i krzyżowe), `make coverage` (pokrycie rdzenia), `make report` (raport LaTeX).
 
+## Interfejs interaktywny
+
+```bash
+make app
+```
+
+Otwiera w przeglądarce aplikację Streamlit (`app/streamlit_app.py`). Wybierasz długość łącza, μ, liczbę impulsów i jeden z ataków (intercept-resend, oślepianie, PNS, time-shift, Trojan horse, słaby generator) z jego parametrami i obroną. Aplikacja liczy Monte Carlo i pokazuje zysk, QBER i informację Ewy obok modelu analitycznego. Pozostałe zakładki: pełny postprocessing do klucza końcowego (Cascade albo LDPC), stopa klucza R(L) i wyniki wszystkich eksperymentów. Wymaga dodatkowej zależności `app` (instaluje ją `make install`).
+
 ## Dokumentacja
 
 - [docs/model.md](docs/model.md): założenia fizyczne i dowodu, konwencje, parametry, model każdego ataku i rozszerzenia
 - [docs/architecture.md](docs/architecture.md): tor impulsów, punkty ataku P1–P8, zasady konstrukcji, tabela ataków (moduł, eksperyment, testy, obrona) i powiązane narzędzia
+- [app/streamlit_app.py](app/streamlit_app.py): interfejs interaktywny; scenariusze ataków w [src/qkdsim/scenarios.py](src/qkdsim/scenarios.py)
 - [report/main.tex](report/main.tex): raport (`make report`)
 - [CHANGELOG.md](CHANGELOG.md): historia wersji
 
